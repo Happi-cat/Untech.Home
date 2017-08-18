@@ -1,0 +1,4 @@
+[submodule "External/Untech.Practices"]
+	path = External/Untech.Practices
+	url = https://github.com/Happi-cat/Untech.Practices.git
+	branch = develop
