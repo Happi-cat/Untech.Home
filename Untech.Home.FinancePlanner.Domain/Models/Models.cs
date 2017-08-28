@@ -28,9 +28,10 @@ namespace Untech.Home.FinancePlanner.Domain.Models
 		public DateTime When { get;set; }
 	}
 
-	public class Taxon {
+	public class Taxon
+	{
 		public int Id { get; set; }
-		public int? ParentId {get;set;}
-		public string Name {get;set;}
+		public int? ParentId { get;set; }
+		public string Name { get;set; }
 	}
 }
