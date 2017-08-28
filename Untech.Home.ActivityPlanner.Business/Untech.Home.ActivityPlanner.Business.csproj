@@ -5,9 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Untech.Practices\Src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
-    <ProjectReference Include="..\..\Untech.Practices\Src\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj" />
-    <ProjectReference Include="..\..\Untech.Practices\Src\Untech.Practices.Repos.Queryable\Untech.Practices.Repos.Queryable.csproj" />
+    <ProjectReference Include="..\External\Untech.Practices\Src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
+    <ProjectReference Include="..\External\Untech.Practices\Src\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj" />
+    <ProjectReference Include="..\External\Untech.Practices\Src\Untech.Practices.Repos.Queryable\Untech.Practices.Repos.Queryable.csproj" />
     <ProjectReference Include="..\Untech.Home.ActivityPlanner.Domain\Untech.Home.ActivityPlanner.Domain.csproj" />
   </ItemGroup>
 
