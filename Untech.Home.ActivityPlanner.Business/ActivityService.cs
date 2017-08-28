@@ -40,6 +40,7 @@ namespace Untech.Home.ActivityPlanner.Business
 
 			_activities.Update(activity);
 
+			return Unit.Value;
 		}
 
 		public Unit Handle(ToggleActivityOccurrence request)

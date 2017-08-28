@@ -9,39 +9,56 @@ using Untech.Practices.Repos.Queryable;
 namespace Untech.Home.ActivityPlanner.Business
 {
 	public class QueryService :
-		IQueryHandler<ActivityCalendarQuery, IEnumerable<Activity>>,
-		IQueryHandler<ActivityGroupsCalendarQuery, IEnumerable<ActivityGroupCalendar>>
+		IQueryHandler<DailyCalendarQuery, DailyCalendar>,
+		IQueryHandler<MonthlyCalendarQuery, MonthlyCalendar>
 	{
-		private readonly IReadOnlyRepository<ActivityGroup> _activityGroups;
+		private readonly IReadOnlyRepository<Category> _categories;
 		private readonly IReadOnlyRepository<Activity> _activities;
 
-		public QueryService(IReadOnlyRepository<Activity> activities, IReadOnlyRepository<ActivityGroup> activityGroups)
+		public QueryService(IReadOnlyRepository<Activity> activities, IReadOnlyRepository<Category> categories)
 		{
-			_activityGroups = activityGroups;
+			_categories = categories;
 			_activities = activities;
 		}
 
-		public IEnumerable<ActivityGroupCalendar> Handle(ActivityGroupsCalendarQuery request)
+		public DailyCalendar Handle(DailyCalendarQuery request)
 		{
-			foreach (var group in _activityGroups.GetAll())
-			{
+			var response = new DailyCalendar { From = request.From, To = request.To, Categories = new List<CategoryDailyCalendar>() };
+
+			foreach(var category in _categories.GetAll().ToList()) {
 				var activities = _activities.GetAll()
-					.Where(n => n.GroupId == group.Id && n.When >= request.From && n.When <= request.To)
+					.Where(n => n.CategoryId == category.Id)
 					.ToList();
 
-				yield return new ActivityGroupCalendar
-				{
-					Group = group,
-					Occurrencies = activities
-				};
+				response.Categories.Add(new CategoryDailyCalendar {
+					CategoryId = category.Id,
+					Name = category.Name,
+					Remarks = category.Remarks,
+					Activities = null
+				});
 			}
+
+			return response;
 		}
 
-		public IEnumerable<Activity> Handle(ActivityCalendarQuery request)
+		public MonthlyCalendar Handle(MonthlyCalendarQuery request)
 		{
-			return _activities.GetAll()
-				.Where(n => n.When >= request.From && n.When <= request.To)
-				.ToList();
+		var response = new MonthlyCalendar { From = request.From, To = request.To, Categories = new List<CategoryMonthlyCalendar>() };
+
+			foreach(var category in _categories.GetAll().ToList()) {
+				var activities = _activities.GetAll()
+					.Where(n => n.CategoryId == category.Id)
+					.ToList();
+
+				response.Categories.Add(new CategoryDailyCalendar {
+					CategoryId = category.Id,
+					Name = category.Name,
+					Remarks = category.Remarks,
+					Activities = null
+				});
+			}
+
+			return response;	
 		}
 	}
 }
