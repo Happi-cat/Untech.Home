@@ -24,8 +24,8 @@ namespace Untech.Home.FinancePlanner.Domain.Models
 		public FinanceLogEntryType Type { get;set; }
 		public string Remarks { get;set; }
 		public Money Spent { get;set; }
-		public DateTim When { get;set; }
 		public Money Forecasted { get;set; }
+		public DateTime When { get;set; }
 	}
 
 	public class Taxon {
