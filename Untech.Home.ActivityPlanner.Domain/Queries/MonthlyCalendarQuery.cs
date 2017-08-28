@@ -5,7 +5,7 @@ using Untech.Practices.CQRS;
 
 namespace Untech.Home.ActivityPlanner.Domain.Queries
 {
-	public class ActivityGroupsCalendarQuery : IQuery<IEnumerable<ActivityGroupCalendar>>
+	public class MonthlyCalendarQuery : IQuery<MonthlyCalendar>
 	{
 		public DateTime From { get; set; }
 
