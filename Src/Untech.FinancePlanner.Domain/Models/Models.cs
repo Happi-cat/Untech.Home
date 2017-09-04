@@ -1,19 +1,8 @@
 using System;
+using Untech.Practices;
 
 namespace Untech.Home.FinancePlanner.Domain.Models
 {
-	public class Currency
-	{
-		public string Name { get; set; }
-		public string Code { get; set; }
-	}
-
-	public class Money
-	{
-		public double Amount { get; set; }
-		public Currency Currency { get; set; }
-	}
-
 	public enum FinanceLogEntryType
 	{
 		Expense,
