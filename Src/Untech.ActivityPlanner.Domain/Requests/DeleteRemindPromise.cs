@@ -1,6 +1,6 @@
 ﻿using Untech.Practices.CQRS;
 
-namespace Untech.Home.ActivityPlanner.Domain.Commands
+namespace Untech.ActivityPlanner.Domain.Requests
 {
 	public class DeleteRemindPromise : ICommand
 	{
