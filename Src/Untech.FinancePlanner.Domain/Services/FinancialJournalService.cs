@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
+using Untech.Practices.Collections;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.Repos.Queryable;
