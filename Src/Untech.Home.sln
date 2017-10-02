@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.FinancePlanner.Data"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.FinancePlanner.Domain", "Untech.FinancePlanner.Domain\Untech.FinancePlanner.Domain.csproj", "{8E92E6A7-3E4A-42F9-AD61-CE6D6F09E342}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Collections", "..\External\Untech.Practices\Src\Untech.Practices.Collections\Untech.Practices.Collections.csproj", "{0F2A25B4-A03A-4E2E-B610-DD8791984C55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

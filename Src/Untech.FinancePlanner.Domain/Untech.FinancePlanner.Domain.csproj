@@ -5,7 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.Collections\Untech.Practices.Collections.csproj" />
     <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.Core\Untech.Practices.Core.csproj" />
+    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
+    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.Repos.Queryable\Untech.Practices.Repos.Queryable.csproj" />
   </ItemGroup>
 
 </Project>
