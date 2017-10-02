@@ -30,5 +30,11 @@ namespace Untech.FinancePlanner.Domain.Models
 
 		[DataMember]
 		public bool IsRoot => ParentId == 0;
+
+		/// <summary>
+		/// Determines whether this taxon is selectable or not.
+		/// </summary>
+		[DataMember]
+		public bool IsSelectable => !IsRoot;
 	}
 }

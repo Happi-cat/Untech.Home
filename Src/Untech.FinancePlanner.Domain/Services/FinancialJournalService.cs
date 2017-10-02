@@ -46,7 +46,8 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		public FinancialJournalEntry Handle(CreateFinancialJournalEntry request)
 		{
-			if (request.TaxonId == BuiltInTaxonId.Root) throw new ArgumentException("request.TaxonId");
+			var taxon = _dispatcher.Fetch(new TaxonTreeQuery { TaxonId = request.TaxonId });
+			if (!taxon.IsSelectable) throw new InvalidOperationException("Taxon is no selectable");
 
 			var entry = _repo.Create(new FinancialJournalEntry(0, request.TaxonId)
 			{

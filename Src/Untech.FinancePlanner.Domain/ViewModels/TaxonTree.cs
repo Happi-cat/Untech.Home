@@ -19,12 +19,6 @@ namespace Untech.FinancePlanner.Domain.ViewModels
 		}
 
 		/// <summary>
-		/// Determines whether this taxon is selectable or not.
-		/// </summary>
-		[DataMember]
-		public bool IsSelectable => !IsRoot;
-
-		/// <summary>
 		/// Gets or sets loaded children
 		/// </summary>
 		/// <returns></returns>
