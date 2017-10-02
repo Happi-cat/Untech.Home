@@ -11,7 +11,7 @@ using Untech.FinancePlanner.Data;
 namespace Untech.FinancePlanner.Data.Migrations
 {
     [DbContext(typeof(FinancialPlannerContext))]
-    [Migration("20170922110126_InitialCreate")]
+    [Migration("20171002085916_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,6 +19,18 @@ namespace Untech.FinancePlanner.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
+
+            modelBuilder.Entity("Untech.FinancePlanner.Data.Cache.CacheEntry", b =>
+                {
+                    b.Property<string>("Key")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Json");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("CacheEntries");
+                });
 
             modelBuilder.Entity("Untech.FinancePlanner.Domain.Models.FinancialJournalEntry", b =>
                 {

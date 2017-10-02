@@ -9,6 +9,18 @@ namespace Untech.FinancePlanner.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "CacheEntries",
+                columns: table => new
+                {
+                    Key = table.Column<string>(type: "TEXT", nullable: false),
+                    Json = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CacheEntries", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FinancialJournalEntries",
                 columns: table => new
                 {
@@ -45,6 +57,9 @@ namespace Untech.FinancePlanner.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "CacheEntries");
+
             migrationBuilder.DropTable(
                 name: "FinancialJournalEntries");
 

@@ -5,6 +5,5 @@ namespace Untech.FinancePlanner.Domain.Requests
 {
 	public class AnnualFinancialReportQuery : IQuery<AnnualFinancialReport>
 	{
-		public TaxonTreeQuery Taxon { get; set; }
 	}
 }

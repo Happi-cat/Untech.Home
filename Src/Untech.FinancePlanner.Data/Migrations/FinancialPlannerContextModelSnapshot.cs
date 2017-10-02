@@ -19,6 +19,18 @@ namespace Untech.FinancePlanner.Data.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
 
+            modelBuilder.Entity("Untech.FinancePlanner.Data.Cache.CacheEntry", b =>
+                {
+                    b.Property<string>("Key")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Json");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("CacheEntries");
+                });
+
             modelBuilder.Entity("Untech.FinancePlanner.Domain.Models.FinancialJournalEntry", b =>
                 {
                     b.Property<int>("Id")

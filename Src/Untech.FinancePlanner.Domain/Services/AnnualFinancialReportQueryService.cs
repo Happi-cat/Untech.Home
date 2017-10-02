@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using Untech.FinancePlanner.Domain.Cache;
 using Untech.FinancePlanner.Domain.Models;
+using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.FinancePlanner.Domain.ViewModels;
 using Untech.Practices;
@@ -10,21 +12,25 @@ using Untech.Practices.CQRS.Handlers;
 namespace Untech.FinancePlanner.Domain.Services
 {
 	public class AnnualFinancialReportQueryService :
-		IQueryHandler<AnnualFinancialReportQuery, AnnualFinancialReport>
+		IQueryHandler<AnnualFinancialReportQuery, AnnualFinancialReport>,
+		INotificationHandler<FinancialJournalEntrySaved>,
+		INotificationHandler<FinancialJournalEntryDeleted>
 	{
 		private readonly IDispatcher _dispatcher;
+		private readonly ICacheManager _cacheManager;
 
-		public AnnualFinancialReportQueryService(IDispatcher dispatcher)
+		public AnnualFinancialReportQueryService(IDispatcher dispatcher, ICacheManager cacheManager)
 		{
 			_dispatcher = dispatcher;
+			_cacheManager = cacheManager;
 		}
 
 		public AnnualFinancialReport Handle(AnnualFinancialReportQuery request)
 		{
 			var thisMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-			var rootTaxon = _dispatcher.Fetch(request.Taxon ?? new TaxonTreeQuery { Deep = 2 });
+			var rootTaxon = _dispatcher.Fetch(new TaxonTreeQuery { Deep = 2 });
 
-			var builder = new MonthlyReportBuilder(_dispatcher, rootTaxon);
+			var builder = new MonthlyReportBuilder(_dispatcher, _cacheManager, rootTaxon);
 
 			return new AnnualFinancialReport
 			{
@@ -36,22 +42,58 @@ namespace Untech.FinancePlanner.Domain.Services
 			};
 		}
 
+		public void Publish(FinancialJournalEntrySaved notification)
+		{
+			string cacheKey = GetMonthlyReportKey(notification.When);
+			_cacheManager.Drop(cacheKey);
+		}
+
+		public void Publish(FinancialJournalEntryDeleted notification)
+		{
+			string cacheKey = GetMonthlyReportKey(notification.When);
+			_cacheManager.Drop(cacheKey);
+		}
+
+		private static string GetMonthlyReportKey(DateTime when)
+		{
+			return $"cache://reports/financial-monthly-report/{when.Year}/{when.Month}";
+		}
+
 		private class MonthlyReportBuilder
 		{
 			private readonly IDispatcher _dispatcher;
+
+			private readonly ICacheManager _cacheManager;
+
 			private readonly TaxonTree _taxon;
 
 			private DateTime _thatMonth;
 
-			public MonthlyReportBuilder(IDispatcher dispatcher, TaxonTree taxon)
+			public MonthlyReportBuilder(IDispatcher dispatcher, ICacheManager cacheManager, TaxonTree taxon)
 			{
 				_dispatcher = dispatcher;
+				_cacheManager = cacheManager;
 				_taxon = taxon;
 			}
 
 			public MonthlyFinancialReport GetReport(DateTime thatMonth)
 			{
 				_thatMonth = thatMonth;
+
+				if (_cacheManager != null)
+				{
+					var cacheKey = GetMonthlyReportKey(thatMonth);
+					var cached = _cacheManager.Get<MonthlyFinancialReport>(cacheKey);
+
+					if (cached == null)
+					{
+						cached = BuildReport();
+
+						_cacheManager.Set(cacheKey, cached);
+					}
+
+					return cached;
+				}
 
 				return BuildReport();
 			}

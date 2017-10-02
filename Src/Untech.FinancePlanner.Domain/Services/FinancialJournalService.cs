@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Untech.FinancePlanner.Domain.Models;
+using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.Practices.Collections;
 using Untech.Practices.CQRS.Dispatching;
@@ -47,18 +48,30 @@ namespace Untech.FinancePlanner.Domain.Services
 		{
 			if (request.TaxonId == BuiltInTaxonId.Root) throw new ArgumentException("request.TaxonId");
 
-			return _repo.Create(new FinancialJournalEntry(0, request.TaxonId)
+			var entry = _repo.Create(new FinancialJournalEntry(0, request.TaxonId)
 			{
 				Remarks = request.Remarks,
 				Actual = request.Actual,
 				Forecasted = request.Forecasted,
 				When = request.When.Date
 			});
+
+			_dispatcher.Publish(new FinancialJournalEntrySaved(entry));
+
+			return entry;
 		}
 
 		public bool Handle(DeleteFinancialJournalEntry request)
 		{
-			return _repo.Delete(new FinancialJournalEntry(request.Id, 0));
+			var entry = _repo.GetAll().Single(n => n.Id == request.Id);
+			var result = _repo.Delete(entry);
+
+			if (result)
+			{
+				_dispatcher.Publish(new FinancialJournalEntryDeleted(entry));
+			}
+
+			return result;
 		}
 
 		public FinancialJournalEntry Handle(UpdateFinancialJournalEntry request)
@@ -72,6 +85,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 			_repo.Update(entry);
 
+			_dispatcher.Publish(new FinancialJournalEntrySaved(entry));
 			return entry;
 		}
 	}
