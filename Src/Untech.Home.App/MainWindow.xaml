@@ -1,0 +1,9 @@
+﻿<Window xmlns="https://github.com/avaloniaui" MinWidth="500" MinHeight="300">
+  <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <StackPanel>
+      <Grid Name="Income"></Grid>
+      <Grid Name="Saving"></Grid>
+      <Grid Name="Expense"></Grid>
+    </StackPanel>
+  </ScrollViewer>
+</Window>
