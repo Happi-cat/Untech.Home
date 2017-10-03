@@ -1,0 +1,97 @@
+<style>
+    .report-entry {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+    }
+    
+    .report-entry__info,
+    .report-entry__month {
+        padding: 2px 10px;
+        flex-grow: 1;
+    }
+
+    .report-entry__info {
+        flex-grow: 0;
+        width: 300px;
+    }
+
+    .report-entry__title {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    .report-entry__desc {
+        color: gray;
+        word-wrap: normal;
+    }
+
+    .report-entry__month {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-left: 1px solid lightgray;
+    }
+
+    .report-entry__month--past {
+        background-color: lightgreen;
+    }
+
+    .report-entry__month--now {
+        background-color: darkgoldenrod;
+    }
+</style>
+
+<div class='report-table'>
+    <div class='report-entry'>
+        <div class='report-entry__info'>
+            <div class='report-entry__title'>{this.props.title}</div>
+            <div class='report-entry__desc'>{this.props.description}</div>
+        </div>
+        <div class='report-entry__month report-entry__month--past'>cell</div>
+        <div class='report-entry__month report-entry__month--past'>cell</div>
+        <div class='report-entry__month report-entry__month--now'>cell</div>
+        <div class='report-entry__month'>cell</div>
+        <div class='report-entry__month'>cell</div>
+    </div>
+    
+    <div class='report-entry'>
+        <div class='report-entry__info'>
+            <div class='report-entry__title'>{this.props.title}</div>
+            <div class='report-entry__desc'>{this.props.description}</div>
+        </div>
+        <div class='report-entry__month report-entry__month--past'>cell</div>
+        <div class='report-entry__month report-entry__month--past'>cell</div>
+        <div class='report-entry__month report-entry__month--now'>cell</div>
+        <div class='report-entry__month'>cell</div>
+        <div class='report-entry__month'>cell</div>
+    </div>
+    
+    <div class='report-table__expandable-row'>
+
+        <div class='report-entry'>
+            <div class='report-entry__info'>
+                <div class='report-entry__title'>{this.props.title}</div>
+                <div class='report-entry__desc'>{this.props.description}</div>
+            </div>
+            <div class='report-entry__month report-entry__month--past'>cell</div>
+            <div class='report-entry__month report-entry__month--past'>cell</div>
+            <div class='report-entry__month report-entry__month--now'>cell</div>
+            <div class='report-entry__month'>cell</div>
+            <div class='report-entry__month'>cell</div>
+        </div>
+
+        <div>
+            <div class='report-entry'>
+                <div class='report-entry__info'>
+                    <div class='report-entry__title'>{this.props.title}</div>
+                    <div class='report-entry__desc'>{this.props.description}</div>
+                </div>
+                <div class='report-entry__month report-entry__month--past'>cell</div>
+                <div class='report-entry__month report-entry__month--past'>cell</div>
+                <div class='report-entry__month report-entry__month--now'>cell</div>
+                <div class='report-entry__month'>cell</div>
+                <div class='report-entry__month'>cell</div>
+            </div> 
+        </div>
+    </div>
+</div>
