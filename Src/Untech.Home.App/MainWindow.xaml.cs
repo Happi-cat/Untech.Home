@@ -18,9 +18,6 @@ namespace Untech.Home.App
 			var expensesGrid = this.FindControl<Grid>("Expense");
 			var savingGrid = this.FindControl<Grid>("Saving");
 			var incomeGrid = this.FindControl<Grid>("Income");
-
-			expensesGrid.ColumnDefinitions.
-
 		}
 	}
 }
