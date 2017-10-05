@@ -1,6 +1,8 @@
-namespace Untech.FinancePlanner.Domain.Cache
+using System;
+
+namespace Untech.FinancePlanner.Domain.Storage
 {
-	public interface ICacheManager
+	public interface ICacheStorage
 	{
 		T Get<T>(string key);
 

@@ -2,33 +2,46 @@ using System.Collections.Generic;
 using System.Linq;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
+using Untech.FinancePlanner.Domain.Storage;
 using Untech.FinancePlanner.Domain.ViewModels;
 using Untech.Practices.CQRS.Handlers;
-using Untech.Practices.Repos.Queryable;
 
 namespace Untech.FinancePlanner.Domain.Services
 {
 	public class TaxonQueryService :
 		IQueryHandler<TaxonTreeQuery, TaxonTree>
 	{
-		private readonly IReadOnlyRepository<Taxon> _repo;
+		private static readonly IReadOnlyList<Taxon> s_builtIns;
+		private readonly IDataStorage<Taxon> _dataStorage;
 
-		public TaxonQueryService(IReadOnlyRepository<Taxon> repo)
+		static TaxonQueryService()
 		{
-			this._repo = repo;
+			s_builtIns = new List<Taxon>
+			{
+				new Taxon(BuiltInTaxonId.Root, BuiltInTaxonId.Root, "Root"),
+				new Taxon(BuiltInTaxonId.Expense, BuiltInTaxonId.Root, "Expense"),
+				new Taxon(BuiltInTaxonId.Saving, BuiltInTaxonId.Root, "Saving"),
+				new Taxon(BuiltInTaxonId.Income, BuiltInTaxonId.Root, "Income"),
+			};
+		}
+
+		public TaxonQueryService(IDataStorage<Taxon> dataStorage)
+		{
+			_dataStorage = dataStorage;
 		}
 
 		public TaxonTree Handle(TaxonTreeQuery request)
 		{
-			if (request.TaxonId == 0)
+			var builtInTaxon = s_builtIns.SingleOrDefault(n => n.Id == request.TaxonId);
+			if (builtInTaxon != null)
 			{
-				return new TaxonTree(BuiltInTaxonId.Root, BuiltInTaxonId.Root, "Root")
+				return new TaxonTree(builtInTaxon.Id, builtInTaxon.ParentId, builtInTaxon.Name)
 				{
-					Elements = GetDescendants(0, request.Deep)
+					Elements = GetDescendants(builtInTaxon.Id, request.Deep)
 				};
 			}
 
-			var taxon = _repo.GetAll().Single(n => n.Id == request.TaxonId);
+			var taxon = _dataStorage.Find(n => n.Id == request.TaxonId).Single();
 
 			return new TaxonTree(taxon.Id, taxon.ParentId, taxon.Name, taxon.Description)
 			{
@@ -58,16 +71,13 @@ namespace Untech.FinancePlanner.Domain.Services
 		{
 			if (parentTaxonId == 0)
 			{
-				return new List<TaxonTree>
-				{
-					new TaxonTree(BuiltInTaxonId.Expense, BuiltInTaxonId.Root, "Expense"),
-					new TaxonTree(BuiltInTaxonId.Saving, BuiltInTaxonId.Root, "Saving"),
-					new TaxonTree(BuiltInTaxonId.Income, BuiltInTaxonId.Root, "Income"),
-				};
+				return s_builtIns
+					.Where(n => n.ParentId == 0 && n.Id != 0)
+					.Select(n => new TaxonTree(n.Id, n.ParentId, n.Name))
+					.ToList();
 			}
 
-			return _repo.GetAll()
-				.Where(n => n.ParentId == parentTaxonId)
+			return _dataStorage.Find(n => n.ParentId == parentTaxonId)
 				.Select(n => new TaxonTree(n.Id, n.ParentId, n.Name, n.Description))
 				.ToList();
 		}

@@ -1,10 +1,13 @@
 using System.Runtime.Serialization;
+using Untech.FinancePlanner.Domain.Storage;
 
 namespace Untech.FinancePlanner.Domain.Models
 {
 	[DataContract]
-	public class Taxon
+	public class Taxon : IAggregateRoot
 	{
+		protected Taxon() { }
+
 		public Taxon(int id, int parentId, string name, string description = null)
 		{
 			Id = id;

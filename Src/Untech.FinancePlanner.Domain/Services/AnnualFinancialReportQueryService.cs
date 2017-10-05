@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Untech.FinancePlanner.Domain.Cache;
+using Untech.FinancePlanner.Domain.Storage;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
@@ -17,12 +17,12 @@ namespace Untech.FinancePlanner.Domain.Services
 		INotificationHandler<FinancialJournalEntryDeleted>
 	{
 		private readonly IDispatcher _dispatcher;
-		private readonly ICacheManager _cacheManager;
+		private readonly ICacheStorage _cacheStorage;
 
-		public AnnualFinancialReportQueryService(IDispatcher dispatcher, ICacheManager cacheManager)
+		public AnnualFinancialReportQueryService(IDispatcher dispatcher, ICacheStorage cacheStorage)
 		{
 			_dispatcher = dispatcher;
-			_cacheManager = cacheManager;
+			_cacheStorage = cacheStorage;
 		}
 
 		public AnnualFinancialReport Handle(AnnualFinancialReportQuery request)
@@ -30,28 +30,28 @@ namespace Untech.FinancePlanner.Domain.Services
 			var thisMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
 			var rootTaxon = _dispatcher.Fetch(new TaxonTreeQuery { Deep = 2 });
 
-			var builder = new MonthlyReportBuilder(_dispatcher, _cacheManager, rootTaxon);
+			var builder = new MonthlyReportBuilder(_dispatcher, _cacheStorage, rootTaxon);
 
 			return new AnnualFinancialReport
 			{
 				Entries = rootTaxon,
-				Months = Enumerable.Range(-3, 12)
-					 .Select(thisMonth.AddMonths)
-					 .Select(builder.GetReport)
-					 .ToList()
+				Months = Enumerable.Range(-3 + request.ShiftMonth, 12)
+					.Select(thisMonth.AddMonths)
+					.Select(builder.GetReport)
+					.ToList()
 			};
 		}
 
 		public void Publish(FinancialJournalEntrySaved notification)
 		{
 			string cacheKey = GetMonthlyReportKey(notification.When);
-			_cacheManager.Drop(cacheKey);
+			_cacheStorage.Drop(cacheKey);
 		}
 
 		public void Publish(FinancialJournalEntryDeleted notification)
 		{
 			string cacheKey = GetMonthlyReportKey(notification.When);
-			_cacheManager.Drop(cacheKey);
+			_cacheStorage.Drop(cacheKey);
 		}
 
 		private static string GetMonthlyReportKey(DateTime when)
@@ -63,16 +63,16 @@ namespace Untech.FinancePlanner.Domain.Services
 		{
 			private readonly IDispatcher _dispatcher;
 
-			private readonly ICacheManager _cacheManager;
+			private readonly ICacheStorage _cacheStorage;
 
 			private readonly TaxonTree _taxon;
 
 			private DateTime _thatMonth;
 
-			public MonthlyReportBuilder(IDispatcher dispatcher, ICacheManager cacheManager, TaxonTree taxon)
+			public MonthlyReportBuilder(IDispatcher dispatcher, ICacheStorage cacheStorage, TaxonTree taxon)
 			{
 				_dispatcher = dispatcher;
-				_cacheManager = cacheManager;
+				_cacheStorage = cacheStorage;
 				_taxon = taxon;
 			}
 
@@ -80,16 +80,16 @@ namespace Untech.FinancePlanner.Domain.Services
 			{
 				_thatMonth = thatMonth;
 
-				if (_cacheManager != null)
+				if (_cacheStorage != null)
 				{
 					var cacheKey = GetMonthlyReportKey(thatMonth);
-					var cached = _cacheManager.Get<MonthlyFinancialReport>(cacheKey);
+					var cached = _cacheStorage.Get<MonthlyFinancialReport>(cacheKey);
 
 					if (cached == null)
 					{
 						cached = BuildReport();
 
-						_cacheManager.Set(cacheKey, cached);
+						_cacheStorage.Set(cacheKey, cached);
 					}
 
 					return cached;
@@ -102,7 +102,7 @@ namespace Untech.FinancePlanner.Domain.Services
 			{
 				var report = new MonthlyFinancialReport(_thatMonth)
 				{
-					Entries = _taxon.Elements
+					Entries = _taxon.GetElements()
 						.Select(BuildReportEntry)
 						.ToList()
 				};
@@ -131,7 +131,7 @@ namespace Untech.FinancePlanner.Domain.Services
 			{
 				var entry = new MonthlyFinancialReportEntry(currentTaxon.Id, currentTaxon.Name, currentTaxon.Description)
 				{
-					Entries = currentTaxon.Elements
+					Entries = currentTaxon.GetElements()
 						.Select(BuildReportEntry)
 						.ToList()
 				};
@@ -141,7 +141,7 @@ namespace Untech.FinancePlanner.Domain.Services
 					Taxon = new TaxonTreeQuery
 					{
 						TaxonId = currentTaxon.Id,
-						Deep = currentTaxon.Elements.Any() ? 0 : -1
+						Deep = currentTaxon.GetElements().Any() ? 0 : -1
 					}
 				});
 

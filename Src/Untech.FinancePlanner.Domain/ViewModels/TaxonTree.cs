@@ -21,18 +21,13 @@ namespace Untech.FinancePlanner.Domain.ViewModels
 		/// <summary>
 		/// Gets or sets loaded children
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>Null - means not loaded; [] - means nothing</returns>
 		[DataMember]
 		public IReadOnlyCollection<TaxonTree> Elements { get; set; }
 
-		public IEnumerator<TaxonTree> GetEnumerator()
-		{
-			return Elements.EmptyIfNull().GetEnumerator();
-		}
+		[DataMember]
+		public bool ElementsLoaded => Elements != null;
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
+		public IEnumerable<TaxonTree> GetElements() => Elements.EmptyIfNull();
 	}
 }

@@ -9,7 +9,7 @@ namespace Untech.FinancePlanner.Data.Initializations
 {
 	public static class TaxonInitializer
 	{
-		public static void Initialize(FinancialPlannerContext context)
+		public static void Initialize(FinancialPlannerContext context, string directory)
 		{
 			context.Database.EnsureCreated();
 
@@ -18,9 +18,9 @@ namespace Untech.FinancePlanner.Data.Initializations
 				return;
 			}
 
-			Initialize(context, BuiltInTaxonId.Expense, "Expenses.eyaml");
-			Initialize(context, BuiltInTaxonId.Saving, "Savings.eyaml");
-			Initialize(context, BuiltInTaxonId.Income, "Incomes.eyaml");
+			Initialize(context, BuiltInTaxonId.Expense, Path.Combine(directory, "Expenses.eyaml"));
+			Initialize(context, BuiltInTaxonId.Saving, Path.Combine(directory, "Savings.eyaml"));
+			Initialize(context, BuiltInTaxonId.Income, Path.Combine(directory, "Incomes.eyaml"));
 		}
 
 		private static void Initialize(FinancialPlannerContext context, int rootId, string filePath)

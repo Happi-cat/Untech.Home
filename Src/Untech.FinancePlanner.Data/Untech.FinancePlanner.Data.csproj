@@ -12,7 +12,6 @@
     <PackageReference Include="YamlDotNet" Version="4.2.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.Repos.Queryable\Untech.Practices.Repos.Queryable.csproj" />
     <ProjectReference Include="..\Untech.FinancePlanner.Domain\Untech.FinancePlanner.Domain.csproj" />
   </ItemGroup>
 </Project>

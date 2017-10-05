@@ -7,6 +7,11 @@ namespace Untech.FinancePlanner.Data
 {
 	public class FinancialPlannerContext : DbContext
 	{
+		public FinancialPlannerContext()
+		{
+			ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+		}
+
 		public DbSet<Taxon> Taxons { get; set; }
 
 		public DbSet<FinancialJournalEntry> FinancialJournalEntries { get; set; }

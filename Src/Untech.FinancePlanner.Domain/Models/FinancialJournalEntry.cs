@@ -1,12 +1,15 @@
 using System;
 using System.Runtime.Serialization;
+using Untech.FinancePlanner.Domain.Storage;
 using Untech.Practices;
 
 namespace Untech.FinancePlanner.Domain.Models
 {
 	[DataContract]
-	public class FinancialJournalEntry
+	public class FinancialJournalEntry : IAggregateRoot
 	{
+		protected FinancialJournalEntry() { }
+
 		public FinancialJournalEntry(int id, int taxonId)
 		{
 			Id = id;
