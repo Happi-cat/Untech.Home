@@ -35,7 +35,7 @@ namespace Untech.FinancePlanner.Domain.ViewModels
 			get
 			{
 				var today = DateTime.Today;
-				return today.Year < Year || (today.Year == Year && today.Month < Month);
+				return Year < today.Year || (today.Year == Year && Month < today.Month);
 			}
 		}
 

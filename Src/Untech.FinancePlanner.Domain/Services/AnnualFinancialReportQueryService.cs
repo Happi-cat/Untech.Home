@@ -28,13 +28,13 @@ namespace Untech.FinancePlanner.Domain.Services
 		public AnnualFinancialReport Handle(AnnualFinancialReportQuery request)
 		{
 			var thisMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-			var rootTaxon = _dispatcher.Fetch(new TaxonTreeQuery { Deep = 2 });
+			var rootTaxon = _dispatcher.Fetch(new TaxonTreeQuery { Deep = 3 });
 
 			var builder = new MonthlyReportBuilder(_dispatcher, _cacheStorage, rootTaxon);
 
 			return new AnnualFinancialReport
 			{
-				Entries = rootTaxon,
+				Entries = rootTaxon.Elements,
 				Months = Enumerable.Range(-3 + request.ShiftMonth, 12)
 					.Select(thisMonth.AddMonths)
 					.Select(builder.GetReport)
@@ -104,6 +104,7 @@ namespace Untech.FinancePlanner.Domain.Services
 				{
 					Entries = _taxon.GetElements()
 						.Select(BuildReportEntry)
+						.Where(IsNotEmptyActualOrForecasted)
 						.ToList()
 				};
 
@@ -129,10 +130,11 @@ namespace Untech.FinancePlanner.Domain.Services
 
 			private MonthlyFinancialReportEntry BuildReportEntry(TaxonTree currentTaxon)
 			{
-				var entry = new MonthlyFinancialReportEntry(currentTaxon.Id, currentTaxon.Name, currentTaxon.Description)
+				var entry = new MonthlyFinancialReportEntry(currentTaxon.Id)
 				{
 					Entries = currentTaxon.GetElements()
 						.Select(BuildReportEntry)
+						.Where(IsNotEmptyActualOrForecasted)
 						.ToList()
 				};
 
@@ -159,6 +161,12 @@ namespace Untech.FinancePlanner.Domain.Services
 
 				return entry;
 			}
+		}
+
+		private static bool IsNotEmptyActualOrForecasted(MonthlyFinancialReportEntry entry)
+		{
+			return (entry.Actual?.Amount ?? 0) != 0
+				|| (entry.Forecasted?.Amount ?? 0) != 0;
 		}
 	}
 }
