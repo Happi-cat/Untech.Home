@@ -48,12 +48,18 @@ namespace Untech.FinancePlanner.Domain.Services
 			var taxon = _dispatcher.Fetch(new TaxonTreeQuery { TaxonId = request.TaxonId });
 			if (!taxon.IsSelectable) throw new InvalidOperationException("Taxon is no selectable");
 
+			var when = DateTime.Today;
+			if (when.Year != request.Year || when.Month != request.Month)
+			{
+				when = new DateTime(request.Year, request.Month, 1);
+			}
+
 			var entry = _dataStorage.Create(new FinancialJournalEntry(0, request.TaxonId)
 			{
 				Remarks = request.Remarks,
 				Actual = request.Actual,
 				Forecasted = request.Forecasted,
-				When = request.When.Date
+				When = when.Date
 			});
 
 			_dispatcher.Publish(new FinancialJournalEntrySaved(entry));

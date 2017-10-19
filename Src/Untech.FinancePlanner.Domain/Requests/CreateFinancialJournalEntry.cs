@@ -9,10 +9,11 @@ namespace Untech.FinancePlanner.Domain.Requests
 	[DataContract]
 	public class CreateFinancialJournalEntry : ICommand<FinancialJournalEntry>
 	{
-		public CreateFinancialJournalEntry(int taxonId, DateTime when)
+		public CreateFinancialJournalEntry(int taxonId, int year, int month)
 		{
 			TaxonId = taxonId;
-			When = when;
+			Year = year;
+			Month = month;
 		}
 
 		[DataMember]
@@ -28,6 +29,9 @@ namespace Untech.FinancePlanner.Domain.Requests
 		public Money Forecasted { get; set; }
 
 		[DataMember]
-		public DateTime When { get; private set; }
+		public int Year { get; private set; }
+
+		[DataMember]
+		public int Month { get; private set; }
 	}
 }
