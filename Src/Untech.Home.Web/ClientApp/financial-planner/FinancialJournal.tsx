@@ -4,7 +4,7 @@ import { FinancialPlannerApiService } from './api/FinancialPlannerApiService';
 import { ITaxonTree, IFinancialJournalEntry } from './api/Models';
 import { MonthNav } from './financial-journal/MonthNav';
 import { TaxonNav } from './financial-journal/TaxonNav';
-import { Journal } from './financial-journal/Journal';
+import { Journal, IFinancialJournalEntryChange } from './financial-journal/Journal';
 import { pluralizeMonth } from './Utils';
 
 interface IFinancialJournalProps {
@@ -87,24 +87,38 @@ export class FinancialJournal extends React.Component<RouteComponentProps<IFinan
         this.props.history.push('/financial-planner/journal/' + year + '/' + month + '/' + taxonId);
     }
 
-    onJournalEntryAdd() {
+    onJournalEntryAdd(model: IFinancialJournalEntryChange) {
+        const { year, month, taxonId } = this.props.match.params;
 
-        this.load();
+        this.service.createJournalEntry({
+            remarks: model.remarks,
+            actual: model.actual,
+            forecasted: model.forecasted,
+            taxonId: Number.parseInt(taxonId),
+            year: Number.parseInt(year),
+            month: Number.parseInt(month)
+        }).then(() => this.load());
     }
 
-    onJournalEntryUpdate() {
-
-        this.load();
+    onJournalEntryUpdate(id: number, model: IFinancialJournalEntryChange) {
+        this.service.updateJournalEntry({
+            id: id,
+            remarks: model.remarks,
+            actual: model.actual,
+            forecasted: model.forecasted,
+        }).then(() => this.load());
     }
 
-    onJournalEntryDelete() {
-
-        this.load();
+    onJournalEntryDelete(id: number) {
+        this.service.deleteJournalEntry({ id: id })
+            .then(() => this.load());
     }
 
     load() {
+        const { year, month, taxonId } = this.props.match.params;
+
         Promise.all([
-            this.service.getJournal(this.year, this.month, this.taxonId),
+            this.service.getJournal(year, month, taxonId),
             this.service.getTaxon(this.taxonId, 1)
         ]).then((res) => {
             let [entries, taxon] = res;

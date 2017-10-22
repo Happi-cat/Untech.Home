@@ -1,5 +1,10 @@
+export interface ICurrency {
+  id: string
+}
+
 export interface IMoney {
   amount: number,
+  currency: ICurrency
 }
 
 export interface ITaxonTree {
@@ -50,7 +55,8 @@ export interface ICreateFinancialJournalEntryCommand {
   remarks?: string;
   actual?: IMoney;
   forecasted?: IMoney;
-  when: Date;
+  year: number;
+  month: number;
 }
 
 export interface IUpdateFinancialJournalEntryCommand {

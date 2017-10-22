@@ -82,7 +82,7 @@ namespace Untech.Home.Web
 			container.RegisterCollection(typeof(IPipelinePostProcessor<,>), assembly);
 			container.Register(typeof(IQueryHandler<,>), assembly);
 			container.Register(typeof(ICommandHandler<,>), assembly);
-			container.Register(typeof(INotificationHandler<>), assembly);
+			container.RegisterCollection(typeof(INotificationHandler<>), assembly);
 
 			var dispatcher = new Dispatcher(new DispatcherContainer(container));
 			container.RegisterSingleton<IDispatcher>(dispatcher);
@@ -101,7 +101,17 @@ namespace Untech.Home.Web
 				_container = container;
 			}
 
-			public IEnumerable<T> ResolveMany<T>() where T : class => _container.GetServices<T>();
+			public IEnumerable<T> ResolveMany<T>() where T : class
+			{
+				try
+				{
+					return _container.GetServices<T>();
+				}
+				catch
+				{
+					return new T[] { };
+				}
+			}
 
 			public T ResolveOne<T>() where T : class => _container.GetService<T>();
 		}

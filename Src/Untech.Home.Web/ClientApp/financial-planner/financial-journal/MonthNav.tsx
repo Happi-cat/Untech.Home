@@ -15,10 +15,10 @@ export class MonthNav extends React.Component<IMonthNavProps, {}> {
         const prev = [-3, -2, -1].map(renderItem);
         const next = [1, 2, 3].map(renderItem);
 
-        return <ul>
+        return <div>
             {prev}
             {next}
-        </ul>;
+        </div>;
     }
 
     renderItemFromNow(diff: number) {
@@ -52,7 +52,7 @@ class MonthNavItem extends React.Component<IMonthNavProps> {
     }
 
     public render() {
-        return <li className='month-nav__item' onClick={this.onClick}>{pluralizeMonth(this.props.currentMonth)} - {this.props.currentYear}</li>;
+        return <button className='month-nav__item' onClick={this.onClick}>{pluralizeMonth(this.props.currentMonth)} - {this.props.currentYear}</button>;
     }
 
     onClick() {

@@ -19,7 +19,11 @@ namespace Untech.FinancePlanner.Data.Cache
 		{
 			using (var context = _contextFactory())
 			{
-				context.Set<CacheEntry>().Remove(new CacheEntry { Key = key });
+				var entry = context.Set<CacheEntry>().SingleOrDefault(n => n.Key == key);
+
+				if (entry == null) return;
+
+				context.Set<CacheEntry>().Remove(entry);
 				context.SaveChanges();
 			}
 		}

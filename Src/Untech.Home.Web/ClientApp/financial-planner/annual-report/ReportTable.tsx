@@ -168,8 +168,8 @@ class ReportMonth extends React.Component<IReportMonthProps, {}> {
 class ReportMonthMoney extends React.Component<IReportMonthProps, {}> {
   public render() {
     let { isPast, isNow, actual, forecasted } = this.props.model;
-    actual = actual || { amount: 0 };
-    forecasted = forecasted || { amount: 0 };
+    actual = actual || { amount: 0, currency: { id: 'BYN' } };
+    forecasted = forecasted || { amount: 0, currency: { id: 'BYN' } };
 
     if (isPast) {
       return <ReportMonth {...this.props}>

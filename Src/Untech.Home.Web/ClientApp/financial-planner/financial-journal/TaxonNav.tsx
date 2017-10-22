@@ -17,15 +17,15 @@ export class TaxonNav extends React.Component<ITaxonNavProps, {}> {
         const upVisible = this.props.model.id != 0;
 
         let upLink = upVisible
-            ? <li onClick={this.onUpClick}>Up</li>
+            ? <button onClick={this.onUpClick}>Up</button>
             : null;
 
         let elements = this.props.model.elements || [];
-        return <ul>
+        return <div>
             {upLink}
 
             {elements.map(e => <TaxonNavItem key={e.id} model={e} onClick={this.props.onClick} />)}
-        </ul>;
+        </div>;
     }
 
     onUpClick() {
@@ -41,9 +41,9 @@ class TaxonNavItem extends React.Component<ITaxonNavProps> {
     }
 
     public render() {
-        return <li onClick={this.onClick}>
+        return <button onClick={this.onClick}>
             {this.props.model.name}
-        </li>;
+        </button>;
     }
 
     onClick() {
