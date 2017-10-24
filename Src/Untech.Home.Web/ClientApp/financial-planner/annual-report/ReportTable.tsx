@@ -3,6 +3,7 @@ import * as classNames from 'classnames';
 import { ITaxonAnnualFinancialReport, IMonthlyFinancialReport } from './Models';
 import './ReportTable.less';
 import { pluralizeMonth } from '../Utils';
+import Money from '../components/Money';
 
 function getMonthlyReportKey(report: IMonthlyFinancialReport) {
   return report.year + '-' + report.month;
@@ -173,19 +174,20 @@ class ReportMonthMoney extends React.Component<IReportMonthProps, {}> {
 
     if (isPast) {
       return <ReportMonth {...this.props}>
-        <div className='report-month__actual_money'>{actual.amount}</div>
+        <Money className='report-month__actual_money' amount={actual.amount} currencyCode={actual.currency.id} />
       </ReportMonth>;
     }
 
     if (isNow) {
       return <ReportMonth {...this.props}>
-        <div className='report-month__actual_money'>{actual.amount}</div>
-        <div className='report-month__forecasted_money'>{forecasted.amount}</div>
+        <Money className='report-month__actual_money' amount={actual.amount} currencyCode={actual.currency.id} />
+        &nbsp;|&nbsp;
+        <Money className='report-month__forecasted_money' amount={forecasted.amount} currencyCode={actual.currency.id} />
       </ReportMonth>;
     }
 
     return <ReportMonth {...this.props}>
-      <div className='report-month__forecasted_money'>{forecasted.amount}</div>
+      <Money className='report-month__forecasted_money' amount={forecasted.amount} currencyCode={actual.currency.id} />
     </ReportMonth>;
   }
 }

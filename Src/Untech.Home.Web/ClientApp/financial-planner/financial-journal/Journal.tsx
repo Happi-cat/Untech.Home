@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { IMoney, IFinancialJournalEntry } from '../api/Models';
+import Money from '../components/Money';
 
 export interface IFinancialJournalEntryChange {
     remarks: string;
@@ -86,8 +87,8 @@ class Row extends React.Component<IRowProps, IRowState> {
 
         return <tr>
             <td>{remarks}</td>
-            <td>{actual.amount}</td>
-            <td>{forecasted.amount}</td>
+            <td><Money amount={actual.amount} currencyCode={actual.currency.id} /></td>
+            <td><Money amount={forecasted.amount} currencyCode={actual.currency.id} /></td>
             <td>{when}</td>
             <td>
                 {this.props.editable && <button onClick={this.onEdit}>Edit</button>}
