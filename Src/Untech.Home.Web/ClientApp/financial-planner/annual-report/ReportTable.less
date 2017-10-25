@@ -41,6 +41,7 @@
 
 .report-month {
     padding: @padding-tb @padding-lr;
+    font-size: 14px;
     text-align: center;
     cursor: pointer;
 
@@ -61,11 +62,11 @@
         color: @clr-ui-subhead-1;
     }
 
-    &__actual_money {
+    &__actual-money {
         color: black;
     }
     
-    &__forecasted_money {
+    &__forecasted-money {
         color: gray;
     }
 
@@ -79,6 +80,16 @@
 
     &--now {
         background-color: @that-month;
+
+        .report-month__actual-money {
+            width: 100%;
+            text-align: left;
+        }
+
+        .report-month__forecasted-money {
+            width: 100%;
+            text-align: right;
+        }
     }
 
     &--now:hover {

@@ -19,7 +19,13 @@ namespace Untech.FinancePlanner.Domain.ViewModels
 		public Money Actual { get; set; }
 
 		[DataMember]
+		public Money ActualTotals { get; set; }
+
+		[DataMember]
 		public Money Forecasted { get; set; }
+
+		[DataMember]
+		public Money ForecastedTotals { get; set; }
 
 		[DataMember]
 		public IReadOnlyCollection<MonthlyFinancialReportEntry> Entries { get; set; }

@@ -15,5 +15,7 @@ export interface IMonthlyFinancialReport {
   isPast: boolean;
   isNow: boolean;
   actual?: IMoney;
+  actualTotals?: IMoney;
   forecasted?: IMoney;
+  forecastedTotals?: IMoney;
 }

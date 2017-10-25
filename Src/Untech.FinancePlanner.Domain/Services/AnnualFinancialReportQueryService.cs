@@ -115,12 +115,12 @@ namespace Untech.FinancePlanner.Domain.Services
 					.Where(n => n.TaxonId == BuiltInTaxonId.Expense)
 					.ToList();
 
-				report.ActualBalance = incomes
+				report.ActualTotals = incomes
 					.Sum(n => n.Actual)
 					.Subtract(expenses
 						.Sum(n => n.Actual));
 
-				report.ForecastedBalance = incomes
+				report.ForecastedTotals = incomes
 					.Sum(n => n.Forecasted)
 					.Subtract(expenses
 						.Sum(n => n.Forecasted));
@@ -147,16 +147,20 @@ namespace Untech.FinancePlanner.Domain.Services
 					}
 				});
 
-				entry.Actual = entry.Entries
-					.Select(n => n.Actual)
-					.Concat(financialJournalEntries
-						.Select(n => n.Actual))
+				entry.Actual = financialJournalEntries
+						.Sum(n => n.Actual);
+
+				entry.ActualTotals = entry.Entries
+					.Select(n => n.ActualTotals)
+					.Concat(new[] { entry.Actual })
 					.Sum();
 
-				entry.Forecasted = entry.Entries
-					.Select(n => n.Forecasted)
-					.Concat(financialJournalEntries
-						.Select(n => n.Forecasted))
+				entry.Forecasted = financialJournalEntries
+					.Sum(n => n.Forecasted);
+
+				entry.ForecastedTotals = entry.Entries
+					.Select(n => n.ForecastedTotals)
+					.Concat(new[] { entry.Forecasted })
 					.Sum();
 
 				return entry;
@@ -165,8 +169,9 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		private static bool IsNotEmptyActualOrForecasted(MonthlyFinancialReportEntry entry)
 		{
-			return (entry.Actual?.Amount ?? 0) != 0
-				|| (entry.Forecasted?.Amount ?? 0) != 0;
+			return new[] { entry.ActualTotals, entry.ForecastedTotals }
+				.Select(n => n?.Amount ?? 0)
+				.Any(n => n != 0);
 		}
 	}
 }

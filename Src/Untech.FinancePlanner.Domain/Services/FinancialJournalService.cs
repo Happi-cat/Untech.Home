@@ -5,6 +5,7 @@ using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.FinancePlanner.Domain.Storage;
+using Untech.Practices;
 using Untech.Practices.Collections;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;

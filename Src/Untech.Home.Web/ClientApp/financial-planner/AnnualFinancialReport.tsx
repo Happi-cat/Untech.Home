@@ -62,8 +62,8 @@ class Mapper {
         month: monthReport.month,
         isPast: monthReport.isPast,
         isNow: monthReport.isNow,
-        actual: monthReport.actualBalance,
-        forecasted: monthReport.forecastedBalance,
+        actualTotals: monthReport.actualTotals,
+        forecastedTotals: monthReport.forecastedTotals,
         flattenizedEntries: Mapper.flattenizeMonthlyReportEntries(monthReport.entries)
       }
     });
@@ -71,8 +71,8 @@ class Mapper {
     var entries = report.entries.map(iterator);
     var months = transformedMonthlyReports.map(function (m): IMonthlyFinancialReport {
       return {
-        actual: m.actual,
-        forecasted: m.forecasted,
+        actualTotals: m.actualTotals,
+        forecastedTotals: m.forecastedTotals,
         year: m.year,
         month: m.month,
         isPast: m.isPast,
@@ -99,7 +99,9 @@ class Mapper {
           isPast: monthlyReport.isPast,
           isNow: monthlyReport.isNow,
           actual: report.actual,
-          forecasted: report.forecasted
+          actualTotals: report.actualTotals,
+          forecasted: report.forecasted,
+          forecastedTotals: report.forecastedTotals,
         };
       });
 

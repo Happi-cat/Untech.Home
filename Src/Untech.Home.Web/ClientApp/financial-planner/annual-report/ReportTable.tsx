@@ -54,6 +54,7 @@ export class ReportTable extends React.Component<IReportTableProps, {}> {
 
   renderFooterColumns() {
     return this.props.months.map(monthTotalReport => <ReportMonthMoney key={getMonthlyReportKey(monthTotalReport)}
+      showTotals
       taxonId={0}
       model={monthTotalReport}
       onClick={this.onMonthClick} />);
@@ -119,6 +120,7 @@ class ReportBody extends React.Component<IReportBodyProps, IReportBodyState> {
 
       {model.months.map(monthReport => <ReportMonthMoney key={getMonthlyReportKey(monthReport)}
         taxonId={model.taxonId}
+        showTotals={!expanded}
         model={monthReport}
         onClick={this.props.onClick}
       />)}
@@ -140,6 +142,7 @@ class ReportBody extends React.Component<IReportBodyProps, IReportBodyState> {
 interface IReportMonthProps {
   taxonId: number;
   model: IMonthlyFinancialReport;
+  showTotals?: boolean;
   onClick(taxonId: number, year: number, month: number): void;
 }
 
@@ -168,26 +171,39 @@ class ReportMonth extends React.Component<IReportMonthProps, {}> {
 
 class ReportMonthMoney extends React.Component<IReportMonthProps, {}> {
   public render() {
-    let { isPast, isNow, actual, forecasted } = this.props.model;
+    let { isPast, isNow, actual, actualTotals, forecasted, forecastedTotals } = this.props.model;
+
+    if (this.props.showTotals) {
+      actual = actualTotals;
+      forecasted = forecastedTotals;
+    }
+
     actual = actual || { amount: 0, currency: { id: 'BYN' } };
     forecasted = forecasted || { amount: 0, currency: { id: 'BYN' } };
 
     if (isPast) {
       return <ReportMonth {...this.props}>
-        <Money className='report-month__actual_money' amount={actual.amount} currencyCode={actual.currency.id} />
-      </ReportMonth>;
+        <div className='report-month__actual-money'>
+          <Money amount={actual.amount} currencyCode={actual.currency.id} />
+        </div>
+      </ReportMonth >;
     }
 
     if (isNow) {
       return <ReportMonth {...this.props}>
-        <Money className='report-month__actual_money' amount={actual.amount} currencyCode={actual.currency.id} />
-        &nbsp;|&nbsp;
-        <Money className='report-month__forecasted_money' amount={forecasted.amount} currencyCode={actual.currency.id} />
+        <div className='report-month__actual-money'>
+          <Money amount={actual.amount} currencyCode={actual.currency.id} />
+        </div>
+        <div className='report-month__forecasted-money'  >
+          <Money amount={forecasted.amount} currencyCode={actual.currency.id} />
+        </div>
       </ReportMonth>;
     }
 
     return <ReportMonth {...this.props}>
-      <Money className='report-month__forecasted_money' amount={forecasted.amount} currencyCode={actual.currency.id} />
+      <div className='report-month__forecasted-money'  >
+        <Money amount={forecasted.amount} currencyCode={actual.currency.id} />
+      </div>
     </ReportMonth>;
   }
 }

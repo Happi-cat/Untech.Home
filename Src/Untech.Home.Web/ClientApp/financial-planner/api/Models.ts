@@ -25,8 +25,8 @@ export interface IAnnualFinancialReport {
 export interface IMonthlyReport {
   year: number,
   month: number,
-  actualBalance?: IMoney,
-  forecastedBalance?: IMoney,
+  actualTotals?: IMoney,
+  forecastedTotals?: IMoney,
   entries: IMonthlyReportEntry[],
   isPast: boolean,
   isNow: boolean
@@ -37,7 +37,9 @@ export interface IMonthlyReportEntry {
   name: string,
   description: string,
   actual?: IMoney,
+  actualTotals?: IMoney,
   forecasted?: IMoney,
+  forecastedTotals?: IMoney,
   entries?: IMonthlyReportEntry[]
 }
 
