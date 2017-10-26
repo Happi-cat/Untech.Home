@@ -3,8 +3,7 @@ import { withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router';
 import { ReportTable } from './annual-report/ReportTable';
 import { ITaxonAnnualFinancialReport, IMonthlyFinancialReport } from './annual-report/Models';
-import { FinancialPlannerApiService } from './api/FinancialPlannerApiService';
-import { IAnnualFinancialReport, ITaxonTree, IMonthlyReportEntry } from './api/Models';
+import { IAnnualFinancialReport, IMonthlyReportEntry, ITaxonTree, apiService } from './api';
 
 interface AnnualFinancialReportState {
   originalReport?: IAnnualFinancialReport;
@@ -16,12 +15,10 @@ export class AnnualFinancialReport extends React.Component<RouteComponentProps<{
   constructor(props: any) {
     super(props);
     this.state = { loading: true };
-
-    this.onMonthClick = this.onMonthClick.bind(this);
   }
 
   public componentWillMount() {
-    new FinancialPlannerApiService()
+    apiService
       .getReport()
       .then(data => {
         this.setState({
@@ -46,10 +43,10 @@ export class AnnualFinancialReport extends React.Component<RouteComponentProps<{
     return <ReportTable
       entries={report.elements || []}
       months={report.months || []}
-      onMonthClick={this.onMonthClick} />;
+      onMonthClick={this.handleMonthClick} />;
   }
 
-  onMonthClick(taxonId: number, year: number, month: number) {
+  handleMonthClick = (taxonId: number, year: number, month: number) => {
     this.props.history.push('/financial-planner/journal/' + year + '/' + month + '/' + taxonId);
   }
 }
@@ -58,26 +55,16 @@ class Mapper {
   public static transform(report: IAnnualFinancialReport): ITaxonAnnualFinancialReport {
     let transformedMonthlyReports = report.months.map(function (monthReport) {
       return {
-        year: monthReport.year,
-        month: monthReport.month,
-        isPast: monthReport.isPast,
-        isNow: monthReport.isNow,
-        actualTotals: monthReport.actualTotals,
-        forecastedTotals: monthReport.forecastedTotals,
+        ...monthReport,
         flattenizedEntries: Mapper.flattenizeMonthlyReportEntries(monthReport.entries)
       }
     });
 
     var entries = report.entries.map(iterator);
     var months = transformedMonthlyReports.map(function (m): IMonthlyFinancialReport {
-      return {
-        actualTotals: m.actualTotals,
-        forecastedTotals: m.forecastedTotals,
-        year: m.year,
-        month: m.month,
-        isPast: m.isPast,
-        isNow: m.isNow
-      }
+      const { year, month, isPast, isNow, actualTotals, forecastedTotals } = m;
+
+      return { actualTotals, forecastedTotals, year, month, isPast, isNow };
     });
 
     return {
@@ -91,33 +78,22 @@ class Mapper {
 
     function iterator(taxon: ITaxonTree): ITaxonAnnualFinancialReport {
       let taxonMonthlyReports = transformedMonthlyReports.map(function (monthlyReport): IMonthlyFinancialReport {
-        let report = monthlyReport.flattenizedEntries[taxon.id] || {};
+        const { year, month, isPast, isNow } = monthlyReport;
 
-        return {
-          year: monthlyReport.year,
-          month: monthlyReport.month,
-          isPast: monthlyReport.isPast,
-          isNow: monthlyReport.isNow,
-          actual: report.actual,
-          actualTotals: report.actualTotals,
-          forecasted: report.forecasted,
-          forecastedTotals: report.forecastedTotals,
-        };
+        const report = monthlyReport.flattenizedEntries[taxon.id] || {};
+        const { actual, actualTotals, forecasted, forecastedTotals } = report;
+
+        return { year, month, isPast, isNow, actual, actualTotals, forecasted, forecastedTotals, };
       });
 
-      let taxonAnnualReport: ITaxonAnnualFinancialReport = {
+      return {
         taxonId: taxon.id,
         name: taxon.name,
         description: taxon.description,
         isSelectable: taxon.isSelectable,
-        months: taxonMonthlyReports
+        months: taxonMonthlyReports,
+        elements: taxon.elements ? taxon.elements.map(iterator) : undefined
       };
-
-      if (taxon.elements) {
-        taxonAnnualReport.elements = taxon.elements.map(iterator);
-      }
-
-      return taxonAnnualReport;
     }
   }
 

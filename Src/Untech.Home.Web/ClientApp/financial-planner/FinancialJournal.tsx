@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { FinancialPlannerApiService } from './api/FinancialPlannerApiService';
-import { ITaxonTree, IFinancialJournalEntry } from './api/Models';
+import { ITaxonTree, IFinancialJournalEntry, apiService } from './api';
 import { MonthNav } from './financial-journal/MonthNav';
 import { TaxonNav } from './financial-journal/TaxonNav';
 import { Journal, IFinancialJournalEntryChange } from './financial-journal/Journal';
-import { pluralizeMonth } from './Utils';
+import { pluralizeMonth } from './../Utils';
 
 interface IFinancialJournalProps {
     taxonId: string,
@@ -22,14 +21,11 @@ export class FinancialJournal extends React.Component<RouteComponentProps<IFinan
     taxonId: number;
     year: number;
     month: number;
-    service: FinancialPlannerApiService;
 
     constructor(props: any) {
         super(props);
 
         this.state = {};
-
-        this.service = new FinancialPlannerApiService();
 
         this.changeMonth = this.changeMonth.bind(this);
         this.changeTaxon = this.changeTaxon.bind(this);
@@ -90,7 +86,7 @@ export class FinancialJournal extends React.Component<RouteComponentProps<IFinan
     onJournalEntryAdd(model: IFinancialJournalEntryChange) {
         const { year, month, taxonId } = this.props.match.params;
 
-        this.service.createJournalEntry({
+        apiService.createJournalEntry({
             remarks: model.remarks,
             actual: model.actual,
             forecasted: model.forecasted,
@@ -101,7 +97,7 @@ export class FinancialJournal extends React.Component<RouteComponentProps<IFinan
     }
 
     onJournalEntryUpdate(id: number, model: IFinancialJournalEntryChange) {
-        this.service.updateJournalEntry({
+        apiService.updateJournalEntry({
             id: id,
             remarks: model.remarks,
             actual: model.actual,
@@ -110,7 +106,7 @@ export class FinancialJournal extends React.Component<RouteComponentProps<IFinan
     }
 
     onJournalEntryDelete(id: number) {
-        this.service.deleteJournalEntry({ id: id })
+        apiService.deleteJournalEntry({ id: id })
             .then(() => this.load());
     }
 
@@ -118,8 +114,8 @@ export class FinancialJournal extends React.Component<RouteComponentProps<IFinan
         const { year, month, taxonId } = this.props.match.params;
 
         Promise.all([
-            this.service.getJournal(year, month, taxonId),
-            this.service.getTaxon(this.taxonId, 1)
+            apiService.getJournal(year, month, taxonId),
+            apiService.getTaxon(this.taxonId, 1)
         ]).then((res) => {
             let [entries, taxon] = res;
 

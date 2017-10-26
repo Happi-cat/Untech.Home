@@ -8,7 +8,7 @@ import {
   IDeleteFinancialJournalEntryCommand
 } from './Models';
 
-export class FinancialPlannerApiService {
+export class ApiService {
   public getReport() {
     return fetch('api/financial-planner/report')
       .then(response => response.json() as Promise<IAnnualFinancialReport>);

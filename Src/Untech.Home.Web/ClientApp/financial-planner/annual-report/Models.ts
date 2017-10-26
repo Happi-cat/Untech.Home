@@ -1,5 +1,7 @@
 import { IMoney } from '../api/Models';
 
+export { IMoney };
+
 export interface ITaxonAnnualFinancialReport {
   taxonId: number;
   name: string;

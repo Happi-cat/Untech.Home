@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { ITaxonAnnualFinancialReport, IMonthlyFinancialReport } from './Models';
+import { IMoney, ITaxonAnnualFinancialReport, IMonthlyFinancialReport } from './Models';
 import './ReportTable.less';
-import { pluralizeMonth } from '../Utils';
-import Money from '../components/Money';
+import { pluralizeMonth } from '../../Utils';
+import MoneyView from '../components/MoneyView';
 
 function getMonthlyReportKey(report: IMonthlyFinancialReport) {
   return report.year + '-' + report.month;
@@ -16,12 +16,6 @@ interface IReportTableProps {
 }
 
 export class ReportTable extends React.Component<IReportTableProps, {}> {
-  constructor(props: any) {
-    super(props);
-
-    this.onMonthClick = this.onMonthClick.bind(this);
-  }
-
   public render() {
     return <table className='report-table'>
       <thead className='report-table__head'>
@@ -31,7 +25,7 @@ export class ReportTable extends React.Component<IReportTableProps, {}> {
         </tr>
       </thead>
 
-      <ReportBody model={this.props.entries} onClick={this.onMonthClick} />
+      <ReportBody model={this.props.entries} onClick={this.handleMonthClick} />
 
       <tfoot>
         <tr className='report-table__row'>
@@ -46,7 +40,7 @@ export class ReportTable extends React.Component<IReportTableProps, {}> {
     return this.props.months.map(monthTotalReport => <ReportMonth key={getMonthlyReportKey(monthTotalReport)}
       taxonId={0}
       model={monthTotalReport}
-      onClick={this.onMonthClick}>
+      onClick={this.handleMonthClick}>
       <div className='report-month__month'>{pluralizeMonth(monthTotalReport.month)}</div>
       <div className='report-month__year'>{monthTotalReport.year}</div>
     </ReportMonth>);
@@ -57,10 +51,10 @@ export class ReportTable extends React.Component<IReportTableProps, {}> {
       showTotals
       taxonId={0}
       model={monthTotalReport}
-      onClick={this.onMonthClick} />);
+      onClick={this.handleMonthClick} />);
   }
 
-  onMonthClick(taxonId: number, year: number, month: number) {
+  handleMonthClick = (taxonId: number, year: number, month: number) => {
     this.props.onMonthClick(taxonId, year, month);
   }
 }
@@ -75,11 +69,10 @@ interface IReportBodyState {
 }
 
 class ReportBody extends React.Component<IReportBodyProps, IReportBodyState> {
-  constructor() {
-    super();
-    this.state = { expandedTaxons: [] };
+  constructor(props: any) {
+    super(props);
 
-    this.toggleExpanded = this.toggleExpanded.bind(this);
+    this.state = { expandedTaxons: [] };
   }
 
   public render() {
@@ -127,7 +120,7 @@ class ReportBody extends React.Component<IReportBodyProps, IReportBodyState> {
     </tr>;
   }
 
-  toggleExpanded(taxonId: number) {
+  toggleExpanded = (taxonId: number) => {
     this.setState(function (prevState, props) {
       const expanded = prevState.expandedTaxons.indexOf(taxonId) > -1;
       const expandedTaxons = expanded
@@ -147,63 +140,52 @@ interface IReportMonthProps {
 }
 
 class ReportMonth extends React.Component<IReportMonthProps, {}> {
-  constructor(props: any) {
-    super(props);
-
-    this.onClick = this.onClick.bind(this);
-  }
-
   public render() {
     const { isPast, isNow } = this.props.model;
-    const cls = classNames(
-      'report-month',
-      isPast && 'report-month--past',
-      isNow && 'report-month--now'
-    );
+    const cls = classNames('report-month', {
+      'report-month--past': isPast,
+      'report-month--now': isNow
+    });
 
-    return <td className={cls} children={this.props.children} onClick={this.onClick} />;
+    return <td className={cls} children={this.props.children} onClick={this.handleClick} />;
   }
 
-  onClick() {
+  handleClick = () => {
     this.props.onClick(this.props.taxonId, this.props.model.year, this.props.model.month);
   }
 }
 
 class ReportMonthMoney extends React.Component<IReportMonthProps, {}> {
   public render() {
-    let { isPast, isNow, actual, actualTotals, forecasted, forecastedTotals } = this.props.model;
-
-    if (this.props.showTotals) {
-      actual = actualTotals;
-      forecasted = forecastedTotals;
-    }
-
-    actual = actual || { amount: 0, currency: { id: 'BYN' } };
-    forecasted = forecasted || { amount: 0, currency: { id: 'BYN' } };
-
-    if (isPast) {
-      return <ReportMonth {...this.props}>
-        <div className='report-month__actual-money'>
-          <Money amount={actual.amount} currencyCode={actual.currency.id} />
-        </div>
-      </ReportMonth >;
-    }
-
-    if (isNow) {
-      return <ReportMonth {...this.props}>
-        <div className='report-month__actual-money'>
-          <Money amount={actual.amount} currencyCode={actual.currency.id} />
-        </div>
-        <div className='report-month__forecasted-money'  >
-          <Money amount={forecasted.amount} currencyCode={actual.currency.id} />
-        </div>
-      </ReportMonth>;
-    }
+    const { isPast, isNow } = this.props.model;
+    const { actual, forecasted } = this;
+    const showActual = isPast || isNow;
+    const showForecasted = !isPast || isNow;
 
     return <ReportMonth {...this.props}>
-      <div className='report-month__forecasted-money'  >
-        <Money amount={forecasted.amount} currencyCode={actual.currency.id} />
-      </div>
+      {showActual && <div className='report-month__actual-money'>
+        <MoneyView amount={actual.amount} currencyCode={actual.currency.id} />
+      </div>}
+      {showForecasted && <div className='report-month__forecasted-money'>
+        <MoneyView amount={forecasted.amount} currencyCode={actual.currency.id} />
+      </div>}
     </ReportMonth>;
+  }
+
+  get actual() {
+    let { actual, actualTotals } = this.props.model;
+
+    return this.selectMoney(actual, actualTotals);
+  }
+
+  get forecasted() {
+    let { forecasted, forecastedTotals } = this.props.model;
+
+    return this.selectMoney(forecasted, forecastedTotals);
+  }
+
+  selectMoney(money?: IMoney, totals?: IMoney) {
+    money = this.props.showTotals ? totals : money;
+    return money || { amount: 0, currency: { id: 'BYN' } };
   }
 }

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IMoney, IFinancialJournalEntry } from '../api/Models';
-import Money from '../components/Money';
+import { MoneyView } from '../components';
+import { humanizeDate } from '../../Utils';
 
 export interface IFinancialJournalEntryChange {
     remarks: string;
@@ -31,7 +32,7 @@ export class Journal extends React.Component<IJournalProps> {
             </thead>
 
             {this.props.editable && <tbody>
-                <EditRow model={model} onSave={this.onNewItemSave} onCancel={this.onNewItemCancel} />
+                <EditRow model={model} onSave={this.handleNewItemSave} onCancel={this.handleNewItemCancel} />
             </tbody>}
 
             <tbody>
@@ -44,7 +45,7 @@ export class Journal extends React.Component<IJournalProps> {
         </table>;
     }
 
-    onNewItemSave = (model: IEditModel) => {
+    handleNewItemSave = (model: IEditModel) => {
         this.props.onAdd({
             remarks: model.remarks,
             actual: { amount: model.actual, currency: { id: 'BYN' } },
@@ -52,7 +53,7 @@ export class Journal extends React.Component<IJournalProps> {
         });
     }
 
-    onNewItemCancel = () => { }
+    handleNewItemCancel = () => { }
 }
 
 interface IRowProps {
@@ -82,30 +83,30 @@ class Row extends React.Component<IRowProps, IRowState> {
                 actual: actual.amount,
                 forecasted: forecasted.amount
             };
-            return <EditRow model={model} onSave={this.onSave} onCancel={this.onCancel} />;
+            return <EditRow model={model} onSave={this.handleSave} onCancel={this.handleCancel} />;
         }
 
         return <tr>
             <td>{remarks}</td>
-            <td><Money amount={actual.amount} currencyCode={actual.currency.id} /></td>
-            <td><Money amount={forecasted.amount} currencyCode={actual.currency.id} /></td>
-            <td>{when}</td>
+            <td><MoneyView amount={actual.amount} currencyCode={actual.currency.id} /></td>
+            <td><MoneyView amount={forecasted.amount} currencyCode={actual.currency.id} /></td>
+            <td>{humanizeDate(when)}</td>
             <td>
-                {this.props.editable && <button className='btn btn-primary' type='button' onClick={this.onEdit}>Edit</button>}
-                <button className='btn btn-danger' type='button' onClick={this.onDelete}>Delete</button>
+                {this.props.editable && <button className='btn btn-sm btn-primary' type='button' onClick={this.handleEdit}>Edit</button>}
+                <button className='btn btn-sm btn-danger' type='button' onClick={this.handleDelete}>Delete</button>
             </td>
         </tr>;
     }
 
-    onEdit = () => {
+    handleEdit = () => {
         this.setState({ edit: true });
     }
 
-    onDelete = () => {
+    handleDelete = () => {
         this.props.onDelete(this.props.model.id);
     }
 
-    onSave = (model: IEditModel) => {
+    handleSave = (model: IEditModel) => {
         this.setState({ edit: false });
 
         this.props.onUpdate(this.props.model.id, {
@@ -115,7 +116,7 @@ class Row extends React.Component<IRowProps, IRowState> {
         });
     }
 
-    onCancel = () => {
+    handleCancel = () => {
         this.setState({ edit: false });
     }
 }
@@ -148,39 +149,35 @@ class EditRow extends React.Component<IEditRowProps, IEditRowState> {
             actual: model.actual,
             forecasted: model.forecasted
         };
-
-        this.onInputChange = this.onInputChange.bind(this);
-        this.onSave = this.onSave.bind(this);
-        this.onCancel = this.onCancel.bind(this);
     }
 
     public render() {
         return <tr>
-            <td><input name='remarks' type='text' className='form-control' value={this.state.remarks} onChange={this.onInputChange} /></td>
+            <td><input name='remarks' type='text' className='form-control' value={this.state.remarks} onChange={this.handleInputChange} /></td>
             <td>
                 <div className='input-group' >
-                    <input name='actual' type='number' className='form-control' step='0.01' value={this.state.actual} onChange={this.onInputChange} />
+                    <input name='actual' type='number' className='form-control' step='0.01' value={this.state.actual} onChange={this.handleInputChange} />
                     <select className='input-group-addon custom-select'>
                         <option>BYN</option>
                     </select>
                 </div>
             </td>
-            <td><input name='forecasted' type='number' className='form-control' step='0.01' value={this.state.forecasted} onChange={this.onInputChange} /></td>
+            <td><input name='forecasted' type='number' className='form-control' step='0.01' value={this.state.forecasted} onChange={this.handleInputChange} /></td>
             <td></td>
             <td>
-                <button className='btn btn-primary' type='button' onClick={this.onSave}>Save</button>
-                <button className='btn btn-secondary' type='button' onClick={this.onCancel}>Cancel</button>
+                <button className='btn btn-sm btn-primary' type='button' onClick={this.handleSave}>Save</button>
+                <button className='btn btn-sm btn-secondary' type='button' onClick={this.handleCancel}>Cancel</button>
             </td>
         </tr>;
     }
 
-    onInputChange(event: any) {
+    handleInputChange = (event: any) => {
         const { name, value } = event.target;
 
         this.setState({ [name]: value });
     }
 
-    onSave() {
+    handleSave = () => {
         this.props.onSave({
             remarks: this.state.remarks,
             actual: this.state.actual,
@@ -188,7 +185,7 @@ class EditRow extends React.Component<IEditRowProps, IEditRowState> {
         });
     }
 
-    onCancel() {
+    handleCancel = () => {
         this.setState({ remarks: '', actual: 0, forecasted: 0 });
         this.props.onCancel();
     }
