@@ -70,10 +70,10 @@ export class FinancialJournal extends React.Component<RouteComponentProps<IFinan
 
         const taxon = this.state.currentTaxon;
 
-        return <div>
-            <div className='journal-info__taxon-name'> {taxon.name}</div>
-            <div className='journal-info__year'> {this.year}</div>
-            <div className='journal-info__month'> {pluralizeMonth(this.month)}</div>
+        return <div className='h4'>
+            <span className='journal-info__taxon-name'> {taxon.name}</span>
+            <span className='journal-info__year'> {this.year}</span>
+            <span className='journal-info__month'> {pluralizeMonth(this.month)}</span>
         </div>
     }
 

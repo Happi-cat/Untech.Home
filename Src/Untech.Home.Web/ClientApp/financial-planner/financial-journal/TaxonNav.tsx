@@ -17,15 +17,17 @@ export class TaxonNav extends React.Component<ITaxonNavProps, {}> {
         const upVisible = this.props.model.id != 0;
 
         let upLink = upVisible
-            ? <button onClick={this.onUpClick}>Up</button>
+            ? <li className='page-item' onClick={this.onUpClick}><span className='page-link'>Up</span></li>
             : null;
 
         let elements = this.props.model.elements || [];
-        return <div>
-            {upLink}
-
-            {elements.map(e => <TaxonNavItem key={e.id} model={e} onClick={this.props.onClick} />)}
-        </div>;
+        return <nav>
+            <ul className='pagination' >
+                {upLink}
+                <li className='page-item active' ><span className='page-link'>{this.props.model.name}</span></li>
+                {elements.map(e => <TaxonNavItem key={e.id} model={e} onClick={this.props.onClick} />)}
+            </ul>
+        </nav>;
     }
 
     onUpClick() {
@@ -41,9 +43,7 @@ class TaxonNavItem extends React.Component<ITaxonNavProps> {
     }
 
     public render() {
-        return <button onClick={this.onClick}>
-            {this.props.model.name}
-        </button>;
+        return <li className='page-item' onClick={this.onClick}><span className='page-link'>{this.props.model.name}</span></li>;
     }
 
     onClick() {

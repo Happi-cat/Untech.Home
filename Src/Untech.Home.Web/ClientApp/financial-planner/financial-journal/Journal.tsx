@@ -19,7 +19,7 @@ interface IJournalProps {
 export class Journal extends React.Component<IJournalProps> {
     public render() {
         const model = { remarks: '', actual: 0, forecasted: 0 };
-        return <table >
+        return <table className='table table-bordered'>
             <thead>
                 <tr>
                     <th>Remarks</th>
@@ -91,8 +91,8 @@ class Row extends React.Component<IRowProps, IRowState> {
             <td><Money amount={forecasted.amount} currencyCode={actual.currency.id} /></td>
             <td>{when}</td>
             <td>
-                {this.props.editable && <button onClick={this.onEdit}>Edit</button>}
-                <button onClick={this.onDelete}>Delete</button>
+                {this.props.editable && <button className='btn btn-primary' type='button' onClick={this.onEdit}>Edit</button>}
+                <button className='btn btn-danger' type='button' onClick={this.onDelete}>Delete</button>
             </td>
         </tr>;
     }
@@ -156,13 +156,20 @@ class EditRow extends React.Component<IEditRowProps, IEditRowState> {
 
     public render() {
         return <tr>
-            <td><input name='remarks' type='text' value={this.state.remarks} onChange={this.onInputChange} /></td>
-            <td><input name='actual' type='number' step='0.01' value={this.state.actual} onChange={this.onInputChange} /></td>
-            <td><input name='forecasted' type='text' value={this.state.forecasted} onChange={this.onInputChange} /></td>
+            <td><input name='remarks' type='text' className='form-control' value={this.state.remarks} onChange={this.onInputChange} /></td>
+            <td>
+                <div className='input-group' >
+                    <input name='actual' type='number' className='form-control' step='0.01' value={this.state.actual} onChange={this.onInputChange} />
+                    <select className='input-group-addon custom-select'>
+                        <option>BYN</option>
+                    </select>
+                </div>
+            </td>
+            <td><input name='forecasted' type='number' className='form-control' step='0.01' value={this.state.forecasted} onChange={this.onInputChange} /></td>
             <td></td>
             <td>
-                <button onClick={this.onSave}>Save</button>
-                <button onClick={this.onCancel}>Cancel</button>
+                <button className='btn btn-primary' type='button' onClick={this.onSave}>Save</button>
+                <button className='btn btn-secondary' type='button' onClick={this.onCancel}>Cancel</button>
             </td>
         </tr>;
     }
