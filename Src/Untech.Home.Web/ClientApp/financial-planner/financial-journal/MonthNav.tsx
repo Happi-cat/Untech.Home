@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import * as classNames from 'classnames';
-import { pluralizeMonth } from '../../Utils';
+import { MonthView } from '../components';
 
 interface IMonthNavProps {
     currentYear: number;
@@ -18,7 +18,7 @@ export class MonthNav extends React.Component<IMonthNavProps, {}> {
         return <nav >
             <ul className='pagination' >
                 {prev}
-                <li className='page-item active'><span className='page-link'>{pluralizeMonth(this.props.currentMonth)} - {this.props.currentYear}</span></li>
+                <li className='page-item active'><span className='page-link'><MonthView year={this.props.currentYear} month={this.props.currentMonth} /></span></li>
                 {next}
             </ul>
         </nav>;
@@ -50,7 +50,9 @@ export class MonthNav extends React.Component<IMonthNavProps, {}> {
 class MonthNavItem extends React.Component<IMonthNavProps> {
     public render() {
         return <li className='page-item' onClick={this.handleClick}>
-            <span className='page-link'>{pluralizeMonth(this.props.currentMonth)} - {this.props.currentYear}</span>
+            <span className='page-link'>
+                <MonthView year={this.props.currentYear} month={this.props.currentMonth} />
+            </span>
         </li>;
     }
 

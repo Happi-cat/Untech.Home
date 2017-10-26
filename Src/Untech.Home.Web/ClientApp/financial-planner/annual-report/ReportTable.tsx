@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import { IMoney, ITaxonAnnualFinancialReport, IMonthlyFinancialReport } from './Models';
 import './ReportTable.less';
 import { pluralizeMonth } from '../../Utils';
-import MoneyView from '../components/MoneyView';
+import { MoneyView, MonthView } from '../components';
 
 function getMonthlyReportKey(report: IMonthlyFinancialReport) {
   return report.year + '-' + report.month;
@@ -41,8 +41,7 @@ export class ReportTable extends React.Component<IReportTableProps, {}> {
       taxonId={0}
       model={monthTotalReport}
       onClick={this.handleMonthClick}>
-      <div className='report-month__month'>{pluralizeMonth(monthTotalReport.month)}</div>
-      <div className='report-month__year'>{monthTotalReport.year}</div>
+      <MonthView year={monthTotalReport.year} month={monthTotalReport.month} />
     </ReportMonth>);
   }
 

@@ -4,7 +4,7 @@ import { ITaxonTree, IFinancialJournalEntry, apiService } from './api';
 import { MonthNav } from './financial-journal/MonthNav';
 import { TaxonNav } from './financial-journal/TaxonNav';
 import { Journal, IFinancialJournalEntryChange } from './financial-journal/Journal';
-import { pluralizeMonth } from './../Utils';
+import { pluralizeMonth } from './../utils';
 
 interface IFinancialJournalProps {
     taxonId: string,

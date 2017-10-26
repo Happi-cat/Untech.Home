@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { humanizeNumber } from '../../Utils';
+import { humanizeNumber } from '../../utils';
 import './MoneyView.less';
 
 interface IMoneyViewProps {

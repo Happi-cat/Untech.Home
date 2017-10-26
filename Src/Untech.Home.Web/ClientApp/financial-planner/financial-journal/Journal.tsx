@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IMoney, IFinancialJournalEntry } from '../api/Models';
 import { MoneyView } from '../components';
-import { humanizeDate } from '../../Utils';
+import { humanizeDate } from '../../utils';
 
 export interface IFinancialJournalEntryChange {
     remarks: string;
