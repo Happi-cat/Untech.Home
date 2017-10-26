@@ -1,5 +1,5 @@
 import './css/site.css';
-import 'bootstrap/dist/css/bootstrap.css';
+import 'semantic-ui-css/semantic.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';

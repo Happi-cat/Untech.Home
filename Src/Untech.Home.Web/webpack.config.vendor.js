@@ -6,18 +6,25 @@ module.exports = (env) => {
     const extractCSS = new ExtractTextPlugin('vendor.css');
     const isDevBuild = !(env && env.prod);
     return [{
-        stats: { modules: false },
+        stats: {
+            modules: false
+        },
         resolve: {
-            extensions: [ '.js' ]
+            extensions: ['.js']
         },
         module: {
-            rules: [
-                { test: /\.(png|woff|woff2|eot|ttf|svg)(\?|$)/, use: 'url-loader?limit=100000' },
-                { test: /\.css(\?|$)/, use: extractCSS.extract([ isDevBuild ? 'css-loader' : 'css-loader?minimize' ]) }
+            rules: [{
+                    test: /\.(png|woff|woff2|eot|ttf|svg)(\?|$)/,
+                    use: 'url-loader?limit=100000'
+                },
+                {
+                    test: /\.css(\?|$)/,
+                    use: extractCSS.extract([isDevBuild ? 'css-loader' : 'css-loader?minimize'])
+                }
             ]
         },
         entry: {
-            vendor: ['bootstrap', 'bootstrap/dist/css/bootstrap.css', 'event-source-polyfill', 'isomorphic-fetch', 'react', 'react-dom', 'react-router-dom', 'jquery'],
+            vendor: ['semantic-ui-css', 'semantic-ui-css/semantic.css', 'event-source-polyfill', 'isomorphic-fetch', 'react', 'react-dom', 'react-router-dom', 'jquery'],
         },
         output: {
             path: path.join(__dirname, 'wwwroot', 'dist'),
@@ -27,7 +34,10 @@ module.exports = (env) => {
         },
         plugins: [
             extractCSS,
-            new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
+            new webpack.ProvidePlugin({
+                $: 'jquery',
+                jQuery: 'jquery'
+            }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
             new webpack.DllPlugin({
                 path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
                 name: '[name]_[hash]'

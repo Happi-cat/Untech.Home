@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IMoney, IFinancialJournalEntry } from '../api/Models';
-import { MoneyView } from '../components';
+import { MoneyView, MoneyInput } from '../components';
 import { humanizeDate } from '../../utils';
 
 export interface IFinancialJournalEntryChange {
@@ -155,6 +155,7 @@ class EditRow extends React.Component<IEditRowProps, IEditRowState> {
         return <tr>
             <td><input name='remarks' type='text' className='form-control' value={this.state.remarks} onChange={this.handleInputChange} /></td>
             <td>
+                <MoneyInput amount={this.state.actual} currencyCode='BYN' onChange={() => { }} />
                 <div className='input-group' >
                     <input name='actual' type='number' className='form-control' step='0.01' value={this.state.actual} onChange={this.handleInputChange} />
                     <select className='input-group-addon custom-select'>
