@@ -11,8 +11,9 @@
 @row-bg-color: none;
 @row-bg-color-hover: @clr-grey-50;
 
-@padding-tb: 3px;
-@padding-lr: 5px;
+@padding-tb: 0.25em;
+@padding-lr: 1em;
+@line-height: 1.5em;
 
 .report-table {
     width: 100%;
@@ -26,6 +27,8 @@
     /* grey300 */
     border-bottom: 1px solid #E0E0E0;
     background-color: @row-bg-color;
+    height: (@line-height + @padding-tb) * 2;
+    line-height: @line-height;
 }
 
 .report-table .report-table__row:nth-of-type(even) {
@@ -39,6 +42,7 @@
 
 .report-heading {
    text-align: left;
+   line-height: 1.5em;
 
    > i.icon {
     float: right;
@@ -48,7 +52,6 @@
 
 .report-month {
     padding: @padding-tb @padding-lr;
-    font-size: 14px;
     text-align: center;
     cursor: pointer;
 
@@ -75,16 +78,6 @@
 
     &--now {
         background-color: @that-month;
-
-        .report-month__actual-money {
-            width: 100%;
-            text-align: left;
-        }
-
-        .report-month__forecasted-money {
-            width: 100%;
-            text-align: right;
-        }
     }
 
     &--now:hover {
@@ -94,7 +87,6 @@
 
 .report-heading {
     padding: @padding-tb @padding-lr;
-    font-size: 1.2em;
     font-weight: bold;
     width: 320px;
 
