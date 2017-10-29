@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { IMoney, IFinancialJournalEntry } from '../api/Models';
+import { IMoney, IFinancialJournalEntry, apiService } from '../api';
 import { MoneyView, MoneyInput } from '../components';
+import { Input, Button, Icon, Table } from 'semantic-ui-react';
 import { humanizeDate } from '../../utils';
 
 export interface IFinancialJournalEntryChange {
@@ -18,9 +19,15 @@ interface IJournalProps {
 }
 
 export class Journal extends React.Component<IJournalProps> {
+    constructor(props: any) {
+        super(props);
+
+        this.state = { entries: props.entries };
+    }
+
     public render() {
-        const model = { remarks: '', actual: 0, forecasted: 0 };
-        return <table className='table table-bordered'>
+        const model = { remarks: '', actual: 0, actualCurrency: 'BYN', forecasted: 0, forecastedCurrency: 'BYN' };
+        return <Table>
             <thead>
                 <tr>
                     <th>Remarks</th>
@@ -42,7 +49,7 @@ export class Journal extends React.Component<IJournalProps> {
                     onUpdate={this.props.onUpdate}
                     onDelete={this.props.onDelete} />)}
             </tbody>
-        </table>;
+        </Table>;
     }
 
     handleNewItemSave = (model: IEditModel) => {
@@ -81,7 +88,9 @@ class Row extends React.Component<IRowProps, IRowState> {
             const model = {
                 remarks: remarks,
                 actual: actual.amount,
-                forecasted: forecasted.amount
+                actualCurrency: actual.currency.id,
+                forecasted: forecasted.amount,
+                forecastedCurrency: forecasted.currency.id
             };
             return <EditRow model={model} onSave={this.handleSave} onCancel={this.handleCancel} />;
         }
@@ -92,8 +101,12 @@ class Row extends React.Component<IRowProps, IRowState> {
             <td><MoneyView amount={forecasted.amount} currencyCode={actual.currency.id} /></td>
             <td>{humanizeDate(when)}</td>
             <td>
-                {this.props.editable && <button className='btn btn-sm btn-primary' type='button' onClick={this.handleEdit}>Edit</button>}
-                <button className='btn btn-sm btn-danger' type='button' onClick={this.handleDelete}>Delete</button>
+                <Button.Group floated='right'>
+                    {this.props.editable &&
+                        <Button onClick={this.handleEdit} icon='edit' content='Edit' primary />
+                    }
+                    <Button onClick={this.handleDelete} icon='delete' content='Delete' color='orange' />
+                </Button.Group>
             </td>
         </tr>;
     }
@@ -124,7 +137,9 @@ class Row extends React.Component<IRowProps, IRowState> {
 interface IEditModel {
     remarks: string;
     actual: number;
+    actualCurrency: string;
     forecasted: number;
+    forecastedCurrency: string;
 }
 
 interface IEditRowProps {
@@ -136,7 +151,9 @@ interface IEditRowProps {
 interface IEditRowState {
     remarks: string;
     actual: number;
+    actualCurrency: string;
     forecasted: number;
+    forecastedCurrency: string;
 }
 
 class EditRow extends React.Component<IEditRowProps, IEditRowState> {
@@ -144,50 +161,50 @@ class EditRow extends React.Component<IEditRowProps, IEditRowState> {
         super(props);
 
         const model = this.props.model;
-        this.state = {
-            remarks: model.remarks,
-            actual: model.actual,
-            forecasted: model.forecasted
-        };
+        this.state = { ...this.props.model };
     }
 
     public render() {
         return <tr>
-            <td><input name='remarks' type='text' className='form-control' value={this.state.remarks} onChange={this.handleInputChange} /></td>
             <td>
-                <MoneyInput amount={this.state.actual} currencyCode='BYN' onChange={() => { }} />
-                <div className='input-group' >
-                    <input name='actual' type='number' className='form-control' step='0.01' value={this.state.actual} onChange={this.handleInputChange} />
-                    <select className='input-group-addon custom-select'>
-                        <option>BYN</option>
-                    </select>
-                </div>
+                <Input fluid name='remarks' type='text' defaultValue={this.state.remarks} onChange={this.handleInputChange} /></td>
+            <td>
+                <MoneyInput fluid name='actual' initialAmount={this.state.actual} initialCurrencyCode='BYN' onChange={this.handleMoneyChange} />
             </td>
-            <td><input name='forecasted' type='number' className='form-control' step='0.01' value={this.state.forecasted} onChange={this.handleInputChange} /></td>
+            <td>
+                <MoneyInput fluid name='forecasted' initialAmount={this.state.forecasted} initialCurrencyCode='BYN' onChange={this.handleMoneyChange} />
+            </td>
             <td></td>
             <td>
-                <button className='btn btn-sm btn-primary' type='button' onClick={this.handleSave}>Save</button>
-                <button className='btn btn-sm btn-secondary' type='button' onClick={this.handleCancel}>Cancel</button>
+                <Button.Group floated='right'>
+                    <Button onClick={this.handleCancel} icon='cancel' content='Cancel' />
+                    <Button onClick={this.handleSave} icon='save' content='Save' positive />
+                </Button.Group>
             </td>
         </tr>;
     }
 
-    handleInputChange = (event: any) => {
-        const { name, value } = event.target;
+    handleInputChange = (event: any, data: any) => {
+        const { name, value } = data;
 
         this.setState({ [name]: value });
     }
 
+    handleMoneyChange = (data: any) => {
+        const { name, amount, currencyCode } = data;
+        let obj: any = {};
+        obj[name] = amount;
+        obj[name + 'Currency'] = currencyCode;
+        this.setState(obj);
+    }
+
     handleSave = () => {
         this.props.onSave({
-            remarks: this.state.remarks,
-            actual: this.state.actual,
-            forecasted: this.state.forecasted
+            ...this.state
         });
     }
 
     handleCancel = () => {
-        this.setState({ remarks: '', actual: 0, forecasted: 0 });
         this.props.onCancel();
     }
 }

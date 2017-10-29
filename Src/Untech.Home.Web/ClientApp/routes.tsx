@@ -8,5 +8,5 @@ import { FinancialJournal } from './financial-planner/FinancialJournal';
 export const routes = <Layout>
     <Route exact path='/' component={Home} />
     <Route exact path='/financial-planner' component={AnnualFinancialReport} />
-    <Route path='/financial-planner/journal/:year/:month/:taxonId' component={FinancialJournal} />
+    <Route exact path='/financial-planner/journal/:year/:month/:taxonId' component={FinancialJournal} />
 </Layout>;

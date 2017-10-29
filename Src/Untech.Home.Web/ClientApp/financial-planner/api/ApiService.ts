@@ -14,7 +14,7 @@ export class ApiService {
       .then(response => response.json() as Promise<IAnnualFinancialReport>);
   }
 
-  public getTaxon(taxonId?: number, deep?: number) {
+  public getTaxon(taxonId?: number | string, deep?: number) {
     let url = 'api/financial-planner/taxon';
     if (taxonId != undefined) {
       url += '/' + encodeURIComponent(taxonId.toString());
@@ -50,7 +50,7 @@ export class ApiService {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(request)
-    });
+    }).then(response => response.json() as Promise<IFinancialJournalEntry>);
   }
 
   public updateJournalEntry(request: IUpdateFinancialJournalEntryCommand) {
@@ -61,10 +61,11 @@ export class ApiService {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(request)
-    });
+    }).then(response => response.json() as Promise<IFinancialJournalEntry>);;
   }
 
   public deleteJournalEntry(request: IDeleteFinancialJournalEntryCommand) {
-    return fetch('api/financial-planner/journal/' + encodeURIComponent(request.id.toString()), { method: 'DELETE' });
+    return fetch('api/financial-planner/journal/' + encodeURIComponent(request.id.toString()), { method: 'DELETE' })
+      .then(response => response.json() as Promise<boolean>);
   }
 }

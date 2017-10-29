@@ -4,6 +4,7 @@ import { IMoney, ITaxonAnnualFinancialReport, IMonthlyFinancialReport } from './
 import './ReportTable.less';
 import { pluralizeMonth } from '../../Utils';
 import { MoneyView, MonthView } from '../components';
+import { Icon } from 'semantic-ui-react';
 
 function getMonthlyReportKey(report: IMonthlyFinancialReport) {
   return report.year + '-' + report.month;
@@ -100,8 +101,8 @@ class ReportBody extends React.Component<IReportBodyProps, IReportBodyState> {
     );
 
     let icon = expanded
-      ? <span className='report-heading__icon--collapse' >-</span>
-      : <span className='report-heading__icon--expand' >+</span>;
+      ? <Icon name='triangle down' />
+      : <Icon name='triangle left' />
 
     let heading = model.elements && model.elements.length
       ? <th className='report-heading report-heading--clickable' onClick={() => this.toggleExpanded(model.taxonId)}>{icon}{model.name}</th>
