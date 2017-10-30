@@ -99,18 +99,18 @@
     }
 }
 
-.report-table__row--l0 .report-heading {
-    padding-left: 1em;
-}
-
 .report-table__row--l1 .report-heading {
-    padding-left: 2em;
+    padding-left: @padding-lr * 2;
 }
 
 .report-table__row--l2 .report-heading {
-    padding-left: 3em;
+    padding-left: @padding-lr * 3;
 }
 
 .report-table .money-view--zero {
     display: none;
+}
+
+.report-table__row--footer .report-heading {
+    text-transform: uppercase;
 }

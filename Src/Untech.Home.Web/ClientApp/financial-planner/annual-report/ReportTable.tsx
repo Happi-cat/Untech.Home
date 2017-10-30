@@ -29,7 +29,7 @@ export class ReportTable extends React.Component<IReportTableProps, {}> {
       <ReportBody model={this.props.entries} onClick={this.handleMonthClick} />
 
       <tfoot>
-        <tr className='report-table__row'>
+        <tr className='report-table__row report-table__row--footer'>
           <th className='report-heading'>Totals</th>
           {this.renderFooterColumns()}
         </tr>
@@ -38,16 +38,16 @@ export class ReportTable extends React.Component<IReportTableProps, {}> {
   }
 
   renderHeaderColumns() {
-    return this.props.months.map(monthTotalReport => <ReportMonth key={getMonthlyReportKey(monthTotalReport)}
+    return this.props.months.map(monthTotalReport => <ReportCell key={getMonthlyReportKey(monthTotalReport)}
       taxonId={0}
       model={monthTotalReport}
       onClick={this.handleMonthClick}>
       <MonthView year={monthTotalReport.year} month={monthTotalReport.month} />
-    </ReportMonth>);
+    </ReportCell>);
   }
 
   renderFooterColumns() {
-    return this.props.months.map(monthTotalReport => <ReportMonthMoney key={getMonthlyReportKey(monthTotalReport)}
+    return this.props.months.map(monthTotalReport => <ReportMoneyCell key={getMonthlyReportKey(monthTotalReport)}
       showTotals
       taxonId={0}
       model={monthTotalReport}
@@ -111,7 +111,7 @@ class ReportBody extends React.Component<IReportBodyProps, IReportBodyState> {
     return <tr key={model.taxonId} className={cls}>
       {heading}
 
-      {model.months.map(monthReport => <ReportMonthMoney key={getMonthlyReportKey(monthReport)}
+      {model.months.map(monthReport => <ReportMoneyCell key={getMonthlyReportKey(monthReport)}
         taxonId={model.taxonId}
         showTotals={!expanded}
         model={monthReport}
@@ -139,7 +139,7 @@ interface IReportMonthProps {
   onClick(taxonId: number, year: number, month: number): void;
 }
 
-class ReportMonth extends React.Component<IReportMonthProps, {}> {
+class ReportCell extends React.Component<IReportMonthProps, {}> {
   public render() {
     const { isPast, isNow } = this.props.model;
     const cls = classNames('report-month', {
@@ -155,21 +155,21 @@ class ReportMonth extends React.Component<IReportMonthProps, {}> {
   }
 }
 
-class ReportMonthMoney extends React.Component<IReportMonthProps, {}> {
+class ReportMoneyCell extends React.Component<IReportMonthProps, {}> {
   public render() {
     const { isPast, isNow } = this.props.model;
     const { actual, forecasted } = this;
     const showActual = isPast || isNow;
     const showForecasted = !isPast || isNow;
 
-    return <ReportMonth {...this.props}>
+    return <ReportCell {...this.props}>
       {showActual && <div className='report-month__actual-money'>
         <MoneyView amount={actual.amount} currencyCode={actual.currency.id} />
       </div>}
       {showForecasted && <div className='report-month__forecasted-money'>
         <MoneyView amount={forecasted.amount} currencyCode={actual.currency.id} />
       </div>}
-    </ReportMonth>;
+    </ReportCell>;
   }
 
   get actual() {
