@@ -1,5 +1,5 @@
 using System.Runtime.Serialization;
-using Untech.FinancePlanner.Domain.Storage;
+using Untech.Practices.DataStorage;
 
 namespace Untech.FinancePlanner.Domain.Models
 {
@@ -8,19 +8,19 @@ namespace Untech.FinancePlanner.Domain.Models
 	{
 		protected Taxon() { }
 
-		public Taxon(int id, int parentId, string name, string description = null)
+		public Taxon(int Key, int parentKey, string name, string description = null)
 		{
-			Id = id;
-			ParentId = parentId;
+			this.Key = Key;
+			ParentKey = parentKey;
 			Name = name;
 			Description = description;
 		}
 
 		[DataMember]
-		public int Id { get; private set; }
+		public int Key { get; private set; }
 
 		[DataMember]
-		public int ParentId { get; private set; }
+		public int ParentKey { get; private set; }
 
 		[DataMember]
 		public string Name { get; private set; }
@@ -29,10 +29,10 @@ namespace Untech.FinancePlanner.Domain.Models
 		public string Description { get; private set; }
 
 		[DataMember]
-		public bool IsSystemRoot => Id == 0;
+		public bool IsSystemRoot => Key == 0;
 
 		[DataMember]
-		public bool IsRoot => ParentId == 0;
+		public bool IsRoot => ParentKey == 0;
 
 		/// <summary>
 		/// Determines whether this taxon is selectable or not.

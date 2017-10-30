@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
-using Untech.FinancePlanner.Domain.Storage;
 using Untech.FinancePlanner.Domain.ViewModels;
 using Untech.Practices.CQRS.Handlers;
+using Untech.Practices.DataStorage;
 
 namespace Untech.FinancePlanner.Domain.Services
 {
@@ -32,53 +32,53 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		public TaxonTree Handle(TaxonTreeQuery request)
 		{
-			var builtInTaxon = s_builtIns.SingleOrDefault(n => n.Id == request.TaxonId);
+			var builtInTaxon = s_builtIns.SingleOrDefault(n => n.Key == request.TaxonKey);
 			if (builtInTaxon != null)
 			{
-				return new TaxonTree(builtInTaxon.Id, builtInTaxon.ParentId, builtInTaxon.Name)
+				return new TaxonTree(builtInTaxon.Key, builtInTaxon.ParentKey, builtInTaxon.Name)
 				{
-					Elements = GetDescendants(builtInTaxon.Id, request.Deep)
+					Elements = GetDescendants(builtInTaxon.Key, request.Deep)
 				};
 			}
 
-			var taxon = _dataStorage.Find(n => n.Id == request.TaxonId).Single();
+			var taxon = _dataStorage.Find(n => n.Key == request.TaxonKey).Single();
 
-			return new TaxonTree(taxon.Id, taxon.ParentId, taxon.Name, taxon.Description)
+			return new TaxonTree(taxon.Key, taxon.ParentKey, taxon.Name, taxon.Description)
 			{
-				Elements = GetDescendants(taxon.Id, request.Deep)
+				Elements = GetDescendants(taxon.Key, request.Deep)
 			};
 		}
 
-		private List<TaxonTree> GetDescendants(int parentTaxonId, int deep)
+		private List<TaxonTree> GetDescendants(int parentTaxonKey, int deep)
 		{
 			if (deep == 0) return new List<TaxonTree>();
 
 			deep = DecrementDeep(deep);
 
-			var elements = GetElements(parentTaxonId);
+			var elements = GetElements(parentTaxonKey);
 
 			if (deep != 0)
 			{
 				foreach (var taxon in elements)
 				{
-					taxon.Elements = GetDescendants(taxon.Id, deep);
+					taxon.Elements = GetDescendants(taxon.Key, deep);
 				}
 			}
 			return elements;
 		}
 
-		private List<TaxonTree> GetElements(int parentTaxonId)
+		private List<TaxonTree> GetElements(int parentTaxonKey)
 		{
-			if (parentTaxonId == 0)
+			if (parentTaxonKey == 0)
 			{
 				return s_builtIns
-					.Where(n => n.ParentId == 0 && n.Id != 0)
-					.Select(n => new TaxonTree(n.Id, n.ParentId, n.Name))
+					.Where(n => n.ParentKey == 0 && n.Key != 0)
+					.Select(n => new TaxonTree(n.Key, n.ParentKey, n.Name))
 					.ToList();
 			}
 
-			return _dataStorage.Find(n => n.ParentId == parentTaxonId)
-				.Select(n => new TaxonTree(n.Id, n.ParentId, n.Name, n.Description))
+			return _dataStorage.Find(n => n.ParentKey == parentTaxonKey)
+				.Select(n => new TaxonTree(n.Key, n.ParentKey, n.Name, n.Description))
 				.ToList();
 		}
 

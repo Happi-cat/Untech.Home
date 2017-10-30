@@ -14,10 +14,10 @@ export class ApiService {
       .then(response => response.json() as Promise<IAnnualFinancialReport>);
   }
 
-  public getTaxon(taxonId?: number | string, deep?: number) {
+  public getTaxon(taxonKey?: number | string, deep?: number) {
     let url = 'api/financial-planner/taxon';
-    if (taxonId != undefined) {
-      url += '/' + encodeURIComponent(taxonId.toString());
+    if (taxonKey != undefined) {
+      url += '/' + encodeURIComponent(taxonKey.toString());
 
       if (deep != undefined) {
         url += '?deep=' + encodeURIComponent(deep.toString());
@@ -28,10 +28,10 @@ export class ApiService {
       .then(response => response.json() as Promise<ITaxonTree>);
   }
 
-  public getJournal(year: number | string, month: number | string, taxonId?: number | string, deep?: number) {
+  public getJournal(year: number | string, month: number | string, taxonKey?: number | string, deep?: number) {
     let url = 'api/financial-planner/journal/' + encodeURIComponent(year.toString()) + '/' + encodeURIComponent(month.toString());
-    if (taxonId != undefined) {
-      url += '?taxonId=' + encodeURIComponent(taxonId.toString());
+    if (taxonKey != undefined) {
+      url += '?taxonId=' + encodeURIComponent(taxonKey.toString());
 
       if (deep != undefined) {
         url += '&deep=' + encodeURIComponent(deep.toString());
@@ -54,7 +54,7 @@ export class ApiService {
   }
 
   public updateJournalEntry(request: IUpdateFinancialJournalEntryCommand) {
-    return fetch('api/financial-planner/journal/' + encodeURIComponent(request.id.toString()), {
+    return fetch('api/financial-planner/journal/' + encodeURIComponent(request.key.toString()), {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
@@ -65,7 +65,7 @@ export class ApiService {
   }
 
   public deleteJournalEntry(request: IDeleteFinancialJournalEntryCommand) {
-    return fetch('api/financial-planner/journal/' + encodeURIComponent(request.id.toString()), { method: 'DELETE' })
+    return fetch('api/financial-planner/journal/' + encodeURIComponent(request.key.toString()), { method: 'DELETE' })
       .then(response => response.json() as Promise<boolean>);
   }
 }

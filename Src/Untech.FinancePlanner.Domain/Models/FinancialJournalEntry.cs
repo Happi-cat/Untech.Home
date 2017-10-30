@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
-using Untech.FinancePlanner.Domain.Storage;
 using Untech.Practices;
+using Untech.Practices.DataStorage;
 
 namespace Untech.FinancePlanner.Domain.Models
 {
@@ -10,17 +10,17 @@ namespace Untech.FinancePlanner.Domain.Models
 	{
 		protected FinancialJournalEntry() { }
 
-		public FinancialJournalEntry(int id, int taxonId)
+		public FinancialJournalEntry(int key, int taxonKey)
 		{
-			Id = id;
-			TaxonId = taxonId;
+			Key = key;
+			TaxonKey = taxonKey;
 		}
 
 		[DataMember]
-		public int Id { get; private set; }
+		public int Key { get; private set; }
 
 		[DataMember]
-		public int TaxonId { get; private set; }
+		public int TaxonKey { get; private set; }
 
 		[DataMember]
 		public string Remarks { get; set; }

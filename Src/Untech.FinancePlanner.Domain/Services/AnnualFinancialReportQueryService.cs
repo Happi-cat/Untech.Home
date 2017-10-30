@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Untech.FinancePlanner.Domain.Storage;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
@@ -8,6 +7,7 @@ using Untech.FinancePlanner.Domain.ViewModels;
 using Untech.Practices;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
+using Untech.Practices.DataStorage.Cache;
 
 namespace Untech.FinancePlanner.Domain.Services
 {
@@ -44,19 +44,19 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		public void Publish(FinancialJournalEntrySaved notification)
 		{
-			string cacheKey = GetMonthlyReportKey(notification.When);
+			var cacheKey = GetMonthlyReportKey(notification.When);
 			_cacheStorage.Drop(cacheKey);
 		}
 
 		public void Publish(FinancialJournalEntryDeleted notification)
 		{
-			string cacheKey = GetMonthlyReportKey(notification.When);
+			var cacheKey = GetMonthlyReportKey(notification.When);
 			_cacheStorage.Drop(cacheKey);
 		}
 
-		private static string GetMonthlyReportKey(DateTime when)
+		private static CacheKey GetMonthlyReportKey(DateTime when)
 		{
-			return $"cache://reports/financial-monthly-report/{when.Year}/{when.Month}";
+			return new CacheKey("reports", $"financial-monthly-report/{when.Year}/{when.Month}");
 		}
 
 		private class MonthlyReportBuilder
@@ -109,10 +109,10 @@ namespace Untech.FinancePlanner.Domain.Services
 				};
 
 				var incomes = report.Entries
-					.Where(n => n.TaxonId == BuiltInTaxonId.Income)
+					.Where(n => n.TaxonKey == BuiltInTaxonId.Income)
 					.ToList();
 				var expenses = report.Entries
-					.Where(n => n.TaxonId == BuiltInTaxonId.Expense)
+					.Where(n => n.TaxonKey == BuiltInTaxonId.Expense)
 					.ToList();
 
 				report.ActualTotals = incomes
@@ -130,7 +130,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 			private MonthlyFinancialReportEntry BuildReportEntry(TaxonTree currentTaxon)
 			{
-				var entry = new MonthlyFinancialReportEntry(currentTaxon.Id)
+				var entry = new MonthlyFinancialReportEntry(currentTaxon.Key)
 				{
 					Entries = currentTaxon.GetElements()
 						.Select(BuildReportEntry)
@@ -142,7 +142,7 @@ namespace Untech.FinancePlanner.Domain.Services
 				{
 					Taxon = new TaxonTreeQuery
 					{
-						TaxonId = currentTaxon.Id,
+						TaxonKey = currentTaxon.Key,
 						Deep = currentTaxon.GetElements().Any() ? 0 : -1
 					}
 				});

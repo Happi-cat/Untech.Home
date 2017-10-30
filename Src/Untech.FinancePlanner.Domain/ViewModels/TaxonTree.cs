@@ -13,8 +13,8 @@ namespace Untech.FinancePlanner.Domain.ViewModels
 	[DataContract]
 	public class TaxonTree : Taxon, IHierarchical<TaxonTree>
 	{
-		public TaxonTree(int id, int parentId, string name, string description = null)
-			: base(id, parentId, name, description)
+		public TaxonTree(int key, int parentId, string name, string description = null)
+			: base(key, parentId, name, description)
 		{
 		}
 

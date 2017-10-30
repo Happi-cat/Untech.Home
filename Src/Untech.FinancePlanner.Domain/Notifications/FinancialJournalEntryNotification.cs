@@ -8,14 +8,14 @@ namespace Untech.FinancePlanner.Domain.Notifications
 	{
 		public FinancialJournalEntryNotification(FinancialJournalEntry entry)
 		{
-			Id = entry.Id;
-			TaxonId = entry.TaxonId;
+			Key = entry.Key;
+			TaxonKey = entry.TaxonKey;
 			When = entry.When;
 		}
 
-		public int Id { get; private set; }
+		public int Key { get; private set; }
 
-		public int TaxonId { get; private set; }
+		public int TaxonKey { get; private set; }
 
 		public DateTime When { get; private set; }
 	}

@@ -3,7 +3,7 @@ import { IMoney } from '../api/Models';
 export { IMoney };
 
 export interface ITaxonAnnualFinancialReport {
-  taxonId: number;
+  taxonKey: number;
   name: string;
   description: string;
   isSelectable: boolean;

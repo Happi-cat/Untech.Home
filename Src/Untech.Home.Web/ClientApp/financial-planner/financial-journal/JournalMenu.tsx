@@ -12,7 +12,7 @@ interface IJournalMenuProps {
 
 export class JournalMenu extends React.Component<IJournalMenuProps> {
   public render() {
-    const parentId = this.props.taxon.parentId;
+    const parentId = this.props.taxon.parentKey;
     const upVisible = parentId != 0;
 
     const elements = this.props.taxon.elements || [];
@@ -22,16 +22,16 @@ export class JournalMenu extends React.Component<IJournalMenuProps> {
 
       <Menu.Item header content='Taxon' />
       {upVisible && this.renderTaxonItem(parentId, 'Up')}
-      {this.renderTaxonItem(this.props.taxon.id, this.props.taxon.name)}
+      {this.renderTaxonItem(this.props.taxon.key, this.props.taxon.name)}
 
-      {elements.map(e => this.renderTaxonItem(e.id, e.name))}
+      {elements.map(e => this.renderTaxonItem(e.key, e.name))}
     </Menu>;
   }
 
   renderMonthItem(diff: number) {
     const { year, month } = this.getMonthFromCurrent(diff);
     const isActive = diff == 0;
-    const route = '/financial-planner/journal/' + year + '/' + month + '/' + this.props.taxon.id;
+    const route = '/financial-planner/journal/' + year + '/' + month + '/' + this.props.taxon.key;
 
     return <Menu.Item key={diff} as={NavLink} active={isActive} to={route} >
       {pluralizeMonth(month) + ' - ' + year}
@@ -39,7 +39,7 @@ export class JournalMenu extends React.Component<IJournalMenuProps> {
   }
 
   renderTaxonItem(taxonId: number, name: string) {
-    const isActive = taxonId == this.props.taxon.id;
+    const isActive = taxonId == this.props.taxon.key;
     const { year, month } = this.props;
     const route = '/financial-planner/journal/' + year + '/' + month + '/' + taxonId;
 

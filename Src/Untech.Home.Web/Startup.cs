@@ -11,11 +11,12 @@ using Newtonsoft.Json.Serialization;
 using SimpleInjector;
 using Untech.FinancePlanner.Data;
 using Untech.FinancePlanner.Data.Cache;
-using Untech.FinancePlanner.Domain.Storage;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.CQRS.Pipeline;
+using Untech.Practices.DataStorage;
+using Untech.Practices.DataStorage.Cache;
 
 namespace Untech.Home.Web
 {

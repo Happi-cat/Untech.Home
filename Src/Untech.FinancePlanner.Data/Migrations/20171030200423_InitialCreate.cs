@@ -24,10 +24,10 @@ namespace Untech.FinancePlanner.Data.Migrations
                 name: "FinancialJournalEntries",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Key = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Remarks = table.Column<string>(type: "TEXT", nullable: true),
-                    TaxonId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TaxonKey = table.Column<int>(type: "INTEGER", nullable: false),
                     When = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ActualCurrency = table.Column<string>(type: "TEXT", nullable: true),
                     ForecastedCurrency = table.Column<string>(type: "TEXT", nullable: true),
@@ -36,22 +36,22 @@ namespace Untech.FinancePlanner.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FinancialJournalEntries", x => x.Id);
+                    table.PrimaryKey("PK_FinancialJournalEntries", x => x.Key);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Taxons",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Key = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    ParentId = table.Column<int>(type: "INTEGER", nullable: false)
+                    ParentKey = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Taxons", x => x.Id);
+                    table.PrimaryKey("PK_Taxons", x => x.Key);
                 });
         }
 

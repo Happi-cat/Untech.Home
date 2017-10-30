@@ -4,11 +4,11 @@ using System.Linq;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
-using Untech.FinancePlanner.Domain.Storage;
 using Untech.Practices;
 using Untech.Practices.Collections;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
+using Untech.Practices.DataStorage;
 
 namespace Untech.FinancePlanner.Domain.Services
 {
@@ -38,7 +38,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 			foreach (var taxon in rootTaxon.DescendantsAndSelf())
 			{
-				entries.AddRange(_dataStorage.Find(n => n.TaxonId == taxon.Id && n.When >= from && n.When < to));
+				entries.AddRange(_dataStorage.Find(n => n.TaxonKey == taxon.Key && n.When >= from && n.When < to));
 			}
 
 			return entries;
@@ -46,7 +46,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		public FinancialJournalEntry Handle(CreateFinancialJournalEntry request)
 		{
-			var taxon = _dispatcher.Fetch(new TaxonTreeQuery { TaxonId = request.TaxonId });
+			var taxon = _dispatcher.Fetch(new TaxonTreeQuery { TaxonKey = request.TaxonKey });
 			if (!taxon.IsSelectable) throw new InvalidOperationException("Taxon is no selectable");
 
 			var when = DateTime.Today;
@@ -55,7 +55,7 @@ namespace Untech.FinancePlanner.Domain.Services
 				when = new DateTime(request.Year, request.Month, 1);
 			}
 
-			var entry = _dataStorage.Create(new FinancialJournalEntry(0, request.TaxonId)
+			var entry = _dataStorage.Create(new FinancialJournalEntry(0, request.TaxonKey)
 			{
 				Remarks = request.Remarks,
 				Actual = request.Actual,
@@ -70,7 +70,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		public bool Handle(DeleteFinancialJournalEntry request)
 		{
-			var entry = _dataStorage.Find(request.Id);
+			var entry = _dataStorage.Find(request.Key);
 			var result = _dataStorage.Delete(entry);
 
 			if (result)
@@ -83,7 +83,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		public FinancialJournalEntry Handle(UpdateFinancialJournalEntry request)
 		{
-			var entry = _dataStorage.Find(request.Id);
+			var entry = _dataStorage.Find(request.Key);
 
 			entry.Remarks = request.Remarks;
 			entry.Actual = request.Actual;

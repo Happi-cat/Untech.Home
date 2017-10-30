@@ -9,15 +9,15 @@ namespace Untech.FinancePlanner.Domain.Requests
 	[DataContract]
 	public class CreateFinancialJournalEntry : ICommand<FinancialJournalEntry>
 	{
-		public CreateFinancialJournalEntry(int taxonId, int year, int month)
+		public CreateFinancialJournalEntry(int taxonKey, int year, int month)
 		{
-			TaxonId = taxonId;
+			TaxonKey = taxonKey;
 			Year = year;
 			Month = month;
 		}
 
 		[DataMember]
-		public int TaxonId { get; private set; }
+		public int TaxonKey { get; private set; }
 
 		[DataMember]
 		public string Remarks { get; set; }

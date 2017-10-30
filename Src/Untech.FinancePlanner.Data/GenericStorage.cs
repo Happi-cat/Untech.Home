@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Untech.FinancePlanner.Domain.Storage;
+using Untech.Practices.DataStorage;
 
 namespace Untech.FinancePlanner.Data
 {
@@ -17,11 +17,11 @@ namespace Untech.FinancePlanner.Data
 			_contextFactory = contextFactory;
 		}
 
-		public T Find(int id)
+		public T Find(int key)
 		{
 			using (var context = _contextFactory())
 			{
-				return context.Set<T>().SingleOrDefault(n => n.Id == id);
+				return context.Set<T>().SingleOrDefault(n => n.Key == key);
 			}
 		}
 

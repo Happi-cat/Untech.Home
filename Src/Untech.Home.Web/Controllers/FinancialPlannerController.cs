@@ -26,22 +26,22 @@ namespace Untech.Home.Web.Controllers
 		public TaxonTree GetTaxonTree(int deep) => _dispatcher
 			.Fetch(new TaxonTreeQuery { Deep = deep });
 
-		[HttpGet("taxon/{taxonId}")]
-		public TaxonTree GetTaxonTree(int taxonId, int deep = 0) => _dispatcher
-			.Fetch(new TaxonTreeQuery { TaxonId = taxonId, Deep = deep });
+		[HttpGet("taxon/{taxonKey}")]
+		public TaxonTree GetTaxonTree(int taxonKey, int deep = 0) => _dispatcher
+			.Fetch(new TaxonTreeQuery { TaxonKey = taxonKey, Deep = deep });
 
 		[HttpGet("journal")]
 		public IEnumerable<FinancialJournalEntry> GetJournalEntries(int taxonId = 0, int deep = 0) => _dispatcher
 			.Fetch(new FinancialJournalQuery(DateTime.Today)
 			{
-				Taxon = new TaxonTreeQuery { TaxonId = taxonId, Deep = deep }
+				Taxon = new TaxonTreeQuery { TaxonKey = taxonId, Deep = deep }
 			});
 
 		[HttpGet("journal/{year}/{month}")]
 		public IEnumerable<FinancialJournalEntry> GetJournalEntries(int year, int month, int taxonId = 0, int deep = 0) => _dispatcher
 			.Fetch(new FinancialJournalQuery(year, month)
 			{
-				Taxon = new TaxonTreeQuery { TaxonId = taxonId, Deep = deep }
+				Taxon = new TaxonTreeQuery { TaxonKey = taxonId, Deep = deep }
 			});
 
 		[HttpPost("journal")]
@@ -50,18 +50,18 @@ namespace Untech.Home.Web.Controllers
 			return _dispatcher.Process(request);
 		}
 
-		[HttpPut("journal/{id}")]
-		public FinancialJournalEntry UpdateJournalEntry(int id, [FromBody]UpdateFinancialJournalEntry request)
+		[HttpPut("journal/{key}")]
+		public FinancialJournalEntry UpdateJournalEntry(int key, [FromBody]UpdateFinancialJournalEntry request)
 		{
-			if (request.Id != id) throw new ArgumentException(nameof(id));
+			if (request.Key != key) throw new ArgumentException(nameof(key));
 
 			return _dispatcher.Process(request);
 		}
 
-		[HttpDelete("journal/{id}")]
-		public bool DeleteJournalEntry(int id)
+		[HttpDelete("journal/{key}")]
+		public bool DeleteJournalEntry(int key)
 		{
-			return _dispatcher.Process(new DeleteFinancialJournalEntry(id));
+			return _dispatcher.Process(new DeleteFinancialJournalEntry(key));
 		}
 	}
 }

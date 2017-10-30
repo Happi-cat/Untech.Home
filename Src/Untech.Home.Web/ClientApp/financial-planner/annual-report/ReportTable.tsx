@@ -82,7 +82,7 @@ class ReportBody extends React.Component<IReportBodyProps, IReportBodyState> {
   }
 
   renderRowAndChilds(level: number, model: ITaxonAnnualFinancialReport) {
-    const expanded = this.state.expandedTaxons.indexOf(model.taxonId) > -1;
+    const expanded = this.state.expandedTaxons.indexOf(model.taxonKey) > -1;
 
     let expandedRows: React.ReactNode[] = expanded && model.elements
       ? model.elements.map(m => this.renderRowAndChilds(level + 1, m))
@@ -105,14 +105,14 @@ class ReportBody extends React.Component<IReportBodyProps, IReportBodyState> {
       : <Icon name='triangle left' />
 
     let heading = model.elements && model.elements.length
-      ? <th className='report-heading report-heading--clickable' onClick={() => this.toggleExpanded(model.taxonId)}>{icon}{model.name}</th>
+      ? <th className='report-heading report-heading--clickable' onClick={() => this.toggleExpanded(model.taxonKey)}>{icon}{model.name}</th>
       : <th className='report-heading'>{model.name}</th>;
 
-    return <tr key={model.taxonId} className={cls}>
+    return <tr key={model.taxonKey} className={cls}>
       {heading}
 
       {model.months.map(monthReport => <ReportMoneyCell key={getMonthlyReportKey(monthReport)}
-        taxonId={model.taxonId}
+        taxonId={model.taxonKey}
         showTotals={!expanded}
         model={monthReport}
         onClick={this.props.onClick}

@@ -110,7 +110,7 @@ class FinancialJournalInner extends React.Component<IFinancialJournalInnerProps>
             remarks: model.remarks,
             actual: model.actual,
             forecasted: model.forecasted,
-            taxonId: taxon.id,
+            taxonKey: taxon.key,
             year: year,
             month: month
         }).then(data => {
@@ -120,20 +120,20 @@ class FinancialJournalInner extends React.Component<IFinancialJournalInnerProps>
 
     onJournalEntryUpdate = (id: number, model: IFinancialJournalEntryChange) => {
         apiService.updateJournalEntry({
-            id: id,
+            key: id,
             remarks: model.remarks,
             actual: model.actual,
             forecasted: model.forecasted,
         }).then(data => {
-            this.raiseOnUpdated(this.props.entries.map(n => n.id == id ? data : n))
+            this.raiseOnUpdated(this.props.entries.map(n => n.key == id ? data : n))
         });
     }
 
     onJournalEntryDelete = (id: number) => {
         apiService.deleteJournalEntry({
-            id: id
+            key: id
         }).then(() => {
-            this.raiseOnUpdated(this.props.entries.filter(i => i.id != id))
+            this.raiseOnUpdated(this.props.entries.filter(i => i.key != id))
         });
     }
 

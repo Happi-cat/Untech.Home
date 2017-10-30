@@ -27,7 +27,11 @@ namespace Untech.FinancePlanner.Data
 		{
 			modelBuilder.Entity<FinancialJournalEntry>()
 				.OwnsOne(e => e.Actual, mb => ConfigureMoneyColumns("Actual", mb))
-				.OwnsOne(e => e.Forecasted, mb => ConfigureMoneyColumns("Forecasted", mb));
+				.OwnsOne(e => e.Forecasted, mb => ConfigureMoneyColumns("Forecasted", mb))
+				.HasKey(e => e.Key);
+
+			modelBuilder.Entity<Taxon>()
+				.HasKey(e => e.Key);
 
 			modelBuilder.Entity<CacheEntry>()
 				.HasKey(c => c.Key);

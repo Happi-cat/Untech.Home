@@ -68,7 +68,7 @@ class Mapper {
     });
 
     return {
-      taxonId: 0,
+      taxonKey: 0,
       elements: entries,
       months: months,
       isSelectable: false,
@@ -80,14 +80,14 @@ class Mapper {
       let taxonMonthlyReports = transformedMonthlyReports.map(function (monthlyReport): IMonthlyFinancialReport {
         const { year, month, isPast, isNow } = monthlyReport;
 
-        const report = monthlyReport.flattenizedEntries[taxon.id] || {};
+        const report = monthlyReport.flattenizedEntries[taxon.key] || {};
         const { actual, actualTotals, forecasted, forecastedTotals } = report;
 
         return { year, month, isPast, isNow, actual, actualTotals, forecasted, forecastedTotals, };
       });
 
       return {
-        taxonId: taxon.id,
+        taxonKey: taxon.key,
         name: taxon.name,
         description: taxon.description,
         isSelectable: taxon.isSelectable,
@@ -105,7 +105,7 @@ class Mapper {
     return dict;
 
     function iterator(entry: IMonthlyReportEntry) {
-      dict[entry.taxonId] = entry;
+      dict[entry.taxonKey] = entry;
 
       if (entry.entries) {
         entry.entries.forEach(iterator);

@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Untech.FinancePlanner.Domain.Storage;
+using Untech.Practices.DataStorage.Cache;
 
 namespace Untech.FinancePlanner.Data.Cache
 {
@@ -15,24 +15,38 @@ namespace Untech.FinancePlanner.Data.Cache
 			_contextFactory = contextFactory;
 		}
 
-		public void Drop(string key)
+		public void Drop(CacheKey key, bool prefix = false)
 		{
+			var internalKey = key.ToString();
+
 			using (var context = _contextFactory())
 			{
-				var entry = context.Set<CacheEntry>().SingleOrDefault(n => n.Key == key);
+				var set = context.Set<CacheEntry>();
+				if (prefix)
+				{
+					internalKey = internalKey.TrimEnd('/') + '/';
+					var entries = set.Where(n => n.Key.StartsWith(internalKey)).ToList();
+					entries.ForEach(e => set.Remove(e));
+				}
+				else
+				{
+					var entry = set.SingleOrDefault(n => n.Key == internalKey);
 
-				if (entry == null) return;
+					if (entry == null) return;
 
-				context.Set<CacheEntry>().Remove(entry);
+					set.Remove(entry);
+				}
 				context.SaveChanges();
 			}
 		}
 
-		public T Get<T>(string key)
+		public T Get<T>(CacheKey key)
 		{
+			var internalKey = key.ToString();
+
 			using (var context = _contextFactory())
 			{
-				var entry = context.Set<CacheEntry>().SingleOrDefault(n => n.Key == key);
+				var entry = context.Set<CacheEntry>().SingleOrDefault(n => n.Key == internalKey);
 
 				if (entry == null) return default(T);
 
@@ -40,13 +54,15 @@ namespace Untech.FinancePlanner.Data.Cache
 			}
 		}
 
-		public void Set(string key, object value)
+		public void Set(CacheKey key, object value)
 		{
+			var internalKey = key.ToString();
+
 			using (var context = _contextFactory())
 			{
 				var entity = new CacheEntry
 				{
-					Key = key,
+					Key = internalKey,
 					Json = JsonConvert.SerializeObject(value),
 				};
 

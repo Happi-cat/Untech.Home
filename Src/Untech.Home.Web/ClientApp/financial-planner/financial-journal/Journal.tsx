@@ -43,7 +43,7 @@ export class Journal extends React.Component<IJournalProps> {
             </tbody>}
 
             <tbody>
-                {this.props.entries.map(e => <Row key={e.id}
+                {this.props.entries.map(e => <Row key={e.key}
                     model={e}
                     editable={this.props.editable}
                     onUpdate={this.props.onUpdate}
@@ -116,13 +116,13 @@ class Row extends React.Component<IRowProps, IRowState> {
     }
 
     handleDelete = () => {
-        this.props.onDelete(this.props.model.id);
+        this.props.onDelete(this.props.model.key);
     }
 
     handleSave = (model: IEditModel) => {
         this.setState({ edit: false });
 
-        this.props.onUpdate(this.props.model.id, {
+        this.props.onUpdate(this.props.model.key, {
             remarks: model.remarks,
             actual: { amount: model.actual, currency: { id: 'BYN' } },
             forecasted: { amount: model.forecasted, currency: { id: 'BYN' } }
