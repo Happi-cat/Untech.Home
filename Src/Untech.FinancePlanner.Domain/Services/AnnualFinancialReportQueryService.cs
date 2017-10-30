@@ -116,14 +116,14 @@ namespace Untech.FinancePlanner.Domain.Services
 					.ToList();
 
 				report.ActualTotals = incomes
-					.Sum(n => n.Actual)
+					.Sum(n => n.ActualTotals)
 					.Subtract(expenses
-						.Sum(n => n.Actual));
+						.Sum(n => n.ActualTotals));
 
 				report.ForecastedTotals = incomes
-					.Sum(n => n.Forecasted)
+					.Sum(n => n.ForecastedTotals)
 					.Subtract(expenses
-						.Sum(n => n.Forecasted));
+						.Sum(n => n.ForecastedTotals));
 
 				return report;
 			}
