@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Menu } from 'semantic-ui-react';
+import { Menu, Grid } from 'semantic-ui-react';
 import { ITaxonTree } from '../api';
 import { pluralizeMonth } from '../../utils';
 
@@ -16,16 +16,23 @@ export class JournalMenu extends React.Component<IJournalMenuProps> {
     const upVisible = parentId != 0;
 
     const elements = this.props.taxon.elements || [];
-    return <Menu vertical tabular>
-      <Menu.Item header content='Month' />
-      {[-3, -2, -1, 0, 1, 2, 3].map(diff => this.renderMonthItem(diff))}
+    return <Grid>
+      <Grid.Column width='8'>
+        <Menu vertical fluid tabular='right'>
+          <Menu.Item header content='Month' />
+          {[-3, -2, -1, 0, 1, 2, 3].map(diff => this.renderMonthItem(diff))}
+        </Menu>
+      </Grid.Column>
+      <Grid.Column width='8'>
+        <Menu vertical fluid tabular='right'>
+          <Menu.Item header content='Taxon' />
+          {upVisible && this.renderTaxonItem(parentId, 'Up')}
+          {this.renderTaxonItem(this.props.taxon.key, this.props.taxon.name)}
 
-      <Menu.Item header content='Taxon' />
-      {upVisible && this.renderTaxonItem(parentId, 'Up')}
-      {this.renderTaxonItem(this.props.taxon.key, this.props.taxon.name)}
-
-      {elements.map(e => this.renderTaxonItem(e.key, e.name))}
-    </Menu>;
+          {elements.map(e => this.renderTaxonItem(e.key, e.name))}
+        </Menu>
+      </Grid.Column>
+    </Grid>;
   }
 
   renderMonthItem(diff: number) {

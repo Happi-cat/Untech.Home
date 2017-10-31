@@ -91,14 +91,15 @@ class FinancialJournalInner extends React.Component<IFinancialJournalInnerProps>
         const { year, month, taxon, entries } = this.props;
 
         return <Grid>
-            <Grid.Column width={2} >
-                <JournalMenu year={year} month={month} taxon={taxon} />
-            </Grid.Column>
-            <Grid.Column width={14}>
+
+            <Grid.Column width={12}>
                 <Journal editable={taxon.isSelectable} entries={entries}
                     onAdd={this.onJournalEntryAdd}
                     onUpdate={this.onJournalEntryUpdate}
                     onDelete={this.onJournalEntryDelete} />
+            </Grid.Column>
+            <Grid.Column width={4} >
+                <JournalMenu year={year} month={month} taxon={taxon} />
             </Grid.Column>
         </Grid>;
     }
