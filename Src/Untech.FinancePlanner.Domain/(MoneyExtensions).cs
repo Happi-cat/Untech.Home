@@ -30,7 +30,7 @@ namespace Untech.Practices
 			if (left == null) return right;
 			if (right == null) return left;
 
-			if (left.Currency != right.Currency) throw new InvalidOperationException("Cannot summarize different currencies without conversion");
+			if (!left.Currency.Equals(right.Currency)) throw new InvalidOperationException("Cannot summarize different currencies without conversion");
 
 			return new Money(left.Amount - right.Amount, left.Currency);
 		}
