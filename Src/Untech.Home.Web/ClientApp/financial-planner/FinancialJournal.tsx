@@ -31,8 +31,17 @@ export class FinancialJournal extends React.Component<RouteComponentProps<IFinan
         this.load(this.props.match.params);
     }
 
+    public componentDidMount() {
+        console.log('didMount');
+    }
+
+
     public componentWillReceiveProps(props: RouteComponentProps<IFinancialJournalProps>) {
         this.load(props.match.params);
+    }
+
+    public componentWillUnmount() {
+        console.log('unmounted');
     }
 
     public render() {
@@ -57,10 +66,6 @@ export class FinancialJournal extends React.Component<RouteComponentProps<IFinan
     }
 
     load(props: IFinancialJournalProps) {
-        if (!this.mounted) {
-            return;
-        }
-
         const { year, month, taxonId } = props;
 
         Promise.all([
@@ -70,6 +75,7 @@ export class FinancialJournal extends React.Component<RouteComponentProps<IFinan
             let [entries, taxon] = res;
 
             this.setState({
+                loading: false,
                 taxon: taxon,
                 entries: entries || []
             });
@@ -87,6 +93,10 @@ interface IFinancialJournalInnerProps {
 }
 
 class FinancialJournalInner extends React.Component<IFinancialJournalInnerProps> {
+    public componentWillReceiveProps(newProps: IFinancialJournalInnerProps) {
+        console.log('inner.newProps', newProps);
+    }
+
     public render() {
         const { year, month, taxon, entries } = this.props;
 
@@ -139,6 +149,7 @@ class FinancialJournalInner extends React.Component<IFinancialJournalInnerProps>
     }
 
     raiseOnUpdated(entries: IFinancialJournalEntry[]) {
+        console.log('raiseOnUpdated', this);
         const { onUpdated } = this.props;
         onUpdated && onUpdated(entries);
     }

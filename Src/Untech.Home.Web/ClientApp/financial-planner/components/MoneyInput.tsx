@@ -21,7 +21,7 @@ const currencies = [
 export class MoneyInput extends React.Component<IMoneyInputProps> {
     public render() {
         const currencySelector = <Dropdown
-            defaultValue={this.props.initialCurrencyCode}
+            value={this.props.initialCurrencyCode}
             options={currencies}
             onChange={this.handleCurrencyChange} />;
 
@@ -31,14 +31,14 @@ export class MoneyInput extends React.Component<IMoneyInputProps> {
             labelPosition='right'
             placeholder='Amount'
             type='number'
-            defaultValue={this.props.initialAmount}
+            value={this.props.initialAmount}
             onChange={this.handleAmountChange}
         />;
     }
 
     handleAmountChange = (e: any, data: any) => {
         if (data.value != undefined) {
-            this.raiseOnChange({ amount: data.value });
+            this.raiseOnChange({ amount: Number.parseFloat(data.value) });
         }
     }
 
@@ -51,8 +51,8 @@ export class MoneyInput extends React.Component<IMoneyInputProps> {
     raiseOnChange(newData: any) {
         const data = {
             ...this.props,
-            amount: this.props.initialAmount || newData.amount,
-            currencyCode: this.props.initialCurrencyCode || newData.currencyCode,
+            amount: newData.amount || this.props.initialAmount,
+            currencyCode: newData.currencyCode || this.props.initialCurrencyCode,
         }
 
         this.props.onChange(data);

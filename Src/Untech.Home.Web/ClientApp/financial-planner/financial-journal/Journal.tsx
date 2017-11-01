@@ -18,15 +18,24 @@ interface IJournalProps {
     onDelete(id: number): void;
 }
 
-export class Journal extends React.Component<IJournalProps> {
-    constructor(props: any) {
-        super(props);
-
-        this.state = { entries: props.entries };
-    }
-
+export class Journal extends React.Component<IJournalProps, { addNew: boolean }> {
     public render() {
         const model = { remarks: '', actual: 0, actualCurrency: 'BYN', forecasted: 0, forecastedCurrency: 'BYN' };
+
+        // let AddRow = () => (this.state.addNew) ?
+        //     <EditRow model={model} onSave={this.handleNewItemSave} onCancel={this.handleNewItemCancel} />
+        //     : <tr>
+        //         <th></th>
+        //         <td></td>
+        //         <td></td>
+        //         <td></td>
+        //         <td>
+        //             <Button.Group floated='right'>
+        //                 <Button onClick={this.handleNewItem} icon='plus' content='New' positive />
+        //             </Button.Group>
+        //         </td>
+        //     </tr>;
+
         return <Table>
             <thead>
                 <tr>
@@ -39,7 +48,7 @@ export class Journal extends React.Component<IJournalProps> {
             </thead>
 
             {this.props.editable && <tbody>
-                <EditRow model={model} onSave={this.handleNewItemSave} onCancel={this.handleNewItemCancel} />
+                <AddRow onAdd={this.props.onAdd} />
             </tbody>}
 
             <tbody>
@@ -47,9 +56,21 @@ export class Journal extends React.Component<IJournalProps> {
                     model={e}
                     editable={this.props.editable}
                     onUpdate={this.props.onUpdate}
-                    onDelete={this.props.onDelete} />)}
+                    onDelete={this.props.onDelete} />
+                )}
             </tbody>
         </Table>;
+    }
+    constructor(props: any) {
+        super(props);
+
+        this.state = { addNew: false };
+    }
+
+
+
+    handleNewItem = () => {
+        this.setState({ addNew: true });
     }
 
     handleNewItemSave = (model: IEditModel) => {
@@ -60,7 +81,53 @@ export class Journal extends React.Component<IJournalProps> {
         });
     }
 
-    handleNewItemCancel = () => { }
+    handleNewItemCancel = () => {
+        this.setState({ addNew: false });
+    }
+}
+
+class AddRow extends React.Component<{ onAdd(args: IFinancialJournalEntryChange): void }, { addNew: boolean }> {
+    constructor(props: any) {
+        super(props);
+
+        this.state = { addNew: false };
+    }
+
+    public render() {
+        const model = { remarks: '', actual: 0, actualCurrency: 'BYN', forecasted: 0, forecastedCurrency: 'BYN' };
+
+        if (this.state.addNew) {
+            return <EditRow model={model} onSave={this.handleNewItemSave} onCancel={this.handleNewItemCancel} />
+        }
+
+        return <tr>
+            <th></th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <Button.Group floated='right'>
+                    <Button onClick={this.handleNewItem} icon='plus' content='New' positive />
+                </Button.Group>
+            </td>
+        </tr>;
+    }
+
+    handleNewItem = () => {
+        this.setState({ addNew: true });
+    }
+
+    handleNewItemSave = (model: IEditModel) => {
+        this.props.onAdd({
+            remarks: model.remarks,
+            actual: { amount: model.actual, currency: { id: 'BYN' } },
+            forecasted: { amount: model.forecasted, currency: { id: 'BYN' } }
+        });
+    }
+
+    handleNewItemCancel = () => {
+        this.setState({ addNew: false });
+    }
 }
 
 interface IRowProps {
@@ -161,7 +228,7 @@ class EditRow extends React.Component<IEditRowProps, IEditRowState> {
         super(props);
 
         const model = this.props.model;
-        this.state = { ...this.props.model };
+        this.state = { ...model };
     }
 
     public render() {
@@ -169,10 +236,10 @@ class EditRow extends React.Component<IEditRowProps, IEditRowState> {
             <td>
                 <Input fluid name='remarks' type='text' defaultValue={this.state.remarks} onChange={this.handleInputChange} /></td>
             <td>
-                <MoneyInput fluid name='actual' initialAmount={this.state.actual} initialCurrencyCode='BYN' onChange={this.handleMoneyChange} />
+                <MoneyInput fluid name='actual' initialAmount={this.state.actual} initialCurrencyCode={this.state.actualCurrency} onChange={this.handleMoneyChange} />
             </td>
             <td>
-                <MoneyInput fluid name='forecasted' initialAmount={this.state.forecasted} initialCurrencyCode='BYN' onChange={this.handleMoneyChange} />
+                <MoneyInput fluid name='forecasted' initialAmount={this.state.forecasted} initialCurrencyCode={this.state.forecastedCurrency} onChange={this.handleMoneyChange} />
             </td>
             <td></td>
             <td>
@@ -192,9 +259,11 @@ class EditRow extends React.Component<IEditRowProps, IEditRowState> {
 
     handleMoneyChange = (data: any) => {
         const { name, amount, currencyCode } = data;
-        let obj: any = {};
-        obj[name] = amount;
-        obj[name + 'Currency'] = currencyCode;
+        let obj: any = {
+            [name]: amount,
+            [name + 'Currency']: currencyCode
+        };
+
         this.setState(obj);
     }
 
