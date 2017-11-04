@@ -46,7 +46,7 @@ module.exports = (env) => {
                 'process.env.NODE_ENV': isDevBuild ? '"development"' : '"production"'
             })
         ].concat(isDevBuild ? [] : [
-            new webpack.optimize.UglifyJsPlugin()
+            //new webpack.optimize.UglifyJsPlugin()
         ])
     }];
 };

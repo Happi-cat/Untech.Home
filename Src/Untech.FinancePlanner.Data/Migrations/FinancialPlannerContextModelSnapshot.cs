@@ -67,7 +67,7 @@ namespace Untech.FinancePlanner.Data.Migrations
                 {
                     b.OwnsOne("Untech.Practices.Money", "Actual", b1 =>
                         {
-                            b1.Property<int?>("FinancialJournalEntryKey");
+                            b1.Property<int>("FinancialJournalEntryKey");
 
                             b1.Property<double>("Amount")
                                 .HasColumnName("ActualAmount");
@@ -81,7 +81,7 @@ namespace Untech.FinancePlanner.Data.Migrations
 
                             b1.OwnsOne("Untech.Practices.Currency", "Currency", b2 =>
                                 {
-                                    b2.Property<int?>("MoneyFinancialJournalEntryKey");
+                                    b2.Property<int>("MoneyFinancialJournalEntryKey");
 
                                     b2.Property<string>("Id")
                                         .HasColumnName("ActualCurrency");

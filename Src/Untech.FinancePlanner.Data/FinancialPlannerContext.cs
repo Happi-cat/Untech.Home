@@ -26,24 +26,27 @@ namespace Untech.FinancePlanner.Data
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<FinancialJournalEntry>()
-				.OwnsOne(e => e.Actual, mb => ConfigureMoneyColumns("Actual", mb))
 				.OwnsOne(e => e.Forecasted, mb => ConfigureMoneyColumns("Forecasted", mb))
-				.HasKey(e => e.Key);
+				.OwnsOne(e => e.Actual, mb => ConfigureMoneyColumns("Actual", mb));
 
-			modelBuilder.Entity<Taxon>()
-				.HasKey(e => e.Key);
-
-			modelBuilder.Entity<CacheEntry>()
-				.HasKey(c => c.Key);
+			modelBuilder.Entity<FinancialJournalEntry>().HasKey(e => e.Key);
+			modelBuilder.Entity<Taxon>().HasKey(e => e.Key);
+			modelBuilder.Entity<CacheEntry>().HasKey(e => e.Key);
 		}
 
-		private static void ConfigureMoneyColumns(string prefix, ReferenceOwnershipBuilder<FinancialJournalEntry, Practices.Money> moneyBuilder)
+		private static void ConfigureMoneyColumns(string prefix, ReferenceOwnershipBuilder<FinancialJournalEntry, Practices.Money> builder)
 		{
-			moneyBuilder.Property(m => m.Amount).HasColumnName(prefix + "Amount");
+			builder.Property<int>("FinancialJournalEntryKey");
 
-			moneyBuilder.OwnsOne(m => m.Currency, mb => mb
-				.Ignore(m => m.Name)
-				.Property(m => m.Id).HasColumnName(prefix + "Currency"));
+			builder.Property(m => m.Amount).HasColumnName(prefix + "Amount");
+
+			builder.OwnsOne(m => m.Currency, mb =>
+			{
+				mb.Property<int>("MoneyFinancialJournalEntryKey");
+
+				mb.Ignore(m => m.Name);
+				mb.Property(m => m.Id).HasColumnName(prefix + "Currency");
+			});
 		}
 	}
 }

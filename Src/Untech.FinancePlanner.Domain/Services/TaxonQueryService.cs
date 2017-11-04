@@ -51,7 +51,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		private List<TaxonTree> GetDescendants(int parentTaxonKey, int deep)
 		{
-			if (deep == 0) return new List<TaxonTree>();
+			if (deep == 0) return null;
 
 			deep = DecrementDeep(deep);
 
