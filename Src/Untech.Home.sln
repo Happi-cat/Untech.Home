@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D6AA5292-C579-4FAE-834E-8DB7A7860894}"
 EndProject
@@ -24,6 +24,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.FinancePlanner.Domain", "Untech.FinancePlanner.Domain\Untech.FinancePlanner.Domain.csproj", "{8E92E6A7-3E4A-42F9-AD61-CE6D6F09E342}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Collections", "..\External\Untech.Practices\Src\Untech.Practices.Collections\Untech.Practices.Collections.csproj", "{0F2A25B4-A03A-4E2E-B610-DD8791984C55}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Home.Web", "Untech.Home.Web\Untech.Home.Web.csproj", "{A281CBC8-E7E6-46C0-922B-FEA6675A56A5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.DataStorage.Abstractions", "..\External\Untech.Practices\Src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj", "{62CA161E-B8AB-4791-9C61-490833870AF6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.DataStorage.Cache.Abstractions", "..\External\Untech.Practices\Src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj", "{FFD831F9-DDA8-405F-8D70-59365058D680}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +69,22 @@ Global
 		{8E92E6A7-3E4A-42F9-AD61-CE6D6F09E342}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E92E6A7-3E4A-42F9-AD61-CE6D6F09E342}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E92E6A7-3E4A-42F9-AD61-CE6D6F09E342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F2A25B4-A03A-4E2E-B610-DD8791984C55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F2A25B4-A03A-4E2E-B610-DD8791984C55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F2A25B4-A03A-4E2E-B610-DD8791984C55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F2A25B4-A03A-4E2E-B610-DD8791984C55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A281CBC8-E7E6-46C0-922B-FEA6675A56A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A281CBC8-E7E6-46C0-922B-FEA6675A56A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A281CBC8-E7E6-46C0-922B-FEA6675A56A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A281CBC8-E7E6-46C0-922B-FEA6675A56A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62CA161E-B8AB-4791-9C61-490833870AF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62CA161E-B8AB-4791-9C61-490833870AF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62CA161E-B8AB-4791-9C61-490833870AF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62CA161E-B8AB-4791-9C61-490833870AF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFD831F9-DDA8-405F-8D70-59365058D680}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFD831F9-DDA8-405F-8D70-59365058D680}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFD831F9-DDA8-405F-8D70-59365058D680}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFD831F9-DDA8-405F-8D70-59365058D680}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +94,9 @@ Global
 		{6ABFF906-9E08-446A-837C-D89023A00A33} = {77EB491E-6C4C-4AC7-8594-359E1ADC6F85}
 		{B94542B3-1963-494D-82A4-825133FC5099} = {77EB491E-6C4C-4AC7-8594-359E1ADC6F85}
 		{4817DF31-4A54-4EA5-B50D-152D7BAB13F0} = {77EB491E-6C4C-4AC7-8594-359E1ADC6F85}
+		{0F2A25B4-A03A-4E2E-B610-DD8791984C55} = {77EB491E-6C4C-4AC7-8594-359E1ADC6F85}
+		{62CA161E-B8AB-4791-9C61-490833870AF6} = {77EB491E-6C4C-4AC7-8594-359E1ADC6F85}
+		{FFD831F9-DDA8-405F-8D70-59365058D680} = {77EB491E-6C4C-4AC7-8594-359E1ADC6F85}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B8A325F9-7549-4ED8-8BDA-13DEC0BDB03F}

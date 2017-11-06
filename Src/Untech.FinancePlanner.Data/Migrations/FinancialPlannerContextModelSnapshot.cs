@@ -33,32 +33,32 @@ namespace Untech.FinancePlanner.Data.Migrations
 
             modelBuilder.Entity("Untech.FinancePlanner.Domain.Models.FinancialJournalEntry", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("Key")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Remarks");
 
-                    b.Property<int>("TaxonId");
+                    b.Property<int>("TaxonKey");
 
                     b.Property<DateTime>("When");
 
-                    b.HasKey("Id");
+                    b.HasKey("Key");
 
                     b.ToTable("FinancialJournalEntries");
                 });
 
             modelBuilder.Entity("Untech.FinancePlanner.Domain.Models.Taxon", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("Key")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("ParentId");
+                    b.Property<int>("ParentKey");
 
-                    b.HasKey("Id");
+                    b.HasKey("Key");
 
                     b.ToTable("Taxons");
                 });
@@ -67,7 +67,7 @@ namespace Untech.FinancePlanner.Data.Migrations
                 {
                     b.OwnsOne("Untech.Practices.Money", "Actual", b1 =>
                         {
-                            b1.Property<int>("FinancialJournalEntryId");
+                            b1.Property<int>("FinancialJournalEntryKey");
 
                             b1.Property<double>("Amount")
                                 .HasColumnName("ActualAmount");
@@ -76,12 +76,12 @@ namespace Untech.FinancePlanner.Data.Migrations
 
                             b1.HasOne("Untech.FinancePlanner.Domain.Models.FinancialJournalEntry")
                                 .WithOne("Actual")
-                                .HasForeignKey("Untech.Practices.Money", "FinancialJournalEntryId")
+                                .HasForeignKey("Untech.Practices.Money", "FinancialJournalEntryKey")
                                 .OnDelete(DeleteBehavior.Cascade);
 
                             b1.OwnsOne("Untech.Practices.Currency", "Currency", b2 =>
                                 {
-                                    b2.Property<int>("MoneyFinancialJournalEntryId");
+                                    b2.Property<int>("MoneyFinancialJournalEntryKey");
 
                                     b2.Property<string>("Id")
                                         .HasColumnName("ActualCurrency");
@@ -90,14 +90,14 @@ namespace Untech.FinancePlanner.Data.Migrations
 
                                     b2.HasOne("Untech.Practices.Money")
                                         .WithOne("Currency")
-                                        .HasForeignKey("Untech.Practices.Currency", "MoneyFinancialJournalEntryId")
+                                        .HasForeignKey("Untech.Practices.Currency", "MoneyFinancialJournalEntryKey")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
                         });
 
                     b.OwnsOne("Untech.Practices.Money", "Forecasted", b1 =>
                         {
-                            b1.Property<int?>("FinancialJournalEntryId");
+                            b1.Property<int>("FinancialJournalEntryKey");
 
                             b1.Property<double>("Amount")
                                 .HasColumnName("ForecastedAmount");
@@ -106,12 +106,12 @@ namespace Untech.FinancePlanner.Data.Migrations
 
                             b1.HasOne("Untech.FinancePlanner.Domain.Models.FinancialJournalEntry")
                                 .WithOne("Forecasted")
-                                .HasForeignKey("Untech.Practices.Money", "FinancialJournalEntryId")
+                                .HasForeignKey("Untech.Practices.Money", "FinancialJournalEntryKey")
                                 .OnDelete(DeleteBehavior.Cascade);
 
                             b1.OwnsOne("Untech.Practices.Currency", "Currency", b2 =>
                                 {
-                                    b2.Property<int?>("MoneyFinancialJournalEntryId");
+                                    b2.Property<int>("MoneyFinancialJournalEntryKey");
 
                                     b2.Property<string>("Id")
                                         .HasColumnName("ForecastedCurrency");
@@ -120,7 +120,7 @@ namespace Untech.FinancePlanner.Data.Migrations
 
                                     b2.HasOne("Untech.Practices.Money")
                                         .WithOne("Currency")
-                                        .HasForeignKey("Untech.Practices.Currency", "MoneyFinancialJournalEntryId")
+                                        .HasForeignKey("Untech.Practices.Currency", "MoneyFinancialJournalEntryKey")
                                         .OnDelete(DeleteBehavior.Cascade);
                                 });
                         });

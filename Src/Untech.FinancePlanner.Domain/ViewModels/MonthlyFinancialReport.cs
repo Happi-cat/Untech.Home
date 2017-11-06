@@ -21,10 +21,10 @@ namespace Untech.FinancePlanner.Domain.ViewModels
 		public int Month { get; private set; }
 
 		[DataMember]
-		public Money ActualBalance { get; set; }
+		public Money ActualTotals { get; set; }
 
 		[DataMember]
-		public Money ForecastedBalance { get; set; }
+		public Money ForecastedTotals { get; set; }
 
 		[DataMember]
 		public IReadOnlyCollection<MonthlyFinancialReportEntry> Entries { get; set; }

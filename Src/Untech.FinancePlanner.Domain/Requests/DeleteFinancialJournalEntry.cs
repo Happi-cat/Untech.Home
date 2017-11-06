@@ -6,12 +6,12 @@ namespace Untech.FinancePlanner.Domain.Requests
 	[DataContract]
 	public class DeleteFinancialJournalEntry : ICommand<bool>
 	{
-		public DeleteFinancialJournalEntry(int id)
+		public DeleteFinancialJournalEntry(int key)
 		{
-			Id = id;
+			Key = key;
 		}
 
 		[DataMember]
-		public int Id { get; private set; }
+		public int Key { get; private set; }
 	}
 }

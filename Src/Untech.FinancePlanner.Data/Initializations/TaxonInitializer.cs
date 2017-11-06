@@ -43,7 +43,7 @@ namespace Untech.FinancePlanner.Data.Initializations
 			{
 				var entry = context.Taxons.Add(new Taxon(0, parentId, element.Name));
 				context.SaveChanges();
-				Initialize(context, entry.Entity.Id, element.Elements);
+				Initialize(context, entry.Entity.Key, element.Elements);
 			}
 		}
 

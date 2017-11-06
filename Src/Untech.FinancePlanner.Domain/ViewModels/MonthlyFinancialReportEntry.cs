@@ -7,19 +7,25 @@ namespace Untech.FinancePlanner.Domain.ViewModels
 	[DataContract]
 	public class MonthlyFinancialReportEntry
 	{
-		public MonthlyFinancialReportEntry(int taxonId)
+		public MonthlyFinancialReportEntry(int taxonKey)
 		{
-			TaxonId = taxonId;
+			TaxonKey = taxonKey;
 		}
 
 		[DataMember]
-		public int TaxonId { get; private set; }
+		public int TaxonKey { get; private set; }
 
 		[DataMember]
 		public Money Actual { get; set; }
 
 		[DataMember]
+		public Money ActualTotals { get; set; }
+
+		[DataMember]
 		public Money Forecasted { get; set; }
+
+		[DataMember]
+		public Money ForecastedTotals { get; set; }
 
 		[DataMember]
 		public IReadOnlyCollection<MonthlyFinancialReportEntry> Entries { get; set; }

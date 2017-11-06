@@ -8,13 +8,13 @@ namespace Untech.FinancePlanner.Domain.Requests
 	[DataContract]
 	public class UpdateFinancialJournalEntry : ICommand<FinancialJournalEntry>
 	{
-		public UpdateFinancialJournalEntry(int id)
+		public UpdateFinancialJournalEntry(int key)
 		{
-			Id = id;
+			Key = key;
 		}
 
 		[DataMember]
-		public int Id { get; private set; }
+		public int Key { get; private set; }
 
 		[DataMember]
 		public string Remarks { get; set; }
