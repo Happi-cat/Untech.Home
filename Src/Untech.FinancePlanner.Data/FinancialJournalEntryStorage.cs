@@ -16,9 +16,9 @@ namespace Untech.FinancePlanner.Data
 		IQueryHandler<FinancialJournalQuery, IEnumerable<FinancialJournalEntry>>
 	{
 		private readonly Func<IDataContext> _contextFactory;
-		private readonly IDispatcher _dispatcher;
+		private readonly IQueryDispatcher _dispatcher;
 
-		public FinancialJournalEntryStorage(IDispatcher dispatcher, Func<IDataContext> connectionFactory)
+		public FinancialJournalEntryStorage(IQueryDispatcher dispatcher, Func<IDataContext> connectionFactory)
 		{
 			_contextFactory = connectionFactory;
 			_dispatcher = dispatcher;
@@ -31,11 +31,6 @@ namespace Untech.FinancePlanner.Data
 				var dto = context.GetTable<FinancialJournalEntryDto>().SingleOrDefault(n => n.Key == key);
 				return FinancialJournalEntryDto.Convert(dto);
 			}
-		}
-
-		public IEnumerable<FinancialJournalEntry> Find(Expression<Func<FinancialJournalEntry, bool>> predicate)
-		{
-			throw new NotImplementedException();
 		}
 
 		public FinancialJournalEntry Create(FinancialJournalEntry entity)

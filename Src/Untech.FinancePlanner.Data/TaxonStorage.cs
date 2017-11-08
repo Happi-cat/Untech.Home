@@ -48,11 +48,6 @@ namespace Untech.FinancePlanner.Data
 			}
 		}
 
-		public IEnumerable<Taxon> Find(Expression<Func<Taxon, bool>> predicate)
-		{
-			throw new NotSupportedException();
-		}
-
 		public Taxon Create(Taxon entity)
 		{
 			using (var context = _contextFactory())
