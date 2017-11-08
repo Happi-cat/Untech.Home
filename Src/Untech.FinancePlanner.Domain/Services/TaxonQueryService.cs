@@ -3,45 +3,26 @@ using System.Linq;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.FinancePlanner.Domain.ViewModels;
+using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.DataStorage;
 
 namespace Untech.FinancePlanner.Domain.Services
 {
-	public class TaxonQueryService :
-		IQueryHandler<TaxonTreeQuery, TaxonTree>
+	public class TaxonQueryService : IQueryHandler<TaxonTreeQuery, TaxonTree>
 	{
-		private static readonly IReadOnlyList<Taxon> s_builtIns;
+		private readonly IDispatcher _dispatcher;
 		private readonly IDataStorage<Taxon> _dataStorage;
 
-		static TaxonQueryService()
+		public TaxonQueryService(IDataStorage<Taxon> dataStorage, IDispatcher dispatcher)
 		{
-			s_builtIns = new List<Taxon>
-			{
-				new Taxon(BuiltInTaxonId.Root, BuiltInTaxonId.Root, "Root"),
-				new Taxon(BuiltInTaxonId.Expense, BuiltInTaxonId.Root, "Expense"),
-				new Taxon(BuiltInTaxonId.Saving, BuiltInTaxonId.Root, "Saving"),
-				new Taxon(BuiltInTaxonId.Income, BuiltInTaxonId.Root, "Income"),
-			};
-		}
-
-		public TaxonQueryService(IDataStorage<Taxon> dataStorage)
-		{
+			_dispatcher = dispatcher;
 			_dataStorage = dataStorage;
 		}
 
 		public TaxonTree Handle(TaxonTreeQuery request)
 		{
-			var builtInTaxon = s_builtIns.SingleOrDefault(n => n.Key == request.TaxonKey);
-			if (builtInTaxon != null)
-			{
-				return new TaxonTree(builtInTaxon.Key, builtInTaxon.ParentKey, builtInTaxon.Name)
-				{
-					Elements = GetDescendants(builtInTaxon.Key, request.Deep)
-				};
-			}
-
-			var taxon = _dataStorage.Find(n => n.Key == request.TaxonKey).Single();
+			var taxon = _dataStorage.Find(request.TaxonKey);
 
 			return new TaxonTree(taxon.Key, taxon.ParentKey, taxon.Name, taxon.Description)
 			{
@@ -69,15 +50,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		private List<TaxonTree> GetElements(int parentTaxonKey)
 		{
-			if (parentTaxonKey == 0)
-			{
-				return s_builtIns
-					.Where(n => n.ParentKey == 0 && n.Key != 0)
-					.Select(n => new TaxonTree(n.Key, n.ParentKey, n.Name))
-					.ToList();
-			}
-
-			return _dataStorage.Find(n => n.ParentKey == parentTaxonKey)
+			return _dispatcher.Fetch(new TaxonChildsQuery(parentTaxonKey))
 				.Select(n => new TaxonTree(n.Key, n.ParentKey, n.Name, n.Description))
 				.ToList();
 		}

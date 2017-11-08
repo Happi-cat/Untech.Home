@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using Untech.FinancePlanner.Domain.Models;
 using YamlDotNet.RepresentationModel;
 
@@ -11,19 +10,20 @@ namespace Untech.FinancePlanner.Data.Initializations
 	{
 		public static void Initialize(FinancialPlannerContext context, string directory)
 		{
-			context.Database.EnsureCreated();
+			//context.Database.EnsureCreated();
 
-			if (context.Taxons.Any())
-			{
-				return;
-			}
+			//if (context.Taxons.Any())
+			//{
+			//	return;
+			//}
 
-			Initialize(context, BuiltInTaxonId.Expense, Path.Combine(directory, "Expenses.eyaml"));
-			Initialize(context, BuiltInTaxonId.Saving, Path.Combine(directory, "Savings.eyaml"));
-			Initialize(context, BuiltInTaxonId.Income, Path.Combine(directory, "Incomes.eyaml"));
+			//var taxonStorage = new TaxonStorage(() => context);
+			//Initialize(taxonStorage, BuiltInTaxonId.Expense, Path.Combine(directory, "Expenses.eyaml"));
+			//Initialize(taxonStorage, BuiltInTaxonId.Saving, Path.Combine(directory, "Savings.eyaml"));
+			//Initialize(taxonStorage, BuiltInTaxonId.Income, Path.Combine(directory, "Incomes.eyaml"));
 		}
 
-		private static void Initialize(FinancialPlannerContext context, int rootId, string filePath)
+		private static void Initialize(TaxonStorage storage, int rootId, string filePath)
 		{
 			var yaml = new YamlStream();
 			using (var stream = File.OpenRead(filePath))
@@ -33,17 +33,16 @@ namespace Untech.FinancePlanner.Data.Initializations
 				var visitor = new TreeVisitor();
 				visitor.Visit(yaml);
 
-				Initialize(context, rootId, visitor.GetResult().Elements);
+				Initialize(storage, rootId, visitor.GetResult().Elements);
 			}
 		}
 
-		private static void Initialize(FinancialPlannerContext context, int parentId, IEnumerable<Tree> elements)
+		private static void Initialize(TaxonStorage storage, int parentId, IEnumerable<Tree> elements)
 		{
 			foreach (var element in elements)
 			{
-				var entry = context.Taxons.Add(new Taxon(0, parentId, element.Name));
-				context.SaveChanges();
-				Initialize(context, entry.Entity.Key, element.Elements);
+				var entry = storage.Create(new Taxon(0, parentId, element.Name));
+				Initialize(storage, entry.Key, element.Elements);
 			}
 		}
 

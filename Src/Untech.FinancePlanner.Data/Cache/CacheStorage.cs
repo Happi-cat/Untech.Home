@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using LinqToDB;
 using Newtonsoft.Json;
 using Untech.Practices.DataStorage.Cache;
 
@@ -8,35 +8,30 @@ namespace Untech.FinancePlanner.Data.Cache
 {
 	public class CacheStorage : ICacheStorage
 	{
-		private readonly Func<DbContext> _contextFactory;
+		private readonly Func<IDataContext> _connectionFactory;
 
-		public CacheStorage(Func<DbContext> contextFactory)
+		public CacheStorage(Func<IDataContext> connectionFactory)
 		{
-			_contextFactory = contextFactory;
+			_connectionFactory = connectionFactory;
 		}
 
 		public void Drop(CacheKey key, bool prefix = false)
 		{
 			var internalKey = key.ToString();
 
-			using (var context = _contextFactory())
+			using (var context = _connectionFactory())
 			{
-				var set = context.Set<CacheEntry>();
+				var set = context.GetTable<CacheEntry>();
 				if (prefix)
 				{
 					internalKey = internalKey.TrimEnd('/') + '/';
-					var entries = set.Where(n => n.Key.StartsWith(internalKey)).ToList();
-					entries.ForEach(e => set.Remove(e));
+					set.Where(n => n.Key.StartsWith(internalKey))
+						.Delete();
 				}
 				else
 				{
-					var entry = set.SingleOrDefault(n => n.Key == internalKey);
-
-					if (entry == null) return;
-
-					set.Remove(entry);
+					set.Where(n => n.Key == internalKey).Delete();
 				}
-				context.SaveChanges();
 			}
 		}
 
@@ -44,13 +39,15 @@ namespace Untech.FinancePlanner.Data.Cache
 		{
 			var internalKey = key.ToString();
 
-			using (var context = _contextFactory())
+			using (var context = _connectionFactory())
 			{
-				var entry = context.Set<CacheEntry>().SingleOrDefault(n => n.Key == internalKey);
+				var entry = context
+					.GetTable<CacheEntry>()
+					.SingleOrDefault(n => n.Key == internalKey);
 
-				if (entry == null) return default(T);
-
-				return JsonConvert.DeserializeObject<T>(entry.Json);
+				return entry == null
+					? default(T)
+					: JsonConvert.DeserializeObject<T>(entry.Json);
 			}
 		}
 
@@ -58,22 +55,24 @@ namespace Untech.FinancePlanner.Data.Cache
 		{
 			var internalKey = key.ToString();
 
-			using (var context = _contextFactory())
+			using (var context = _connectionFactory())
 			{
+				context.GetTable<CacheEntry>()
+					.Where(n => n.Key == internalKey)
+					.Delete();
+
+				if (value == null)
+				{
+					return;
+				}
+
 				var entity = new CacheEntry
 				{
 					Key = internalKey,
 					Json = JsonConvert.SerializeObject(value),
 				};
 
-				context.Set<CacheEntry>().Remove(entity);
-
-				if (value != null)
-				{
-					context.Set<CacheEntry>().Add(entity);
-				}
-
-				context.SaveChanges();
+				context.Insert(entity);
 			}
 		}
 	}
