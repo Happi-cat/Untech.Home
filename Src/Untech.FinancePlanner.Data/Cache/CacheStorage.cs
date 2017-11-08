@@ -25,7 +25,7 @@ namespace Untech.FinancePlanner.Data.Cache
 				if (prefix)
 				{
 					internalKey = internalKey.TrimEnd('/') + '/';
-					set.Where(n => n.Key.StartsWith(internalKey))
+					set.Where(n => n.Key == internalKey || n.Key.StartsWith(internalKey))
 						.Delete();
 				}
 				else

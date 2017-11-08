@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using LinqToDB;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
@@ -11,7 +10,7 @@ using Untech.Practices.DataStorage;
 namespace Untech.FinancePlanner.Data
 {
 	public class TaxonStorage : IDataStorage<Taxon>,
-		IQueryHandler<TaxonChildsQuery, IEnumerable<Taxon>>
+		IQueryHandler<TaxonElementsQuery, IEnumerable<Taxon>>
 	{
 		private static readonly IReadOnlyList<Taxon> s_builtIns;
 
@@ -74,7 +73,7 @@ namespace Untech.FinancePlanner.Data
 			}
 		}
 
-		public IEnumerable<Taxon> Handle(TaxonChildsQuery request)
+		public IEnumerable<Taxon> Handle(TaxonElementsQuery request)
 		{
 			if (request.TaxonKey == 0)
 			{

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using LinqToDB;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
@@ -37,7 +36,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				var key = context.Insert(FinancialJournalEntryDto.Convert(entity));
+				var key = (int)(long)context.InsertWithIdentity(FinancialJournalEntryDto.Convert(entity));
 				return Find(key);
 			}
 		}
@@ -72,17 +71,15 @@ namespace Untech.FinancePlanner.Data
 			{
 				foreach (var taxon in rootTaxon.DescendantsAndSelf())
 				{
-					var entriesToAdd = context.GetTable<FinancialJournalEntryDto>()
+					var dtos = context.GetTable<FinancialJournalEntryDto>()
 						.Where(n => n.TaxonKey == taxon.Key && n.When >= from && n.When < to)
-						.ToList()
-						.Select(FinancialJournalEntryDto.Convert);
+						.ToList();
 
-					entries.AddRange(entriesToAdd);
+					entries.AddRange(dtos.Select(FinancialJournalEntryDto.Convert));
 				}
 			}
 
 			return entries;
 		}
-
 	}
 }

@@ -4,9 +4,9 @@ using Untech.Practices.CQRS;
 
 namespace Untech.FinancePlanner.Domain.Requests
 {
-	public class TaxonChildsQuery : IQuery<IEnumerable<Taxon>>
+	public class TaxonElementsQuery : IQuery<IEnumerable<Taxon>>
 	{
-		public TaxonChildsQuery(int taxonKey)
+		public TaxonElementsQuery(int taxonKey)
 		{
 			TaxonKey = taxonKey;
 		}

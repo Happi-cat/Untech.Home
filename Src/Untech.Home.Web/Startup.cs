@@ -90,6 +90,7 @@ namespace Untech.Home.Web
 
 
 			container.RegisterSingleton<IDispatcher>(dispatcher);
+			container.RegisterSingleton<IQueryDispatcher>(dispatcher);
 
 			container.Verify();
 

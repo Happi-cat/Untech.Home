@@ -11,10 +11,10 @@ namespace Untech.FinancePlanner.Domain.Services
 {
 	public class TaxonQueryService : IQueryHandler<TaxonTreeQuery, TaxonTree>
 	{
-		private readonly IDispatcher _dispatcher;
+		private readonly IQueryDispatcher _dispatcher;
 		private readonly IDataStorage<Taxon> _dataStorage;
 
-		public TaxonQueryService(IDataStorage<Taxon> dataStorage, IDispatcher dispatcher)
+		public TaxonQueryService(IDataStorage<Taxon> dataStorage, IQueryDispatcher dispatcher)
 		{
 			_dispatcher = dispatcher;
 			_dataStorage = dataStorage;
@@ -50,7 +50,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		private List<TaxonTree> GetElements(int parentTaxonKey)
 		{
-			return _dispatcher.Fetch(new TaxonChildsQuery(parentTaxonKey))
+			return _dispatcher.Fetch(new TaxonElementsQuery(parentTaxonKey))
 				.Select(n => new TaxonTree(n.Key, n.ParentKey, n.Name, n.Description))
 				.ToList();
 		}
