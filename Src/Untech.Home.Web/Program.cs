@@ -20,13 +20,7 @@ namespace Untech.Home.Web
 
 		public static void EnsureDatabaseCreated()
 		{
-			using (var context = new FinancialPlannerContext())
-			{
-				if (context.Database.EnsureCreated())
-				{
-					TaxonInitializer.Initialize(context, @"..\..\Configs\");
-				}
-			}
+			DbInitializer.Initialize(() => new FinancialPlannerContext(), @"..\..\Configs\");
 		}
 	}
 }

@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
+using LinqToDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using SimpleInjector;
 using Untech.FinancePlanner.Data;
 using Untech.FinancePlanner.Data.Cache;
@@ -70,14 +68,19 @@ namespace Untech.Home.Web
 		public IDispatcher ConfigureDispatcher()
 		{
 			var container = new Container();
+			var dispatcher = new Dispatcher(new DispatcherContainer(container));
 
-			Func<DbContext> contextFactory = () => new FinancialPlannerContext();
+			container.RegisterSingleton<Func<IDataContext>>(() => new FinancialPlannerContext());
 
-			container.RegisterSingleton<ICacheStorage>(new CacheStorage(contextFactory));
-			container.RegisterSingleton<IDataStorage<FinancialJournalEntry>>(new GenericStorage<FinancialJournalEntry>(contextFactory));
-			container.RegisterSingleton<IDataStorage<Taxon>>(new GenericStorage<Taxon>(contextFactory));
+			container.Register<ICacheStorage, CacheStorage>();
+			container.Register<IDataStorage<FinancialJournalEntry>, FinancialJournalEntryStorage>();
+			container.Register<IDataStorage<Taxon>, TaxonStorage>();
 
-			var assembly = new[] { typeof(FinancialJournalEntry).Assembly };
+			var assembly = new[]
+			{
+				typeof(FinancialPlannerContext).Assembly,
+				typeof(FinancialJournalEntry).Assembly
+			};
 
 			container.RegisterCollection(typeof(IPipelinePreProcessor<>), assembly);
 			container.RegisterCollection(typeof(IPipelinePostProcessor<,>), assembly);
@@ -85,8 +88,9 @@ namespace Untech.Home.Web
 			container.Register(typeof(ICommandHandler<,>), assembly);
 			container.RegisterCollection(typeof(INotificationHandler<>), assembly);
 
-			var dispatcher = new Dispatcher(new DispatcherContainer(container));
+
 			container.RegisterSingleton<IDispatcher>(dispatcher);
+			container.RegisterSingleton<IQueryDispatcher>(dispatcher);
 
 			container.Verify();
 

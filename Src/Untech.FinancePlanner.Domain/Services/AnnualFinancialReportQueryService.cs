@@ -16,10 +16,10 @@ namespace Untech.FinancePlanner.Domain.Services
 		INotificationHandler<FinancialJournalEntrySaved>,
 		INotificationHandler<FinancialJournalEntryDeleted>
 	{
-		private readonly IDispatcher _dispatcher;
+		private readonly IQueryDispatcher _dispatcher;
 		private readonly ICacheStorage _cacheStorage;
 
-		public AnnualFinancialReportQueryService(IDispatcher dispatcher, ICacheStorage cacheStorage)
+		public AnnualFinancialReportQueryService(IQueryDispatcher dispatcher, ICacheStorage cacheStorage)
 		{
 			_dispatcher = dispatcher;
 			_cacheStorage = cacheStorage;
@@ -61,7 +61,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		private class MonthlyReportBuilder
 		{
-			private readonly IDispatcher _dispatcher;
+			private readonly IQueryDispatcher _dispatcher;
 
 			private readonly ICacheStorage _cacheStorage;
 
@@ -69,7 +69,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 			private DateTime _thatMonth;
 
-			public MonthlyReportBuilder(IDispatcher dispatcher, ICacheStorage cacheStorage, TaxonTree taxon)
+			public MonthlyReportBuilder(IQueryDispatcher dispatcher, ICacheStorage cacheStorage, TaxonTree taxon)
 			{
 				_dispatcher = dispatcher;
 				_cacheStorage = cacheStorage;

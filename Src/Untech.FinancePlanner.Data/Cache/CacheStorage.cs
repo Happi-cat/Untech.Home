@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using LinqToDB;
 using Newtonsoft.Json;
 using Untech.Practices.DataStorage.Cache;
 
@@ -8,9 +8,9 @@ namespace Untech.FinancePlanner.Data.Cache
 {
 	public class CacheStorage : ICacheStorage
 	{
-		private readonly Func<DbContext> _contextFactory;
+		private readonly Func<IDataContext> _contextFactory;
 
-		public CacheStorage(Func<DbContext> contextFactory)
+		public CacheStorage(Func<IDataContext> contextFactory)
 		{
 			_contextFactory = contextFactory;
 		}
@@ -21,22 +21,18 @@ namespace Untech.FinancePlanner.Data.Cache
 
 			using (var context = _contextFactory())
 			{
-				var set = context.Set<CacheEntry>();
+				var set = context.GetTable<CacheEntry>();
 				if (prefix)
 				{
-					internalKey = internalKey.TrimEnd('/') + '/';
-					var entries = set.Where(n => n.Key.StartsWith(internalKey)).ToList();
-					entries.ForEach(e => set.Remove(e));
+					internalKey = internalKey.TrimEnd('/');
+					var internalPrefix = internalKey + '/';
+					set.Where(n => n.Key == internalKey || n.Key.StartsWith(internalPrefix))
+						.Delete();
 				}
 				else
 				{
-					var entry = set.SingleOrDefault(n => n.Key == internalKey);
-
-					if (entry == null) return;
-
-					set.Remove(entry);
+					set.Where(n => n.Key == internalKey).Delete();
 				}
-				context.SaveChanges();
 			}
 		}
 
@@ -46,11 +42,13 @@ namespace Untech.FinancePlanner.Data.Cache
 
 			using (var context = _contextFactory())
 			{
-				var entry = context.Set<CacheEntry>().SingleOrDefault(n => n.Key == internalKey);
+				var entry = context
+					.GetTable<CacheEntry>()
+					.SingleOrDefault(n => n.Key == internalKey);
 
-				if (entry == null) return default(T);
-
-				return JsonConvert.DeserializeObject<T>(entry.Json);
+				return entry == null
+					? default(T)
+					: JsonConvert.DeserializeObject<T>(entry.Json);
 			}
 		}
 
@@ -60,20 +58,22 @@ namespace Untech.FinancePlanner.Data.Cache
 
 			using (var context = _contextFactory())
 			{
+				context.GetTable<CacheEntry>()
+					.Where(n => n.Key == internalKey)
+					.Delete();
+
+				if (value == null)
+				{
+					return;
+				}
+
 				var entity = new CacheEntry
 				{
 					Key = internalKey,
 					Json = JsonConvert.SerializeObject(value),
 				};
 
-				context.Set<CacheEntry>().Remove(entity);
-
-				if (value != null)
-				{
-					context.Set<CacheEntry>().Add(entity);
-				}
-
-				context.SaveChanges();
+				context.Insert(entity);
 			}
 		}
 	}
