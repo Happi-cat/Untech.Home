@@ -51,7 +51,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				var key = context.Insert(TaxonDto.Convert(entity));
+				var key = context.InsertWithInt32Identity(TaxonDto.Convert(entity));
 				return Find(key);
 			}
 		}

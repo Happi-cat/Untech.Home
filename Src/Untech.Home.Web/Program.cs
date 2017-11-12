@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Untech.FinancePlanner.Data;
+using Untech.FinancePlanner.Data.Initializations;
 
 namespace Untech.Home.Web
 {
@@ -18,20 +20,7 @@ namespace Untech.Home.Web
 
 		public static void EnsureDatabaseCreated()
 		{
-			try
-			{
-				// using (var context = new FinancialPlannerContext())
-				// {
-				// 	//if (context.Database.EnsureCreated())
-				// 	//{
-				// 	//	TaxonInitializer.Initialize(context, @"..\..\Configs\");
-				// 	//}
-				// }
-			}
-			catch
-			{
-
-			}
+			DbInitializer.Initialize(() => new FinancialPlannerContext(), @"..\..\Configs\");
 		}
 	}
 }

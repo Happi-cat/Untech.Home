@@ -36,7 +36,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				var key = (int)(long)context.InsertWithIdentity(FinancialJournalEntryDto.Convert(entity));
+				var key = context.InsertWithInt32Identity(FinancialJournalEntryDto.Convert(entity));
 				return Find(key);
 			}
 		}
