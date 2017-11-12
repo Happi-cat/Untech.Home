@@ -8,24 +8,25 @@ namespace Untech.FinancePlanner.Data.Cache
 {
 	public class CacheStorage : ICacheStorage
 	{
-		private readonly Func<IDataContext> _connectionFactory;
+		private readonly Func<IDataContext> _contextFactory;
 
-		public CacheStorage(Func<IDataContext> connectionFactory)
+		public CacheStorage(Func<IDataContext> contextFactory)
 		{
-			_connectionFactory = connectionFactory;
+			_contextFactory = contextFactory;
 		}
 
 		public void Drop(CacheKey key, bool prefix = false)
 		{
 			var internalKey = key.ToString();
 
-			using (var context = _connectionFactory())
+			using (var context = _contextFactory())
 			{
 				var set = context.GetTable<CacheEntry>();
 				if (prefix)
 				{
-					internalKey = internalKey.TrimEnd('/') + '/';
-					set.Where(n => n.Key == internalKey || n.Key.StartsWith(internalKey))
+					internalKey = internalKey.TrimEnd('/');
+					var internalPrefix = internalKey + '/';
+					set.Where(n => n.Key == internalKey || n.Key.StartsWith(internalPrefix))
 						.Delete();
 				}
 				else
@@ -39,7 +40,7 @@ namespace Untech.FinancePlanner.Data.Cache
 		{
 			var internalKey = key.ToString();
 
-			using (var context = _connectionFactory())
+			using (var context = _contextFactory())
 			{
 				var entry = context
 					.GetTable<CacheEntry>()
@@ -55,7 +56,7 @@ namespace Untech.FinancePlanner.Data.Cache
 		{
 			var internalKey = key.ToString();
 
-			using (var context = _connectionFactory())
+			using (var context = _contextFactory())
 			{
 				context.GetTable<CacheEntry>()
 					.Where(n => n.Key == internalKey)
