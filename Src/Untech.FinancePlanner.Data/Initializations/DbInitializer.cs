@@ -19,8 +19,8 @@ namespace Untech.FinancePlanner.Data.Initializations
 			using (var context = contextFactory())
 			{
 				EnsureTableExists<CacheEntry>(context);
-				EnsureTableExists<TaxonDto>(context);
-				EnsureTableExists<FinancialJournalEntryDto>(context);
+				EnsureTableExists<TaxonDao>(context);
+				EnsureTableExists<FinancialJournalEntryDao>(context);
 
 				if (context.Taxons.Any())
 				{

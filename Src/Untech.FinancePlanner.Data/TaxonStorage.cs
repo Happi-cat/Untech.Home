@@ -42,8 +42,8 @@ namespace Untech.FinancePlanner.Data
 
 			using (var context = _contextFactory())
 			{
-				var dto = context.GetTable<TaxonDto>().SingleOrDefault(n => n.Key == key);
-				return TaxonDto.Convert(dto);
+				var dto = context.GetTable<TaxonDao>().SingleOrDefault(n => n.Key == key);
+				return TaxonDao.Convert(dto);
 			}
 		}
 
@@ -51,7 +51,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				var key = context.InsertWithInt32Identity(TaxonDto.Convert(entity));
+				var key = context.InsertWithInt32Identity(TaxonDao.Convert(entity));
 				return Find(key);
 			}
 		}
@@ -60,7 +60,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				return context.Delete(TaxonDto.Convert(entity)) > 0;
+				return context.Delete(TaxonDao.Convert(entity)) > 0;
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				context.Update(TaxonDto.Convert(entity));
+				context.Update(TaxonDao.Convert(entity));
 				return entity;
 			}
 		}
@@ -82,10 +82,10 @@ namespace Untech.FinancePlanner.Data
 
 			using (var context = _contextFactory())
 			{
-				return context.GetTable<TaxonDto>()
+				return context.GetTable<TaxonDao>()
 					.Where(n => n.ParentKey == request.TaxonKey)
 					.ToList()
-					.Select(TaxonDto.Convert);
+					.Select(TaxonDao.Convert);
 			}
 		}
 	}

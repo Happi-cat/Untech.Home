@@ -4,7 +4,7 @@ using Untech.FinancePlanner.Domain.Models;
 namespace Untech.FinancePlanner.Data
 {
 	[Table("Taxons")]
-	public class TaxonDto
+	public class TaxonDao
 	{
 		[Column, PrimaryKey, Identity]
 		public int Key { get; set; }
@@ -18,14 +18,14 @@ namespace Untech.FinancePlanner.Data
 		[Column]
 		public string Description { get; set; }
 
-		public static Taxon Convert(TaxonDto dto)
+		public static Taxon Convert(TaxonDao dao)
 		{
-			return new Taxon(dto.Key, dto.ParentKey, dto.Name, dto.Description);
+			return new Taxon(dao.Key, dao.ParentKey, dao.Name, dao.Description);
 		}
 
-		public static TaxonDto Convert(Taxon entry)
+		public static TaxonDao Convert(Taxon entry)
 		{
-			return new TaxonDto
+			return new TaxonDao
 			{
 				Key = entry.Key,
 				ParentKey = entry.ParentKey,

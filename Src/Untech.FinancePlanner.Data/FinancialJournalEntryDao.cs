@@ -6,7 +6,7 @@ using Untech.Practices;
 namespace Untech.FinancePlanner.Data
 {
 	[Table("FinancialJournalEntries")]
-	public class FinancialJournalEntryDto
+	public class FinancialJournalEntryDao
 	{
 		[Column, PrimaryKey, Identity]
 		public int Key { get; set; }
@@ -32,20 +32,20 @@ namespace Untech.FinancePlanner.Data
 		[Column, NotNull]
 		public DateTime When { get; set; }
 
-		public static FinancialJournalEntry Convert(FinancialJournalEntryDto dto)
+		public static FinancialJournalEntry Convert(FinancialJournalEntryDao dao)
 		{
-			return new FinancialJournalEntry(dto.Key, dto.TaxonKey)
+			return new FinancialJournalEntry(dao.Key, dao.TaxonKey)
 			{
-				Remarks = dto.Remarks,
-				When = dto.When,
-				Actual = new Money(dto.ActualAmount, new Currency(dto.ActualCurrency, dto.ActualCurrency)),
-				Forecasted = new Money(dto.ForecastedAmount, new Currency(dto.ForecastedCurrency, dto.ForecastedCurrency))
+				Remarks = dao.Remarks,
+				When = dao.When,
+				Actual = new Money(dao.ActualAmount, new Currency(dao.ActualCurrency, dao.ActualCurrency)),
+				Forecasted = new Money(dao.ForecastedAmount, new Currency(dao.ForecastedCurrency, dao.ForecastedCurrency))
 			};
 		}
 
-		public static FinancialJournalEntryDto Convert(FinancialJournalEntry entry)
+		public static FinancialJournalEntryDao Convert(FinancialJournalEntry entry)
 		{
-			return new FinancialJournalEntryDto
+			return new FinancialJournalEntryDao
 			{
 				Key = entry.Key,
 				TaxonKey = entry.TaxonKey,

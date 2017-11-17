@@ -14,8 +14,8 @@ namespace Untech.FinancePlanner.Data
 
 		public ITable<CacheEntry> CacheEntries => GetTable<CacheEntry>();
 
-		public ITable<FinancialJournalEntryDto> FinancialJournalEntries => GetTable<FinancialJournalEntryDto>();
+		public ITable<FinancialJournalEntryDao> FinancialJournalEntries => GetTable<FinancialJournalEntryDao>();
 
-		public ITable<TaxonDto> Taxons => GetTable<TaxonDto>();
+		public ITable<TaxonDao> Taxons => GetTable<TaxonDao>();
 	}
 }
