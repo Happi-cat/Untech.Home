@@ -1,4 +1,3 @@
-using System;
 using Untech.FinancePlanner.Domain.ViewModels;
 using Untech.Practices.CQRS;
 

@@ -22,6 +22,10 @@ namespace Untech.Home.Web.Controllers
 		public AnnualFinancialReport GetReport(int shiftMonth = 0) => _dispatcher
 			.Fetch(new AnnualFinancialReportQuery { ShiftMonth = shiftMonth });
 
+		[HttpGet("report/{year}/{month}")]
+		public MonthlyFinancialReport GetMonthlyReport(int year, int month) => _dispatcher
+			.Fetch(new MonthlyFinancialReportQuery(year, month));
+
 		[HttpGet("taxon")]
 		public TaxonTree GetTaxonTree(int deep) => _dispatcher
 			.Fetch(new TaxonTreeQuery { Deep = deep });

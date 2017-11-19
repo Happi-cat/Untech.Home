@@ -10,6 +10,6 @@ namespace Untech.FinancePlanner.Domain.ViewModels
 		public IReadOnlyCollection<TaxonTree> Entries { get; set; }
 
 		[DataMember]
-		public IReadOnlyCollection<MonthlyFinancialReport> Months { get; set; }
+		public IReadOnlyCollection<AnnualFinancialReportMonth> Months { get; set; }
 	}
 }

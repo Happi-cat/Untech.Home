@@ -30,14 +30,14 @@ namespace Untech.FinancePlanner.Domain.Services
 			var thisMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
 			var rootTaxon = _dispatcher.Fetch(new TaxonTreeQuery { Deep = 3 });
 
-			var builder = new MonthlyReportBuilder(_dispatcher, _cacheStorage, rootTaxon);
+			var builder = new MonthReportBuilder(_dispatcher, rootTaxon);
 
 			return new AnnualFinancialReport
 			{
 				Entries = rootTaxon.Elements,
 				Months = Enumerable.Range(-3 + request.ShiftMonth, 12)
 					.Select(thisMonth.AddMonths)
-					.Select(builder.GetReport)
+					.Select(n => GetReportFromCacheOrBuild(n, builder))
 					.ToList()
 			};
 		}
@@ -56,51 +56,43 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		private static CacheKey GetMonthlyReportKey(DateTime when)
 		{
-			return new CacheKey("reports", $"financial-monthly-report/{when.Year}/{when.Month}");
+			return new CacheKey("reports", $"annual-financial-report/month/{when.Year}/{when.Month}");
 		}
 
-		private class MonthlyReportBuilder
+		private AnnualFinancialReportMonth GetReportFromCacheOrBuild(DateTime thatMonth, MonthReportBuilder builder)
+		{
+			var cacheKey = GetMonthlyReportKey(thatMonth);
+			var report = _cacheStorage.Get<AnnualFinancialReportMonth>(cacheKey);
+
+			if (report == null)
+			{
+				report = builder.GetReport(thatMonth);
+
+				_cacheStorage.Set(cacheKey, report);
+			}
+
+			return report;
+		}
+
+		private class MonthReportBuilder
 		{
 			private readonly IQueryDispatcher _dispatcher;
-
-			private readonly ICacheStorage _cacheStorage;
 
 			private readonly TaxonTree _taxon;
 
 			private DateTime _thatMonth;
 
-			public MonthlyReportBuilder(IQueryDispatcher dispatcher, ICacheStorage cacheStorage, TaxonTree taxon)
+			public MonthReportBuilder(IQueryDispatcher dispatcher, TaxonTree taxon)
 			{
 				_dispatcher = dispatcher;
-				_cacheStorage = cacheStorage;
 				_taxon = taxon;
 			}
 
-			public MonthlyFinancialReport GetReport(DateTime thatMonth)
+			public AnnualFinancialReportMonth GetReport(DateTime thatMonth)
 			{
 				_thatMonth = thatMonth;
 
-				if (_cacheStorage != null)
-				{
-					var cacheKey = GetMonthlyReportKey(thatMonth);
-					var cached = _cacheStorage.Get<MonthlyFinancialReport>(cacheKey);
-
-					if (cached == null)
-					{
-						cached = BuildReport();
-
-						_cacheStorage.Set(cacheKey, cached);
-					}
-
-					return cached;
-				}
-
-				return BuildReport();
-			}
-
-			private MonthlyFinancialReport BuildReport()
-			{
-				var report = new MonthlyFinancialReport(_thatMonth)
+				var report = new AnnualFinancialReportMonth(_thatMonth)
 				{
 					Entries = _taxon.GetElements()
 						.Select(BuildReportEntry)
@@ -128,16 +120,8 @@ namespace Untech.FinancePlanner.Domain.Services
 				return report;
 			}
 
-			private MonthlyFinancialReportEntry BuildReportEntry(TaxonTree currentTaxon)
+			private AnnualFinancialReportMonthEntry BuildReportEntry(TaxonTree currentTaxon)
 			{
-				var entry = new MonthlyFinancialReportEntry(currentTaxon.Key)
-				{
-					Entries = currentTaxon.GetElements()
-						.Select(BuildReportEntry)
-						.Where(IsNotEmptyActualOrForecasted)
-						.ToList()
-				};
-
 				var financialJournalEntries = _dispatcher.Fetch(new FinancialJournalQuery(_thatMonth)
 				{
 					Taxon = new TaxonTreeQuery
@@ -147,16 +131,20 @@ namespace Untech.FinancePlanner.Domain.Services
 					}
 				});
 
-				entry.Actual = financialJournalEntries
-						.Sum(n => n.Actual);
+				var entry = new AnnualFinancialReportMonthEntry(currentTaxon.Key)
+				{
+					Actual = financialJournalEntries.Sum(n => n.Actual),
+					Forecasted = financialJournalEntries.Sum(n => n.Forecasted),
+					Entries = currentTaxon.GetElements()
+						.Select(BuildReportEntry)
+						.Where(IsNotEmptyActualOrForecasted)
+						.ToList()
+				};
 
 				entry.ActualTotals = entry.Entries
 					.Select(n => n.ActualTotals)
 					.Concat(new[] { entry.Actual })
 					.Sum();
-
-				entry.Forecasted = financialJournalEntries
-					.Sum(n => n.Forecasted);
 
 				entry.ForecastedTotals = entry.Entries
 					.Select(n => n.ForecastedTotals)
@@ -167,7 +155,7 @@ namespace Untech.FinancePlanner.Domain.Services
 			}
 		}
 
-		private static bool IsNotEmptyActualOrForecasted(MonthlyFinancialReportEntry entry)
+		private static bool IsNotEmptyActualOrForecasted(AnnualFinancialReportMonthEntry entry)
 		{
 			return new[] { entry.ActualTotals, entry.ForecastedTotals }
 				.Select(n => n?.Amount ?? 0)

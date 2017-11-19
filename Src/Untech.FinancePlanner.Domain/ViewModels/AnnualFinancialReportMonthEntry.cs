@@ -5,9 +5,9 @@ using Untech.Practices;
 namespace Untech.FinancePlanner.Domain.ViewModels
 {
 	[DataContract]
-	public class MonthlyFinancialReportEntry
+	public class AnnualFinancialReportMonthEntry
 	{
-		public MonthlyFinancialReportEntry(int taxonKey)
+		public AnnualFinancialReportMonthEntry(int taxonKey)
 		{
 			TaxonKey = taxonKey;
 		}
@@ -28,6 +28,6 @@ namespace Untech.FinancePlanner.Domain.ViewModels
 		public Money ForecastedTotals { get; set; }
 
 		[DataMember]
-		public IReadOnlyCollection<MonthlyFinancialReportEntry> Entries { get; set; }
+		public IReadOnlyCollection<AnnualFinancialReportMonthEntry> Entries { get; set; }
 	}
 }
