@@ -75,7 +75,7 @@ namespace Untech.FinancePlanner.Domain.Services
 		{
 			var rootTaxon = _dispatcher.Fetch(new TaxonTreeQuery { Deep = -1 });
 
-			return rootTaxon.Descendants().ToDictionary(n => n.Key, n => n);
+			return rootTaxon.DescendantsAndSelf().ToDictionary(n => n.Key, n => n);
 		}
 
 		private class DayReportBuilder
@@ -100,7 +100,7 @@ namespace Untech.FinancePlanner.Domain.Services
 				return report;
 			}
 
-			private MonthlyFinancialReportDayEntry BuildDayReportEntry(FinancialJournalEntry entry) => new MonthlyFinancialReportDayEntry
+			private MonthlyFinancialReportDayEntry BuildDayReportEntry(FinancialJournalEntry entry) => new MonthlyFinancialReportDayEntry(entry.TaxonKey)
 			{
 				Name = GetName(entry.Key),
 				Remarks = entry.Remarks,
@@ -112,13 +112,12 @@ namespace Untech.FinancePlanner.Domain.Services
 			{
 				var names = new Stack<string>();
 
-				var currentTaxonKey = taxonKey;
-				while (currentTaxonKey != BuiltInTaxonId.Root)
+				var currentTaxon = _taxons[taxonKey];
+				while (!currentTaxon.IsSystemRoot)
 				{
-					var currentTaxon = _taxons[currentTaxonKey];
 					names.Push(currentTaxon.Name);
 
-					currentTaxonKey = currentTaxon.ParentKey;
+					currentTaxon = _taxons[currentTaxon.ParentKey];
 				}
 
 				return string.Join(" / ", names);

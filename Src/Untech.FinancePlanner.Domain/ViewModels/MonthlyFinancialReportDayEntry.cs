@@ -6,6 +6,14 @@ namespace Untech.FinancePlanner.Domain.ViewModels
 	[DataContract]
 	public class MonthlyFinancialReportDayEntry
 	{
+		public MonthlyFinancialReportDayEntry(int taxonKey)
+		{
+			TaxonKey = taxonKey;
+		}
+
+		[DataMember]
+		public int TaxonKey { get; private set; }
+
 		[DataMember]
 		public string Name { get; set; }
 
