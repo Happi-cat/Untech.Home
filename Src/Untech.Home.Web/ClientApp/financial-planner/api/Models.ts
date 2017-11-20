@@ -19,20 +19,20 @@ export interface ITaxonTree {
 
 export interface IAnnualFinancialReport {
   entries: ITaxonTree[],
-  months: IMonthlyReport[]
+  months: IAnnualFinancialReportMonth[]
 }
 
-export interface IMonthlyReport {
+export interface IAnnualFinancialReportMonth {
   year: number,
   month: number,
   actualTotals?: IMoney,
   forecastedTotals?: IMoney,
-  entries: IMonthlyReportEntry[],
+  entries: IAnnualFinancialReportMonthEntry[],
   isPast: boolean,
   isNow: boolean
 }
 
-export interface IMonthlyReportEntry {
+export interface IAnnualFinancialReportMonthEntry {
   taxonKey: number,
   name: string,
   description: string,
@@ -40,7 +40,28 @@ export interface IMonthlyReportEntry {
   actualTotals?: IMoney,
   forecasted?: IMoney,
   forecastedTotals?: IMoney,
-  entries?: IMonthlyReportEntry[]
+  entries?: IAnnualFinancialReportMonthEntry[]
+}
+
+export interface IMonthlyFinancialReport {
+  year: number;
+  month: number;
+  days: IMonthlyFinancialReportDay[];
+}
+
+export interface IMonthlyFinancialReportDay {
+  day: number;
+  actualTotals: IMoney;
+  forecastedTotals: IMoney;
+  entries: IMonthlyFinancialReportDayEntry[];
+}
+
+export interface IMonthlyFinancialReportDayEntry {
+  name: string;
+  taxonKey: number;
+  remarks?: string;
+  actual?: IMoney;
+  forecasted?: IMoney;
 }
 
 export interface IFinancialJournalEntry {

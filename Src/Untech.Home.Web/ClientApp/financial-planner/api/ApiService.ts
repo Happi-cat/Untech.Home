@@ -2,6 +2,7 @@ import 'isomorphic-fetch';
 import {
   ITaxonTree,
   IAnnualFinancialReport,
+  IMonthlyFinancialReport,
   IFinancialJournalEntry,
   ICreateFinancialJournalEntryCommand,
   IUpdateFinancialJournalEntryCommand,
@@ -12,6 +13,12 @@ export class ApiService {
   public getReport() {
     return fetch('api/financial-planner/report')
       .then(response => response.json() as Promise<IAnnualFinancialReport>);
+  }
+
+  public getMonthlyReport(year: number | string, month: number | string) {
+    let url = 'api/financial-planner/report/' + encodeURIComponent(year.toString()) + '/' + encodeURIComponent(month.toString());
+    return fetch(url)
+      .then(response => response.json() as Promise<IMonthlyFinancialReport>);
   }
 
   public getTaxon(taxonKey?: number | string, deep?: number) {

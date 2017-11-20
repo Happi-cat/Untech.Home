@@ -55,13 +55,17 @@ namespace Untech.FinancePlanner.Domain.Services
 		{
 			var dayBuilder = new DayReportBuilder(GetTaxons());
 
-			var entries = _dispatcher.Fetch(new FinancialJournalQuery(request.Year, request.Month));
+			var entries = _dispatcher.Fetch(new FinancialJournalQuery(request.Year, request.Month)
+			{
+				Taxon = new TaxonTreeQuery { Deep = -1 }
+			});
 
 			return new MonthlyFinancialReport(request.Year, request.Month)
 			{
 				Days = entries
-					.GroupBy(n => n.When)
+					.GroupBy(n => n.When.Date)
 					.Select(dayBuilder.GetReport)
+					.OrderBy(n => n.Day)
 					.ToList()
 			};
 		}
@@ -100,9 +104,8 @@ namespace Untech.FinancePlanner.Domain.Services
 				return report;
 			}
 
-			private MonthlyFinancialReportDayEntry BuildDayReportEntry(FinancialJournalEntry entry) => new MonthlyFinancialReportDayEntry(entry.TaxonKey)
+			private MonthlyFinancialReportDayEntry BuildDayReportEntry(FinancialJournalEntry entry) => new MonthlyFinancialReportDayEntry(GetName(entry.TaxonKey), entry.TaxonKey)
 			{
-				Name = GetName(entry.Key),
 				Remarks = entry.Remarks,
 				Actual = entry.Actual,
 				Forecasted = entry.Forecasted
