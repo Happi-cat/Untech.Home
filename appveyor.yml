@@ -18,6 +18,7 @@ before_build:
       cd .\Src
       nuget restore
       cd .\Untech.Home.Web
+      npm install less@latest -g
       npm install
 build:
   project: Src\Untech.Home.sln
