@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { RouteComponentProps } from 'react-router';
 import { ReportTable } from './annual-report/ReportTable';
 import { ITaxonAnnualFinancialReport, IMonthlyFinancialReport } from './annual-report/Models';
-import { IAnnualFinancialReport, IMonthlyReportEntry, ITaxonTree, apiService } from './api';
+import { IAnnualFinancialReport, IAnnualFinancialReportMonthEntry, ITaxonTree, apiService } from './api';
 
 interface AnnualFinancialReportState {
   originalReport?: IAnnualFinancialReport;
@@ -47,7 +47,12 @@ export class AnnualFinancialReport extends React.Component<RouteComponentProps<{
   }
 
   handleMonthClick = (taxonId: number, year: number, month: number) => {
-    this.props.history.push('/financial-planner/journal/' + year + '/' + month + '/' + taxonId);
+    if (taxonId) {
+      this.props.history.push('/financial-planner/journal/' + year + '/' + month + '/' + taxonId);
+    } else {
+
+      this.props.history.push('/financial-planner/' + year + '/' + month);
+    }
   }
 }
 
@@ -97,14 +102,14 @@ class Mapper {
     }
   }
 
-  private static flattenizeMonthlyReportEntries(entries: IMonthlyReportEntry[]) {
-    let dict: { [taxonId: number]: IMonthlyReportEntry } = {};
+  private static flattenizeMonthlyReportEntries(entries: IAnnualFinancialReportMonthEntry[]) {
+    let dict: { [taxonId: number]: IAnnualFinancialReportMonthEntry } = {};
 
     entries.forEach(iterator);
 
     return dict;
 
-    function iterator(entry: IMonthlyReportEntry) {
+    function iterator(entry: IAnnualFinancialReportMonthEntry) {
       dict[entry.taxonKey] = entry;
 
       if (entry.entries) {

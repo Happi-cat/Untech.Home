@@ -43,7 +43,7 @@ namespace Untech.Home.Web
 				app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
 				{
 					HotModuleReplacement = true,
-					ReactHotModuleReplacement = true
+					ReactHotModuleReplacement = false
 				});
 			}
 			else
