@@ -8,9 +8,9 @@ namespace Untech.FinancePlanner.Domain.Models
 	{
 		protected Taxon() { }
 
-		public Taxon(int Key, int parentKey, string name, string description = null)
+		public Taxon(int key, int parentKey, string name, string description = null)
 		{
-			this.Key = Key;
+			Key = key;
 			ParentKey = parentKey;
 			Name = name;
 			Description = description;
