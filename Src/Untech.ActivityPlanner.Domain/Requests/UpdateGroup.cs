@@ -6,22 +6,18 @@ using Untech.Practices.CQRS;
 namespace Untech.ActivityPlanner.Domain.Requests
 {
 	[DataContract]
-	public class UpdateActivityGroup : ICommand<ActivityGroup>
+	public class UpdateGroup : ICommand<Group>
 	{
-		public UpdateActivityGroup(int id, string name)
+		public UpdateGroup(int key, string name)
 		{
-			Id = id;
+			Key = key;
 			Name = name;
 		}
 
 		[DataMember]
-		public int Id { get; private set; }
+		public int Key { get; private set; }
 
 		[DataMember]
 		public string Name { get; private set; }
-
-		[DataMember]
-		public string Remarks { get; set; }
 	}
-
 }

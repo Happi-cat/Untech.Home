@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
+    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj">
+      <Project>{62CA161E-B8AB-4791-9C61-490833870AF6}</Project>
+      <Name>Untech.Practices.DataStorage.Abstractions</Name>
+    </ProjectReference>
   </ItemGroup>
-
 </Project>

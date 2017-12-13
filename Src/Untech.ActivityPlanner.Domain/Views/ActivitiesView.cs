@@ -4,9 +4,8 @@ using System.Runtime.Serialization;
 namespace Untech.ActivityPlanner.Domain.Views
 {
 	[DataContract]
-	public class MonthlyCalendar : ActivitiesView
+	public class ActivitiesView : List<ActivitiesViewGroup>
 	{
-		[DataMember]
-		public IReadOnlyCollection<MonthlyCalendarMonth> Months { get; set; }
+		public IReadOnlyCollection<ActivitiesViewGroup> Groups { get; set; }
 	}
 }

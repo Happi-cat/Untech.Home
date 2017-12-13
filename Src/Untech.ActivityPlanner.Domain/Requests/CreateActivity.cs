@@ -7,9 +7,9 @@ namespace Untech.ActivityPlanner.Domain.Requests
 	[DataContract]
 	public class CreateActivity : ICommand<Activity>
 	{
-		public CreateActivity(int groupId, string name)
+		public CreateActivity(int groupKey, string name)
 		{
-			GroupId = groupId;
+			GroupKey = groupKey;
 			Name = name;
 		}
 
@@ -17,9 +17,6 @@ namespace Untech.ActivityPlanner.Domain.Requests
 		public string Name { get; private set; }
 
 		[DataMember]
-		public string Remarks { get; set; }
-
-		[DataMember]
-		public int GroupId { get; private set; }
+		public int GroupKey { get; private set; }
 	}
 }

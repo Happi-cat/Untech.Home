@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using Untech.ActivityPlanner.Domain.Views;
 using Untech.Practices.CQRS;
 
 namespace Untech.ActivityPlanner.Domain.Requests
 {
-	public class MonthlyCalendarQuery : IQuery<MonthlyCalendar>
+	public class MonthlyCalendarQuery : IQuery<MonthlyCalendarQuery>
 	{
-		public MonthlyCalendarQuery(DateTime from, DateTime to)
+		public MonthlyCalendarQuery(DateTime monthFrom, DateTime monthTo)
 		{
-			if (From > To) throw new ArgumentException("From cannot be greater than To");
-
-			From = from;
-			To = to;
+			MonthFrom = monthFrom;
+			MonthTo = monthTo;
 		}
 
-		public DateTime From { get; private set; }
+		public DateTime MonthFrom { get; }
 
-		public DateTime To { get; private set; }
+		public DateTime MonthTo { get; }
 	}
 }
