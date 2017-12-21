@@ -1,18 +1,16 @@
 ﻿using System;
+using Untech.ActivityPlanner.Domain.Views;
 using Untech.Practices.CQRS;
 
 namespace Untech.ActivityPlanner.Domain.Requests
 {
-	public class MonthlyCalendarQuery : IQuery<MonthlyCalendarQuery>
+	public class MonthlyCalendarQuery : IQuery<MonthlyCalendar>
 	{
-		public MonthlyCalendarQuery(DateTime monthFrom, DateTime monthTo)
+		public MonthlyCalendarQuery(OccurrencesQuery occurrencesQuery)
 		{
-			MonthFrom = monthFrom;
-			MonthTo = monthTo;
+			Occurrences = occurrencesQuery;
 		}
 
-		public DateTime MonthFrom { get; }
-
-		public DateTime MonthTo { get; }
+		public OccurrencesQuery Occurrences { get; }
 	}
 }

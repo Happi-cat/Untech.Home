@@ -6,9 +6,9 @@ namespace Untech.ActivityPlanner.Domain.Views
 	[DataContract]
 	public class DailyCalendarDayActivity
 	{
-		public DailyCalendarDayActivity(Activity activity, ActivityOccurrence occurrence)
+		public DailyCalendarDayActivity(int activityKey, ActivityOccurrence occurrence)
 		{
-			ActivityKey = activity.Key;
+			ActivityKey = activityKey;
 
 			Note = occurrence.Note;
 			Higlighted = occurrence.Highlighted;

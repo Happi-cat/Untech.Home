@@ -3,8 +3,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Calendar.v3" Version="1.32.0.1076" />
     <PackageReference Include="linq2db.core" Version="1.9.0" />
     <PackageReference Include="Microsoft.Data.SQLite" Version="2.0.0" />
     <PackageReference Include="newtonsoft.json" Version="10.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
+    <ProjectReference Include="..\Untech.ActivityPlanner.Domain\Untech.ActivityPlanner.Domain.csproj" />
   </ItemGroup>
 </Project>

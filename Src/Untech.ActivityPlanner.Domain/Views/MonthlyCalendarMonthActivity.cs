@@ -6,9 +6,9 @@ namespace Untech.ActivityPlanner.Domain.Views
 	[DataContract]
 	public class MonthlyCalendarMonthActivity
 	{
-		public MonthlyCalendarMonthActivity(Activity activity, int count)
+		public MonthlyCalendarMonthActivity(int activityKey, int count)
 		{
-			ActivityKey = activity.Key;
+			ActivityKey = activityKey;
 			Count = count;
 		}
 

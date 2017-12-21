@@ -6,14 +6,11 @@ namespace Untech.ActivityPlanner.Domain.Requests
 {
 	public class DailyCalendarQuery  : IQuery<DailyCalendar>
 	{
-		public DailyCalendarQuery(DateTime dayFrom, DateTime dayTo)
+		public DailyCalendarQuery(OccurrencesQuery occurrencesQuery)
 		{
-			DayFrom = dayFrom;
-			DayTo = dayTo;
+			OccurrencesQuery = occurrencesQuery;
 		}
 
-		public DateTime DayFrom { get; private set; }
-
-		public DateTime DayTo { get; private set; }
+		public OccurrencesQuery OccurrencesQuery { get; private set; }
 	}
 }

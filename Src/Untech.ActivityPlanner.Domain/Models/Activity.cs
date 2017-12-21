@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using Untech.Practices.DataStorage;
 
 namespace Untech.ActivityPlanner.Domain.Models
@@ -6,10 +7,10 @@ namespace Untech.ActivityPlanner.Domain.Models
 	[DataContract]
 	public class Activity : IAggregateRoot
 	{
-		public Activity(int key, int groupId, string name)
+		public Activity(int key, int groupKey, string name)
 		{
 			Key = key;
-			GroupId = groupId;
+			GroupKey = groupKey;
 			Name = name;
 		}
 
@@ -20,6 +21,6 @@ namespace Untech.ActivityPlanner.Domain.Models
 		public string Name { get; private set; }
 
 		[DataMember]
-		public int GroupId { get; private set; }
+		public int GroupKey { get; private set; }
 	}
 }
