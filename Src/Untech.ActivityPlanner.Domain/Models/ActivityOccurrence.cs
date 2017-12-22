@@ -5,13 +5,20 @@ using Untech.Practices.DataStorage;
 namespace Untech.ActivityPlanner.Domain.Models
 {
 	[DataContract]
-	public class ActivityOccurrence : IAggregateRoot<string>
+	public class ActivityOccurrence : IAggregateRoot
 	{
-		public ActivityOccurrence(string key, int activityKey, DateTime thatDay)
+		public ActivityOccurrence(int key, int activityKey, DateTime thatDay)
 		{
 			Key = key;
+			ActivityKey = activityKey;
 			When = thatDay.Date;
 		}
+
+		[DataMember]
+		public int Key { get; private set; }
+
+		[DataMember]
+		public int ActivityKey { get; private set; }
 
 		[DataMember]
 		public DateTime When { get; private set; }
@@ -24,15 +31,5 @@ namespace Untech.ActivityPlanner.Domain.Models
 
 		[DataMember]
 		public bool Missed { get; set; }
-
-		[DataMember]
-		public bool IsPast => When.Date < DateTime.Today;
-
-		[DataMember]
-		public bool IsToday => When.Date == DateTime.Today;
-
-		public string Key { get; }
-
-		public int ActivityKey { get; set; }
 	}
 }

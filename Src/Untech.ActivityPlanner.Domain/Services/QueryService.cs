@@ -45,9 +45,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 				Days = occurrences
 					.Select(dayOccurrences => new DailyCalendarDay(dayOccurrences.Key)
 					{
-						Activities = dayOccurrences
-							.Select(_ => new DailyCalendarDayActivity(_.ActivityKey, _))
-							.ToList()
+						Activities = dayOccurrences.ToList()
 					})
 					.ToList()
 			};

@@ -12,10 +12,10 @@ namespace Untech.ActivityPlanner.Domain.Requests
 			ActivityKey = activityKey;
 			When = when;
 		}
-		
+
 		[DataMember]
 		public int ActivityKey { get; private set; }
-		
+
 		[DataMember]
 		public DateTime When { get; private set; }
 
@@ -24,5 +24,8 @@ namespace Untech.ActivityPlanner.Domain.Requests
 
 		[DataMember]
 		public bool Highlighted { get; set; }
+
+		[DataMember]
+		public bool Missed { get; set; }
 	}
 }

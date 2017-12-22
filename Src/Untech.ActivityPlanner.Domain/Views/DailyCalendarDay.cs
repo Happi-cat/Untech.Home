@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Untech.ActivityPlanner.Domain.Models;
 
 namespace Untech.ActivityPlanner.Domain.Views
 {
@@ -24,6 +25,6 @@ namespace Untech.ActivityPlanner.Domain.Views
 		public int Day { get; private set; }
 
 		[DataMember]
-		public IReadOnlyCollection<DailyCalendarDayActivity> Activities { get; set; }
+		public IReadOnlyCollection<ActivityOccurrence> Activities { get; set; }
 	}
 }
