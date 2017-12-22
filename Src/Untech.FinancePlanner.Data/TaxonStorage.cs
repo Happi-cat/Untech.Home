@@ -43,7 +43,7 @@ namespace Untech.FinancePlanner.Data
 			using (var context = _contextFactory())
 			{
 				var dto = context.GetTable<TaxonDao>().SingleOrDefault(n => n.Key == key);
-				return TaxonDao.Convert(dto);
+				return TaxonDao.ToEntity(dto);
 			}
 		}
 
@@ -51,7 +51,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				var key = context.InsertWithInt32Identity(TaxonDao.Convert(entity));
+				var key = context.InsertWithInt32Identity(new TaxonDao(entity));
 				return Find(key);
 			}
 		}
@@ -60,7 +60,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				return context.Delete(TaxonDao.Convert(entity)) > 0;
+				return context.Delete(new TaxonDao(entity)) > 0;
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				context.Update(TaxonDao.Convert(entity));
+				context.Update(new TaxonDao(entity));
 				return entity;
 			}
 		}
@@ -85,7 +85,7 @@ namespace Untech.FinancePlanner.Data
 				return context.GetTable<TaxonDao>()
 					.Where(n => n.ParentKey == request.TaxonKey)
 					.ToList()
-					.Select(TaxonDao.Convert);
+					.Select(TaxonDao.ToEntity);
 			}
 		}
 	}

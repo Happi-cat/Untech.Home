@@ -27,8 +27,8 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				var dto = context.GetTable<FinancialJournalEntryDao>().SingleOrDefault(n => n.Key == key);
-				return FinancialJournalEntryDao.Convert(dto);
+				var dao = context.GetTable<FinancialJournalEntryDao>().SingleOrDefault(n => n.Key == key);
+				return FinancialJournalEntryDao.ToEntity(dao);
 			}
 		}
 
@@ -36,7 +36,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				var key = context.InsertWithInt32Identity(FinancialJournalEntryDao.Convert(entity));
+				var key = context.InsertWithInt32Identity(new FinancialJournalEntryDao(entity));
 				return Find(key);
 			}
 		}
@@ -45,7 +45,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				return context.Delete(FinancialJournalEntryDao.Convert(entity)) > 0;
+				return context.Delete(new FinancialJournalEntryDao(entity)) > 0;
 			}
 		}
 
@@ -53,7 +53,7 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				context.Update(FinancialJournalEntryDao.Convert(entity));
+				context.Update(new FinancialJournalEntryDao(entity));
 				return entity;
 			}
 		}
@@ -71,11 +71,11 @@ namespace Untech.FinancePlanner.Data
 			{
 				foreach (var taxon in rootTaxon.DescendantsAndSelf())
 				{
-					var dtos = context.GetTable<FinancialJournalEntryDao>()
+					var daos = context.GetTable<FinancialJournalEntryDao>()
 						.Where(n => n.TaxonKey == taxon.Key && n.When >= from && n.When < to)
 						.ToList();
 
-					entries.AddRange(dtos.Select(FinancialJournalEntryDao.Convert));
+					entries.AddRange(daos.Select(FinancialJournalEntryDao.ToEntity));
 				}
 			}
 
