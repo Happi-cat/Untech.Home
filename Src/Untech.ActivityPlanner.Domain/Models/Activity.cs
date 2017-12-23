@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using Untech.Practices.DataStorage;
 
 namespace Untech.ActivityPlanner.Domain.Models

@@ -18,8 +18,5 @@ namespace Untech.ActivityPlanner.Domain.Requests
 
 		[DataMember]
 		public string Name { get; private set; }
-
-		[DataMember]
-		public string Remarks { get; set; }
 	}
 }

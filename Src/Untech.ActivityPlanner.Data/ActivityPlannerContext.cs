@@ -13,21 +13,21 @@ namespace Untech.ActivityPlanner.Data
 			var b = MappingSchema.GetFluentMappingBuilder();
 
 			b.Entity<Group>().HasTableName("Groups")
-				.Property(_ => _.Key).IsIdentity().IsPrimaryKey()
-				.Property(_ => _.Name);
+				.Property(n => n.Key).IsIdentity().IsPrimaryKey()
+				.Property(n => n.Name);
 
 			b.Entity<Activity>().HasTableName("Activities")
-				.Property(_ => _.Key).IsIdentity().IsPrimaryKey()
-				.Property(_ => _.GroupKey)
-				.Property(_ => _.Name);
+				.Property(n => n.Key).IsIdentity().IsPrimaryKey()
+				.Property(n => n.GroupKey)
+				.Property(n => n.Name);
 
 			b.Entity<ActivityOccurrence>().HasTableName("ActivityOccurrences")
-				.Property(_ => _.Key).IsIdentity().IsPrimaryKey()
-				.Property(_ => _.ActivityKey)
-				.Property(_ => _.Note).IsNullable()
-				.Property(_ => _.Highlighted)
-				.Property(_ => _.Missed)
-				.Property(_ => _.When);
+				.Property(n => n.Key).IsIdentity().IsPrimaryKey()
+				.Property(n => n.ActivityKey)
+				.Property(n => n.Note).IsNullable()
+				.Property(n => n.Highlighted)
+				.Property(n => n.Missed)
+				.Property(n => n.When);
 		}
 
 		public ITable<Group> Groups => GetTable<Group>();

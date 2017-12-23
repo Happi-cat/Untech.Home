@@ -26,7 +26,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 				{
 					Activities = _dispatcher
 						.Fetch(new ActivitiesQuery(group.Key))
-						.Select(_ => new ActivitiesViewActivity(_))
+						.Select(n => new ActivitiesViewActivity(n))
 						.ToList()
 				})
 				.ToList()
@@ -38,7 +38,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 
 			var occurrences = _dispatcher
 				.Fetch(request.OccurrencesQuery)
-				.GroupBy(_ => _.When.Date);
+				.GroupBy(n => n.When.Date);
 
 			return new DailyCalendar(view)
 			{
@@ -57,7 +57,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 
 			var occurrences = _dispatcher
 				.Fetch(request.Occurrences)
-				.GroupBy(_ => new DateTime(_.When.Year, _.When.Month, 1));
+				.GroupBy(n => new DateTime(n.When.Year, n.When.Month, 1));
 
 			return new MonthlyCalendar(view)
 			{
@@ -65,8 +65,8 @@ namespace Untech.ActivityPlanner.Domain.Services
 					.Select(monthOccurrences => new MonthlyCalendarMonth(monthOccurrences.Key)
 					{
 						Activities = monthOccurrences
-							.GroupBy(_ => _.ActivityKey)
-							.Select(_ => new MonthlyCalendarMonthActivity(_.Key, _.Count()))
+							.GroupBy(n => n.ActivityKey)
+							.Select(n => new MonthlyCalendarMonthActivity(n.Key, n.Count()))
 							.ToList()
 					})
 					.ToList()

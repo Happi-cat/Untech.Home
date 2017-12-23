@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
 namespace Untech.ActivityPlanner.Domain.Requests
@@ -7,17 +6,13 @@ namespace Untech.ActivityPlanner.Domain.Requests
 	[DataContract]
 	public class UpdateActivityOccurrence : ICommand
 	{
-		public UpdateActivityOccurrence(int activityKey, DateTime when)
+		public UpdateActivityOccurrence(int key)
 		{
-			ActivityKey = activityKey;
-			When = when;
+			Key = key;
 		}
 
 		[DataMember]
-		public int ActivityKey { get; private set; }
-
-		[DataMember]
-		public DateTime When { get; private set; }
+		public int Key { get; private set; }
 
 		[DataMember]
 		public string Note { get; set; }

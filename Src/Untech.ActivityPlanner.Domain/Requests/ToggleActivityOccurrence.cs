@@ -1,25 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
 namespace Untech.ActivityPlanner.Domain.Requests
 {
 	[DataContract]
-	public class ToggleActivityOccurrences : ICommand
+	public class ToggleActivityOccurrence : ICommand
 	{
-		public ToggleActivityOccurrences(int activityKey)
+		public ToggleActivityOccurrence(int activityKey, DateTime when)
 		{
 			ActivityKey = activityKey;
+			When = when.Date;
 		}
 
 		[DataMember]
 		public int ActivityKey { get; private set; }
 
 		[DataMember]
-		public IReadOnlyCollection<DateTime> Added { get; set; }
-
-		[DataMember]
-		public IReadOnlyCollection<DateTime> Deleted { get; set; }
+		public DateTime When { get; private set; }
 	}
 }
