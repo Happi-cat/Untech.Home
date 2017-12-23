@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.DataStorag
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.DataStorage.Cache.Abstractions", "..\External\Untech.Practices\Src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj", "{FFD831F9-DDA8-405F-8D70-59365058D680}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.ActivityPlanner.Integration.GoogleCalendar", "Untech.ActivityPlanner.Integration.GoogleCalendar\Untech.ActivityPlanner.Integration.GoogleCalendar.csproj", "{B6DB4D04-DC5F-4154-94E9-CC704802C54B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Integration.GoogleCalendar", "Untech.Integration.GoogleCalendar\Untech.Integration.GoogleCalendar.csproj", "{B6DB4D04-DC5F-4154-94E9-CC704802C54B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
