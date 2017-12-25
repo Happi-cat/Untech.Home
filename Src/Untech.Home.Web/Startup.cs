@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
-using LinqToDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
+using Untech.ActivityPlanner.Data;
+using Untech.ActivityPlanner.Domain.Models;
+using Untech.ActivityPlanner.Integration.GoogleCalendar;
 using Untech.FinancePlanner.Data;
 using Untech.FinancePlanner.Data.Cache;
 using Untech.FinancePlanner.Domain.Models;
@@ -70,16 +72,26 @@ namespace Untech.Home.Web
 			var container = new Container();
 			var dispatcher = new Dispatcher(new DispatcherContainer(container));
 
-			container.RegisterSingleton<Func<IDataContext>>(() => new FinancialPlannerContext());
+			container.RegisterSingleton<Func<FinancialPlannerContext>>(() => new FinancialPlannerContext());
+			container.RegisterSingleton<Func<ActivityPlannerContext>>(() => new ActivityPlannerContext());
 
 			container.Register<ICacheStorage, CacheStorage>();
 			container.Register<IDataStorage<FinancialJournalEntry>, FinancialJournalEntryStorage>();
 			container.Register<IDataStorage<Taxon>, TaxonStorage>();
 
+			container.Register<IDataStorage<Group>, GenericDataStorage<Group>>();
+			container.Register<IDataStorage<Activity>, ActivityDataStorage>();
+			container.Register<IDataStorage<ActivityOccurrence>, GenericDataStorage<ActivityOccurrence>>();
+
 			var assembly = new[]
 			{
 				typeof(FinancialPlannerContext).Assembly,
-				typeof(FinancialJournalEntry).Assembly
+				typeof(FinancialJournalEntry).Assembly,
+
+				typeof(ActivityPlannerContext).Assembly,
+				typeof(Activity).Assembly,
+
+				typeof(CalendarSynchronizer).Assembly
 			};
 
 			container.RegisterCollection(typeof(IPipelinePreProcessor<>), assembly);

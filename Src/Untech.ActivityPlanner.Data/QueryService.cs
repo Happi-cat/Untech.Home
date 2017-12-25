@@ -14,7 +14,7 @@ namespace Untech.ActivityPlanner.Data
 	{
 		private readonly Func<IDataContext> _contextFactory;
 
-		public QueryService(Func<IDataContext> contextFactory)
+		public QueryService(Func<ActivityPlannerContext> contextFactory)
 		{
 			_contextFactory = contextFactory;
 		}

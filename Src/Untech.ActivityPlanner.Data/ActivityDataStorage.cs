@@ -7,7 +7,7 @@ namespace Untech.ActivityPlanner.Data
 {
 	public class ActivityDataStorage : GenericDataStorage<Activity>
 	{
-		public ActivityDataStorage(Func<IDataContext> contextFactory) : base(contextFactory)
+		public ActivityDataStorage(Func<ActivityPlannerContext> contextFactory) : base(contextFactory)
 		{
 		}
 

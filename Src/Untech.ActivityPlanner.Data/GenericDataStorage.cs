@@ -10,7 +10,7 @@ namespace Untech.ActivityPlanner.Data
 	{
 		private readonly Func<IDataContext> _contextFactory;
 
-		public GenericDataStorage(Func<IDataContext> contextFactory)
+		public GenericDataStorage(Func<ActivityPlannerContext> contextFactory)
 		{
 			_contextFactory = contextFactory;
 		}
