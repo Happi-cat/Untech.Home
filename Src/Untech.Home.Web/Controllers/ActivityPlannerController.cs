@@ -18,13 +18,13 @@ namespace Untech.Home.Web.Controllers
 			_dispatcher = dispatcher;
 		}
 
-		[HttpGet("calendar/daily/{from}-{to}")]
-		public DailyCalendar GetDailyCalendar(DateTime from, DateTime to) => _dispatcher
-			.Fetch(new DailyCalendarQuery(from, to));
+		[HttpGet("calendar/daily/{fromDay}-{toDay}")]
+		public DailyCalendar GetDailyCalendar(int fromDay, int toDay) => _dispatcher
+			.Fetch(new DailyCalendarQuery(fromDay, toDay));
 
-		[HttpGet("calendar/monthly/{year}/{fromMonth}-{toMonth}")]
-		public MonthlyCalendar GetMonthlyCalendar(int year, int fromMonth, int toMonth) => _dispatcher
-				.Fetch(new MonthlyCalendarQuery(year, fromMonth, toMonth));
+		[HttpGet("calendar/monthly/{fromMonth}-{toMonth}")]
+		public MonthlyCalendar GetMonthlyCalendar(int fromMonth, int toMonth) => _dispatcher
+				.Fetch(new MonthlyCalendarQuery(fromMonth, toMonth));
 
 		[HttpPost("group")]
 		public Group CreateGroup([FromBody]CreateGroup request) => _dispatcher.Process(request);

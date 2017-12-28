@@ -10,13 +10,13 @@ import {
 } from './Models';
 
 export default class ApiService {
-  public getDailyCalendar(from: Date, to: Date) {
-    return fetch('api/activity-planner/calendar/daily/' + from + '-' + to)
+  public getDailyCalendar(fromDay: number | string, toDay: number | string) {
+    return fetch('api/activity-planner/calendar/daily/' + fromDay + '-' + toDay)
       .then(response => response.json() as Promise<IDailyCalendar>);
   }
 
-  public getMonthlyCalendar(year: number | string, fromMonth: number | string, toMonth: number | string) {
-    return fetch('api/activity-planner/calendar/monthly/' + year + '/' + fromMonth + '-' + toMonth)
+  public getMonthlyCalendar(fromMonth: number | string, toMonth: number | string) {
+    return fetch('api/activity-planner/calendar/monthly/' + fromMonth + '-' + toMonth)
       .then(response => response.json() as Promise<IMonthlyCalendar>);
   }
 

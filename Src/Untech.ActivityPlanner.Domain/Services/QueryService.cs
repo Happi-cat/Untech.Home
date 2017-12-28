@@ -74,7 +74,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 						Activities = occurrences.ContainsKey(month)
 							? occurrences[month]
 								.GroupBy(n => n.ActivityKey)
-								.Select(n => new MonthlyCalendarMonthActivity(n.Key, n.Count()))
+								.Select(n => new MonthlyCalendarMonthActivity(n.Key, n.Count(m => !m.Missed)))
 								.ToArray()
 							: new MonthlyCalendarMonthActivity[0]
 					})
