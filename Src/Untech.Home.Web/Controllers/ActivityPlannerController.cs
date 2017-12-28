@@ -24,7 +24,7 @@ namespace Untech.Home.Web.Controllers
 
 		[HttpGet("calendar/monthly/{fromMonth}-{toMonth}")]
 		public MonthlyCalendar GetMonthlyCalendar(int fromMonth, int toMonth) => _dispatcher
-				.Fetch(new MonthlyCalendarQuery(fromMonth, toMonth));
+			.Fetch(new MonthlyCalendarQuery(fromMonth, toMonth));
 
 		[HttpPost("group")]
 		public Group CreateGroup([FromBody]CreateGroup request) => _dispatcher.Process(request);
