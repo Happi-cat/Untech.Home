@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as classNames from 'classnames';
 import { IMoney, ITaxonAnnualFinancialReport, IMonthlyFinancialReport } from './Models';
 import './ReportTable.less';
-import { pluralizeMonth } from '../../Utils';
+import { pluralizeMonth } from '../../utils';
 import { MoneyView, MonthView } from '../components';
 import { Icon } from 'semantic-ui-react';
 
