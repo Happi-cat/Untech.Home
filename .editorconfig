@@ -1,0 +1,12 @@
+[*.ts]
+indent_size=2
+indent_style=space
+
+[*.tsx]
+index_size=2
+indent_style=space
+
+[*.cs]
+indent_size=4
+indent_style=tab
+
