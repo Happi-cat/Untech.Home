@@ -24,21 +24,16 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 
 		public void Publish(ActivityOccurrenceSaved notification)
 		{
-			Event calendarEvent = FindCalendarEvent(notification);
-
-			if (calendarEvent == null)
+			Event calendarEvent = FindCalendarEvent(notification) ?? new Event
 			{
-				calendarEvent = new Event
+				ExtendedProperties = new Event.ExtendedPropertiesData
 				{
-					ExtendedProperties = new Event.ExtendedPropertiesData
+					Private__ = new Dictionary<string, string>
 					{
-						Private__ = new Dictionary<string, string>
-						{
-							[CalendarKey] = notification.Occurrence.Key.ToString()
-						}
+						[CalendarKey] = notification.Occurrence.Key.ToString()
 					}
-				};
-			}
+				}
+			};
 
 			var prefix = string.Join(" ", GetPrefixes(notification.Occurrence).Select(n => $"[{n}]"));
 
