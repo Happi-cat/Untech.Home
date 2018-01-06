@@ -15,6 +15,6 @@ namespace Untech.ActivityPlanner.Domain.Views
 		public ActivitiesView View { get; private set; }
 
 		[DataMember]
-		public IReadOnlyCollection<DailyCalendarDay> Days { get; set; }
+		public IReadOnlyCollection<DailyCalendarMonth> Months { get; set; }
 	}
 }

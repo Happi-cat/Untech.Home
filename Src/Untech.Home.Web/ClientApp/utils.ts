@@ -1,4 +1,4 @@
-const dict: { [mo: number]: string } = {
+const moDict: { [mo: number]: string } = {
     1: 'Jan',
     2: 'Feb',
     3: 'Mar',
@@ -13,8 +13,22 @@ const dict: { [mo: number]: string } = {
     12: 'Dec'
 };
 
+const dayOfWeekDict: { [d: number]: string } = {
+  1: 'Mo',
+  2: 'Tu',
+  3: 'We',
+  4: 'Th',
+  5: 'Fr',
+  6: 'Sa',
+  7: 'Su'
+};
+
 export function pluralizeMonth(month: number) {
-    return dict[month];
+    return moDict[month];
+}
+
+export function pluralizeDayOfWeek(dayOfWeek: number) {
+  return dayOfWeekDict[dayOfWeek];
 }
 
 export function humanizeNumber(value: number | string, fractionDigits?: number) {

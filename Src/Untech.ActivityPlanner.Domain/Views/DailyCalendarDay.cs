@@ -13,6 +13,7 @@ namespace Untech.ActivityPlanner.Domain.Views
 			Year = thatDay.Year;
 			Month = thatDay.Month;
 			Day = thatDay.Day;
+			DayOfWeek = thatDay.DayOfWeek == System.DayOfWeek.Sunday ? 7 : (int)thatDay.DayOfWeek;
 		}
 
 		[DataMember]
@@ -23,6 +24,9 @@ namespace Untech.ActivityPlanner.Domain.Views
 
 		[DataMember]
 		public int Day { get; private set; }
+
+		[DataMember]
+		public int DayOfWeek { get; private set; }
 
 		[DataMember]
 		public IReadOnlyCollection<ActivityOccurrence> Activities { get; set; }

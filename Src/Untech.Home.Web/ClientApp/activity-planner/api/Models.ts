@@ -5,6 +5,7 @@ export interface IActivityOccurrence {
   note?: string;
   highlighted: boolean;
   missed: boolean;
+  ongoing: boolean;
 }
 
 export interface IActivitiesViewActivity {
@@ -26,12 +27,20 @@ export interface IDailyCalendarDay {
   year: number;
   month: number;
   day: number;
+  dayOfWeek: number;
   activities: IActivityOccurrence[]
 }
 
+export interface IDailyCalendarMonth {
+  year: number;
+  month: number;
+  days: IDailyCalendarDay[];
+}
+
+
 export interface IDailyCalendar {
   view: IActivitiesView;
-  days: IDailyCalendarDay[];
+  months: IDailyCalendarMonth[];
 }
 
 export interface IMonthlyCalendarMonthActivity {

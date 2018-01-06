@@ -11,3 +11,10 @@ export function activitiesViewToDict(request: IActivitiesView) {
 
   return dict;
 }
+
+export function activitiesViewToList(request: IActivitiesView) {
+  return request.groups
+    .map(group => group.activities)
+    .reduce((old, current) => [...old, ...current], [])
+}
+

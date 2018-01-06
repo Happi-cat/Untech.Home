@@ -11,7 +11,7 @@ using Untech.Practices.CQRS.Handlers;
 namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 {
 	public class CalendarSynchronizer : INotificationHandler<ActivityOccurrenceSaved>,
-			INotificationHandler<ActivityOccurrenceDeleted>
+		INotificationHandler<ActivityOccurrenceDeleted>
 	{
 		private const string CalendarKey = "untech.home.activityPlanner.occurrenceKey";
 

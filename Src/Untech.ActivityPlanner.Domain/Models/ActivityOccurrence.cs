@@ -31,5 +31,8 @@ namespace Untech.ActivityPlanner.Domain.Models
 
 		[DataMember]
 		public bool Missed { get; set; }
+
+		[DataMember]
+		public bool Ongoing => When > DateTime.Today;
 	}
 }

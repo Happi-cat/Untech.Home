@@ -1,16 +1,10 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
-import { IMoney, IMonthlyFinancialReport, IMonthlyFinancialReportDay, IMonthlyFinancialReportDayEntry } from './Models';
-import { MoneyView, MonthView } from '../components';
-import { Icon } from 'semantic-ui-react';
-
-function getMonthlyReportKey(report: IMonthlyFinancialReport) {
-  return report.year + '-' + report.month;
-}
+import { IMonthlyFinancialReport, IMonthlyFinancialReportDayEntry } from './Models';
+import { MoneyView} from '../components';
 
 interface IMonthlyReportTableProps {
   report: IMonthlyFinancialReport;
-  onTaxonClick(taxonId: number): void;
+  onTaxonClick(taxonId : number): void;
 }
 
 export class MonthlyReportTable extends React.Component<IMonthlyReportTableProps, {}> {

@@ -42,16 +42,21 @@ namespace Untech.ActivityPlanner.Domain.Services
 				.GroupBy(n => n.When.Date)
 				.ToDictionary(n => n.Key, n => n.ToArray());
 
-			var dates = GetDates(request.Occurrences.From, request.Occurrences.To, n => n.AddDays(1));
+			var allDays = GetDates(request.Occurrences.From, request.Occurrences.To, n => n.AddDays(1))
+				.Select(day => new DailyCalendarDay(day)
+				{
+					Activities = occurrences.ContainsKey(day) ? occurrences[day].ToArray() : new Models.ActivityOccurrence[0]
+				});
 
 			return new DailyCalendar(view)
 			{
-				Days = dates
-					.Select(day => new DailyCalendarDay(day)
+				Months = allDays
+					.GroupBy(n => new DateTime(n.Year, n.Month, 1))
+					.Select(group => new DailyCalendarMonth(group.Key)
 					{
-						Activities = occurrences.ContainsKey(day) ? occurrences[day].ToArray() : new Models.ActivityOccurrence[0]
+						Days = group.OrderBy(n => n.Day).ToArray()
 					})
-					.ToList()
+					.ToArray()
 			};
 		}
 
