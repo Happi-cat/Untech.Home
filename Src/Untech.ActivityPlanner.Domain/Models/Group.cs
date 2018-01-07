@@ -6,6 +6,11 @@ namespace Untech.ActivityPlanner.Domain.Models
 	[DataContract]
 	public class Group : IAggregateRoot
 	{
+		private Group()
+		{
+
+		}
+
 		public Group(int key, string name)
 		{
 			Key = key;

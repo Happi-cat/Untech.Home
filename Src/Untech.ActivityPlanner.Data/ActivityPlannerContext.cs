@@ -27,7 +27,8 @@ namespace Untech.ActivityPlanner.Data
 				.Property(n => n.Note).IsNullable()
 				.Property(n => n.Highlighted)
 				.Property(n => n.Missed)
-				.Property(n => n.When);
+				.Property(n => n.When)
+				.Property(n => n.Ongoing).IsNotColumn();
 		}
 
 		public ITable<Group> Groups => GetTable<Group>();

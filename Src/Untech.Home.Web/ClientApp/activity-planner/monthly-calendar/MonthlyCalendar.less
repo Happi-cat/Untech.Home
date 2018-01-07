@@ -1,0 +1,20 @@
+.monthly-calendar {
+  font-size: 13px;
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  td, th {
+    text-align: center;
+    padding: 2px 5px;
+  }
+}
+
+.monthly-calendar__month {
+  border: 1px solid transparent;
+
+  &--level-1 { background-color: lighten(green, 60%); }
+  &--level-2 { background-color: lighten(green, 30%); }
+  &--level-3 { background-color: green; }
+  &--level-4 { background-color: darken(green, 30%); }
+  &--level-5 { background-color: darken(green, 60%); }
+}

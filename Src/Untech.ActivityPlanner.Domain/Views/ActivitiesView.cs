@@ -6,6 +6,7 @@ namespace Untech.ActivityPlanner.Domain.Views
 	[DataContract]
 	public class ActivitiesView
 	{
+		[DataMember]
 		public IReadOnlyCollection<ActivitiesViewGroup> Groups { get; set; }
 	}
 }

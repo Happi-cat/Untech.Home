@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
+import './DailyCalendar.less';
 import {
   IDailyCalendar,
   IDailyCalendarDay,
@@ -12,11 +13,11 @@ export interface IDailyCalendarProps {
   calendar: IDailyCalendar;
 }
 
-export class DailyCalendar extends React.Component<IDailyCalendarProps> {
+export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
   public render() {
     const months = this.props.calendar.months.map(m => ({
       key: m.year + '-' + m.month,
-      name: pluralizeMonth(m.month),
+      name: m.year + ' ' + pluralizeMonth(m.month),
       daysCount: m.days.length,
       days: m.days
     }));
@@ -29,21 +30,21 @@ export class DailyCalendar extends React.Component<IDailyCalendarProps> {
       }));
     const groups = this.props.calendar.view.groups;
 
-    return <table className="monthly-report">
+    return <table className="daily-calendar">
       <thead>
-        <tr>
-          <th></th>
-          {months.map(m => <th key={m.key} colSpan={m.daysCount}>{m.name}</th>)}
+        <tr className="daily-calendar__months">
+          <th />
+          {months.map(m => <td key={m.key} colSpan={m.daysCount}>{m.name}</td>)}
         </tr>
-        <tr>
-          <th></th>
-          {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend}>
+        <tr className="daily-calendar__days">
+          <th />
+          {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend} isThisDay={d.isThisDay}>
             {d.day}
           </CalendarDay>)}
         </tr>
-        <tr>
-          <th></th>
-          {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend}>
+        <tr className="daily-calendar__days-of-week">
+          <th />
+          {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend} isThisDay={d.isThisDay}>
             {pluralizeDayOfWeek(d.dayOfWeek)}
           </CalendarDay>)}
         </tr>
@@ -53,6 +54,10 @@ export class DailyCalendar extends React.Component<IDailyCalendarProps> {
         group={g}
         allDays={days}
       />)}
+      <tfoot>
+        <td></td>
+        <td colSpan={days.length} />
+      </tfoot>
     </table>;
   }
 }
@@ -62,8 +67,9 @@ interface IExtendendDailyCalendarDay extends IDailyCalendarDay {
   isWeekend: boolean;
 }
 
-interface ICalendarDayProps {
+interface ICalendarDayProps extends React.TdHTMLAttributes<CalendarDay> {
   isWeekend: boolean;
+  isThisDay: boolean;
   className?: string;
 }
 
@@ -72,6 +78,7 @@ class CalendarDay extends React.PureComponent<ICalendarDayProps> {
     const className = classNames([
       'daily-calendar__day',
       this.props.isWeekend && 'daily-calendar__day--weekend',
+      this.props.isThisDay && 'daily-calendar__day--today',
       this.props.className
     ]);
 
@@ -90,7 +97,7 @@ function CalendarGroup(props: ICalendarGroupProps) {
   const {name, activities} = props.group;
 
   return <tbody>
-  <tr className="daily-report__group">
+  <tr className="daily-calendar__group">
     <th>{name}</th>
     <td colSpan={props.allDays.length}></td>
   </tr>
@@ -109,41 +116,46 @@ interface ICalendarActivityProps {
 function CalendarActivity(props: ICalendarActivityProps) {
   const activityKey = props.activity.activityKey;
   const days = props.allDays.map(day => {
-    const activity = day.activities.find(ma => ma.activityKey == activityKey);
+    const occurrence = day.activities.find(ma => ma.activityKey == activityKey);
 
     return {
       key: day.year + '-' + day.month,
-      isWeekend: day.isWeekend,
-      activity: activity
+      activityKey: activityKey,
+      ...day,
+      occurrence: occurrence
     };
   });
 
-  return <tr className="daily-report__activity">
+  return <tr className="daily-calendar__activity">
     <th>{props.activity.name}</th>
-    {days.map(m => <CalendarActivityDay key={m.key} isWeekend={m.isWeekend} activity={m.activity}/>)}
+    {days.map(m => <CalendarActivityDay key={m.key} {...m} />)}
   </tr>;
 }
 
 interface ICalendarActivityDayProps extends ICalendarDayProps {
-  activity?: IActivityOccurrence;
+  activityKey: number;
+  year: number;
+  month: number;
+  day: number;
+  occurrence?: IActivityOccurrence;
 }
 
 function CalendarActivityDay(props: ICalendarActivityDayProps) {
-  let { highlighted, missed, ongoing } = props.activity || {
+  let { highlighted, missed, ongoing } = props.occurrence || {
     highlighted: false,
     missed: false,
     ongoing: false
   };
 
   let className = classNames([
-    props.activity && "daily-report__activity-day",
-    ongoing && "daily-report__activity-day--ongoing",
-    highlighted && "daily-report__activity-day--highlight",
-    missed && "daily-report__activity-day--missed"
+    props.occurrence && "daily-calendar__activity-day",
+    ongoing && "daily-calendar__activity-day--ongoing",
+    ongoing && highlighted && "daily-calendar__activity-day--highlight",
+    missed && "daily-calendar__activity-day--missed"
   ]);
-  let children = props.activity && props.activity.note ? "*" : ""
+  let children = props.occurrence && props.occurrence.note ? "*" : ""
 
-  return <CalendarDay isWeekend={props.isWeekend} className={className}>
+  return <CalendarDay isWeekend={props.isWeekend} isThisDay={props.isThisDay} className={className}>
     {children}
   </CalendarDay>;
 }

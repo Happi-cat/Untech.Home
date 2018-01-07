@@ -6,6 +6,11 @@ namespace Untech.ActivityPlanner.Domain.Models
 	[DataContract]
 	public class Activity : IAggregateRoot
 	{
+		private Activity()
+		{
+
+		}
+
 		public Activity(int key, int groupKey, string name)
 		{
 			Key = key;

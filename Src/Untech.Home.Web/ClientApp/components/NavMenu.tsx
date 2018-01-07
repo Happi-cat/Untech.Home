@@ -10,7 +10,12 @@ export class NavMenu extends React.Component {
                 Home
             </Menu.Item>
 
-            <Menu.Item as={NavLink} to={'/financial-planner'} activeClassName='active' >
+            <Menu.Item as={NavLink} to='/activity-planner' activeClassName='active' >
+                <Icon name='bicycle' />
+                Activity planner
+            </Menu.Item>
+
+            <Menu.Item as={NavLink} to='/financial-planner' activeClassName='active' >
                 <Icon name='dollar' />
                 Financial planner
             </Menu.Item>

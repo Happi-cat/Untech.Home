@@ -20,6 +20,9 @@ namespace Untech.ActivityPlanner.Domain.Views
 		public int Month { get; private set; }
 
 		[DataMember]
+		public bool IsThisMonth => DateTime.Today.Year == Year && DateTime.Today.Month == Month;
+
+		[DataMember]
 		public IReadOnlyCollection<MonthlyCalendarMonthActivity> Activities { get; set; }
 	}
 }

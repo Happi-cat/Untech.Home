@@ -29,6 +29,9 @@ namespace Untech.ActivityPlanner.Domain.Views
 		public int DayOfWeek { get; private set; }
 
 		[DataMember]
+		public bool IsThisDay => new DateTime(Year, Month, Day) == DateTime.Today;
+
+		[DataMember]
 		public IReadOnlyCollection<ActivityOccurrence> Activities { get; set; }
 	}
 }

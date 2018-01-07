@@ -7,6 +7,11 @@ namespace Untech.ActivityPlanner.Domain.Models
 	[DataContract]
 	public class ActivityOccurrence : IAggregateRoot
 	{
+		private ActivityOccurrence()
+		{
+
+		}
+
 		public ActivityOccurrence(int key, int activityKey, DateTime thatDay)
 		{
 			Key = key;

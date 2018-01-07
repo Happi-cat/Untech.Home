@@ -28,6 +28,7 @@ export interface IDailyCalendarDay {
   month: number;
   day: number;
   dayOfWeek: number;
+  isThisDay: boolean;
   activities: IActivityOccurrence[]
 }
 
@@ -51,6 +52,7 @@ export interface IMonthlyCalendarMonthActivity {
 export interface IMonthlyCalendarMonth {
   year: number;
   month: number;
+  isThisMonth: boolean;
   activities: IMonthlyCalendarMonthActivity[];
 }
 
