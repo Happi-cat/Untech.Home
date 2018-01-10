@@ -47,11 +47,15 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 
 			if (string.IsNullOrEmpty(calendarEvent.Id))
 			{
-				_service.Events.Insert(calendarEvent, "primary");
+				_service.Events
+					.Insert(calendarEvent, "primary")
+					.Execute();
 			}
 			else
 			{
-				_service.Events.Update(calendarEvent, "primary", calendarEvent.Id);
+				_service.Events
+					.Update(calendarEvent, "primary", calendarEvent.Id)
+					.Execute();
 			}
 		}
 
@@ -61,7 +65,9 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 
 			if (calendarEvent != null)
 			{
-				_service.Events.Delete("primary", calendarEvent.Id);
+				_service.Events
+					.Delete("primary", calendarEvent.Id)
+					.Execute();
 			}
 		}
 

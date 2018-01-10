@@ -72,12 +72,12 @@ export interface ICreateGroup {
 
 export interface IToogleActivityOccurrence {
   activityKey: number;
-  when: Date;
+  when: Date | string;
 }
 
 export interface IToogleActivityOccurrences {
   activityKey: number;
-  when: Date[];
+  when: Date[] | string[];
 }
 
 export interface IUpdateActivityOccurrence {

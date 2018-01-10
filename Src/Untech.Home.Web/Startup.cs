@@ -1,5 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Calendar.v3;
+using Google.Apis.Services;
+using Google.Apis.Util.Store;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -74,6 +80,7 @@ namespace Untech.Home.Web
 
 			container.RegisterSingleton<Func<FinancialPlannerContext>>(() => new FinancialPlannerContext());
 			container.RegisterSingleton<Func<ActivityPlannerContext>>(() => new ActivityPlannerContext());
+			container.RegisterSingleton(GetInitializer());
 
 			container.Register<ICacheStorage, CacheStorage>();
 			container.Register<IDataStorage<FinancialJournalEntry>, FinancialJournalEntryStorage>();
@@ -107,6 +114,32 @@ namespace Untech.Home.Web
 			container.Verify();
 
 			return dispatcher;
+		}
+
+		private static BaseClientService.Initializer GetInitializer()
+		{
+			UserCredential credential;
+
+			using (var stream = File.OpenRead("google.client_secret.json"))
+			{
+				string credPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+				credPath = Path.Combine(credPath, ".credentials/calendar-dotnet-quickstart.json");
+
+				credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+					GoogleClientSecrets.Load(stream).Secrets,
+					new [] { CalendarService.Scope.Calendar },
+					"user",
+					CancellationToken.None,
+					new FileDataStore(credPath, true)).Result;
+				Console.WriteLine("Credential file saved to: " + credPath);
+			}
+
+			// Create Google Calendar API service.
+			return new BaseClientService.Initializer
+			{
+				HttpClientInitializer = credential,
+				ApplicationName = "Activity Planner",
+			};
 		}
 
 		private class DispatcherContainer : ITypeResolver

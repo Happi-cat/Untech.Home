@@ -8,9 +8,28 @@ import {
   IActivitiesViewActivity, IActivityOccurrence
 } from '../api';
 import {pluralizeDayOfWeek, pluralizeMonth} from '../../utils'
+import {QuickAdder} from "../components/QuickAdder";
+import {SmartQuickEditor} from "../components/SmartQuickEditor";
 
 export interface IDailyCalendarProps {
   calendar: IDailyCalendar;
+  dispatcher: IDailyCalendarDispatcher;
+}
+
+export interface IDailyCalendarDispatcher {
+  onAddGroup(name: string): void;
+
+  onDeleteGroup(id: number): void;
+
+  onAddActivity(groupId: number, name: string): void;
+
+  onUpdateActivity(id: number, name: string): void;
+
+  onDelteActivity(id: number): void;
+
+  onToggleActivityOccurrence(activityId: number, year: number, month: number, day: number): void;
+
+  onActivityOccurrenceSelected(activityOccurrenceId: number): void;
 }
 
 export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
@@ -32,31 +51,34 @@ export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
 
     return <table className="daily-calendar">
       <thead>
-        <tr className="daily-calendar__months">
-          <th />
-          {months.map(m => <td key={m.key} colSpan={m.daysCount}>{m.name}</td>)}
-        </tr>
-        <tr className="daily-calendar__days">
-          <th />
-          {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend} isThisDay={d.isThisDay}>
-            {d.day}
-          </CalendarDay>)}
-        </tr>
-        <tr className="daily-calendar__days-of-week">
-          <th />
-          {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend} isThisDay={d.isThisDay}>
-            {pluralizeDayOfWeek(d.dayOfWeek)}
-          </CalendarDay>)}
-        </tr>
+      <tr className="daily-calendar__months">
+        <th/>
+        {months.map(m => <td key={m.key} colSpan={m.daysCount}>{m.name}</td>)}
+      </tr>
+      <tr className="daily-calendar__days">
+        <th/>
+        {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend} isThisDay={d.isThisDay}>
+          {d.day}
+        </CalendarDay>)}
+      </tr>
+      <tr className="daily-calendar__days-of-week">
+        <th/>
+        {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend} isThisDay={d.isThisDay}>
+          {pluralizeDayOfWeek(d.dayOfWeek)}
+        </CalendarDay>)}
+      </tr>
       </thead>
       {groups.map(g => <CalendarGroup
         key={g.name}
         group={g}
         allDays={days}
+        dispatcher={this.props.dispatcher}
       />)}
       <tfoot>
-        <td></td>
-        <td colSpan={days.length} />
+      <td>
+        <QuickAdder onSave={this.props.dispatcher.onAddGroup}/>
+      </td>
+      <td colSpan={days.length}/>
       </tfoot>
     </table>;
   }
@@ -67,7 +89,7 @@ interface IExtendendDailyCalendarDay extends IDailyCalendarDay {
   isWeekend: boolean;
 }
 
-interface ICalendarDayProps extends React.TdHTMLAttributes<CalendarDay> {
+interface ICalendarDayProps extends React.TdHTMLAttributes<HTMLTableDataCellElement> {
   isWeekend: boolean;
   isThisDay: boolean;
   className?: string;
@@ -75,14 +97,15 @@ interface ICalendarDayProps extends React.TdHTMLAttributes<CalendarDay> {
 
 class CalendarDay extends React.PureComponent<ICalendarDayProps> {
   public render() {
-    const className = classNames([
+    const { isWeekend, isThisDay, className, ...other } = this.props;
+    const elementClassName = classNames([
       'daily-calendar__day',
-      this.props.isWeekend && 'daily-calendar__day--weekend',
-      this.props.isThisDay && 'daily-calendar__day--today',
-      this.props.className
+      isWeekend && 'daily-calendar__day--weekend',
+      isThisDay && 'daily-calendar__day--today',
+      className
     ]);
 
-    return <td className={className}>
+    return <td className={elementClassName} {...other}>
       {this.props.children}
     </td>;
   }
@@ -91,45 +114,77 @@ class CalendarDay extends React.PureComponent<ICalendarDayProps> {
 interface ICalendarGroupProps {
   group: IActivitiesViewGroup;
   allDays: IExtendendDailyCalendarDay[];
+  dispatcher: IDailyCalendarDispatcher;
 }
 
-function CalendarGroup(props: ICalendarGroupProps) {
-  const {name, activities} = props.group;
+class CalendarGroup extends React.PureComponent<ICalendarGroupProps> {
+  public render() {
+    const {name, activities} = this.props.group;
 
-  return <tbody>
-  <tr className="daily-calendar__group">
-    <th>{name}</th>
-    <td colSpan={props.allDays.length}></td>
-  </tr>
-  {activities.map(a => <CalendarActivity
-    key={a.name}
-    activity={a}
-    allDays={props.allDays}/>)}
-  </tbody>
+    return <tbody>
+    <tr className="daily-calendar__group">
+      <th>
+        <SmartQuickEditor value={name} onSave={this.handleGroupSave} onDelete={this.handleGroupDelete}/>
+      </th>
+      <td colSpan={this.props.allDays.length}/>
+    </tr>
+    {activities.map(a => <CalendarActivity
+      key={a.name}
+      activity={a}
+      allDays={this.props.allDays}
+      dispatcher={this.props.dispatcher}/>)}
+    <tr>
+      <td><QuickAdder onSave={this.handleActivityAdd}/></td>
+      <td colSpan={this.props.allDays.length}/>
+    </tr>
+    </tbody>
+  }
+
+  handleGroupSave = () => {
+  };
+  handleGroupDelete = () => {
+    this.props.dispatcher.onDeleteGroup(this.props.group.groupKey);
+  }
+  handleActivityAdd = (name: string) => {
+    this.props.dispatcher.onAddActivity(this.props.group.groupKey, name);
+  }
 }
 
 interface ICalendarActivityProps {
   activity: IActivitiesViewActivity;
   allDays: IExtendendDailyCalendarDay[];
+  dispatcher: IDailyCalendarDispatcher;
 }
 
-function CalendarActivity(props: ICalendarActivityProps) {
-  const activityKey = props.activity.activityKey;
-  const days = props.allDays.map(day => {
-    const occurrence = day.activities.find(ma => ma.activityKey == activityKey);
+class CalendarActivity extends React.PureComponent<ICalendarActivityProps> {
+  public render() {
+    const activityKey = this.props.activity.activityKey;
+    const days = this.props.allDays.map(day => {
+      const occurrence = day.activities.find(ma => ma.activityKey == activityKey);
 
-    return {
-      key: day.year + '-' + day.month,
-      activityKey: activityKey,
-      ...day,
-      occurrence: occurrence
-    };
-  });
+      return {
+        key: day.year + '-' + day.month,
+        activityKey: activityKey,
+        ...day,
+        occurrence: occurrence
+      };
+    });
 
-  return <tr className="daily-calendar__activity">
-    <th>{props.activity.name}</th>
-    {days.map(m => <CalendarActivityDay key={m.key} {...m} />)}
-  </tr>;
+    return <tr className="daily-calendar__activity">
+      <th>
+        <SmartQuickEditor value={this.props.activity.name} onSave={this.handleSave} onDelete={this.handleDelete}/>
+      </th>
+      {days.map(m => <CalendarActivityDay key={m.key} dispatcher={this.props.dispatcher} {...m} />)}
+    </tr>;
+  }
+
+  handleSave = (name: string) => {
+    this.props.dispatcher.onUpdateActivity(this.props.activity.activityKey, name);
+  }
+
+  handleDelete = () => {
+    this.props.dispatcher.onDelteActivity(this.props.activity.activityKey);
+  }
 }
 
 interface ICalendarActivityDayProps extends ICalendarDayProps {
@@ -138,25 +193,43 @@ interface ICalendarActivityDayProps extends ICalendarDayProps {
   month: number;
   day: number;
   occurrence?: IActivityOccurrence;
+  dispatcher: IDailyCalendarDispatcher;
 }
 
-function CalendarActivityDay(props: ICalendarActivityDayProps) {
-  let { highlighted, missed, ongoing } = props.occurrence || {
-    highlighted: false,
-    missed: false,
-    ongoing: false
-  };
+class CalendarActivityDay extends React.PureComponent<ICalendarActivityDayProps> {
+  public render() {
+    let {highlighted, missed, ongoing} = this.props.occurrence || {
+      highlighted: false,
+      missed: false,
+      ongoing: false
+    };
 
-  let className = classNames([
-    props.occurrence && "daily-calendar__activity-day",
-    ongoing && "daily-calendar__activity-day--ongoing",
-    ongoing && highlighted && "daily-calendar__activity-day--highlight",
-    missed && "daily-calendar__activity-day--missed"
-  ]);
-  let children = props.occurrence && props.occurrence.note ? "*" : ""
+    let className = classNames([
+      this.props.occurrence && "daily-calendar__activity-day",
+      ongoing && "daily-calendar__activity-day--ongoing",
+      ongoing && highlighted && "daily-calendar__activity-day--highlight",
+      missed && "daily-calendar__activity-day--missed"
+    ]);
+    let children = this.props.occurrence && this.props.occurrence.note ? "*" : ""
 
-  return <CalendarDay isWeekend={props.isWeekend} isThisDay={props.isThisDay} className={className}>
-    {children}
-  </CalendarDay>;
+    return <CalendarDay
+      isWeekend={this.props.isWeekend}
+      isThisDay={this.props.isThisDay}
+      className={className}
+      onClick={this.handleClick}
+      onDoubleClick={this.handleDoubleClick}>
+      {children}
+    </CalendarDay>;
+  }
+
+  handleClick = () => {
+    const {activityKey, year, month, day} = this.props;
+    this.props.dispatcher.onToggleActivityOccurrence(activityKey, year, month, day);
+  }
+
+  handleDoubleClick = () => {
+    if (this.props.occurrence) {
+      this.props.dispatcher.onActivityOccurrenceSelected(this.props.occurrence.key);
+    }
+  }
 }
-

@@ -52,7 +52,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 		{
 			var activity = _activityDataStorage.Find(request.ActivityKey);
 
-			var occurrence = _dispatcher.Fetch(new OccurrencesQuery(request.When, request.When))
+			var occurrence = _dispatcher.Fetch(new OccurrencesQuery(request.When, request.When.AddDays(1)))
 				.SingleOrDefault(n => n.ActivityKey == activity.Key && n.When == request.When.Date);
 
 			if (occurrence == null)
