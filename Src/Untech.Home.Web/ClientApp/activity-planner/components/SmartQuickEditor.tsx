@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {QuickEditor} from "./QuickEditor";
 import {Button} from "semantic-ui-react";
+import './SmartQuickEditor.less';
+
 
 export interface ISmartQuickEditorProps {
   value: string;
@@ -26,11 +28,11 @@ export class SmartQuickEditor extends React.Component<ISmartQuickEditorProps, IS
       </div>
     }
 
-    return <div>
-      <div>{this.props.value}</div>
+    return <div className="smart-quick-editor">
+      <div className="smart-quick-editor__label">{this.props.value}</div>
       <Button.Group floated='right' size='mini'>
-        <Button onClick={this.props.onDelete} icon='delete' content='Delete' />
-        <Button onClick={this.handleEdit} icon='edit' content='Edit' positive/>
+        <Button onClick={this.props.onDelete} icon='trash'/>
+        <Button onClick={this.handleEdit} icon='edit' positive/>
       </Button.Group>
     </div>
   }

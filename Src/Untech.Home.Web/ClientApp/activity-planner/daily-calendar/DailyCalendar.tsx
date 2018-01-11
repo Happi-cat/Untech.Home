@@ -10,6 +10,7 @@ import {
 import {pluralizeDayOfWeek, pluralizeMonth} from '../../utils'
 import {QuickAdder} from "../components/QuickAdder";
 import {SmartQuickEditor} from "../components/SmartQuickEditor";
+import {Button} from "semantic-ui-react";
 
 export interface IDailyCalendarProps {
   calendar: IDailyCalendar;
@@ -53,15 +54,18 @@ export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
       <thead>
       <tr className="daily-calendar__months">
         <th/>
+        <th/>
         {months.map(m => <td key={m.key} colSpan={m.daysCount}>{m.name}</td>)}
       </tr>
       <tr className="daily-calendar__days">
+        <th/>
         <th/>
         {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend} isThisDay={d.isThisDay}>
           {d.day}
         </CalendarDay>)}
       </tr>
       <tr className="daily-calendar__days-of-week">
+        <th/>
         <th/>
         {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend} isThisDay={d.isThisDay}>
           {pluralizeDayOfWeek(d.dayOfWeek)}
@@ -75,8 +79,9 @@ export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
         dispatcher={this.props.dispatcher}
       />)}
       <tfoot>
+      <td/>
       <td>
-        <QuickAdder onSave={this.props.dispatcher.onAddGroup}/>
+        <QuickAdder onSave={this.props.dispatcher.onAddGroup} placeholder="Add group..."/>
       </td>
       <td colSpan={days.length}/>
       </tfoot>
@@ -97,7 +102,7 @@ interface ICalendarDayProps extends React.TdHTMLAttributes<HTMLTableDataCellElem
 
 class CalendarDay extends React.PureComponent<ICalendarDayProps> {
   public render() {
-    const { isWeekend, isThisDay, className, ...other } = this.props;
+    const {isWeekend, isThisDay, className, ...other} = this.props;
     const elementClassName = classNames([
       'daily-calendar__day',
       isWeekend && 'daily-calendar__day--weekend',
@@ -117,26 +122,44 @@ interface ICalendarGroupProps {
   dispatcher: IDailyCalendarDispatcher;
 }
 
-class CalendarGroup extends React.PureComponent<ICalendarGroupProps> {
+interface ICalendarGroupState {
+  expanded: boolean;
+}
+
+class CalendarGroup extends React.Component<ICalendarGroupProps, ICalendarGroupState> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = {expanded: false};
+  }
+
   public render() {
     const {name, activities} = this.props.group;
 
+    let icon = this.state.expanded
+      ? 'triangle down'
+      : 'triangle right';
+
     return <tbody>
     <tr className="daily-calendar__group">
+      <th>
+        <Button size='mini' icon={icon} onClick={this.toggleExpanded}/>
+      </th>
       <th>
         <SmartQuickEditor value={name} onSave={this.handleGroupSave} onDelete={this.handleGroupDelete}/>
       </th>
       <td colSpan={this.props.allDays.length}/>
     </tr>
-    {activities.map(a => <CalendarActivity
+    {this.state.expanded && activities.map(a => <CalendarActivity
       key={a.name}
       activity={a}
       allDays={this.props.allDays}
       dispatcher={this.props.dispatcher}/>)}
-    <tr>
-      <td><QuickAdder onSave={this.handleActivityAdd}/></td>
+    {this.state.expanded && <tr>
+      <td/>
+      <td><QuickAdder onSave={this.handleActivityAdd} placeholder="Add activity..."/></td>
       <td colSpan={this.props.allDays.length}/>
-    </tr>
+    </tr>}
     </tbody>
   }
 
@@ -147,6 +170,12 @@ class CalendarGroup extends React.PureComponent<ICalendarGroupProps> {
   }
   handleActivityAdd = (name: string) => {
     this.props.dispatcher.onAddActivity(this.props.group.groupKey, name);
+  }
+  toggleExpanded = () => {
+    this.setState(function (prevState, props) {
+      const expanded = prevState.expanded;
+      return {expanded: !expanded};
+    });
   }
 }
 
@@ -171,6 +200,7 @@ class CalendarActivity extends React.PureComponent<ICalendarActivityProps> {
     });
 
     return <tr className="daily-calendar__activity">
+      <th/>
       <th>
         <SmartQuickEditor value={this.props.activity.name} onSave={this.handleSave} onDelete={this.handleDelete}/>
       </th>

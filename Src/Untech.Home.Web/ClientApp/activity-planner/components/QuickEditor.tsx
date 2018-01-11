@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Input, Button} from "semantic-ui-react";
 
 export interface IQuickEditorProps {
+  placeholder?:string;
   value: string;
   onSave(value: string) : void;
   onCancel() : void;
@@ -20,12 +21,21 @@ export class QuickEditor extends React.Component<IQuickEditorProps, IQuickEditor
 
   public render() {
     return <div>
-      <Input fluid name='value' size='mini' type='text' defaultValue={this.state.value} onChange={this.handleInputChange}/>
+      <Input
+        fluid
+        name='value'
+        size='mini'
+        type='text'
+        defaultValue={this.state.value}
+        placeholder={this.props.placeholder}
+        onChange={this.handleInputChange}
+        action={<Button.Group floated='right' size='mini'>
+          <Button onClick={this.handleCancel} icon='cancel'/>
+          <Button onClick={this.handleSave} icon='save' positive/>
+        </Button.Group>}
+      />
 
-      <Button.Group floated='right' size='mini'>
-        <Button onClick={this.handleCancel} icon='cancel' content='Cancel'/>
-        <Button onClick={this.handleSave} icon='save' content='Save' positive/>
-      </Button.Group>
+
     </div>;
   }
 
