@@ -10,7 +10,7 @@ import {
 import {pluralizeDayOfWeek, pluralizeMonth} from '../../utils'
 import {QuickAdder} from "../components/QuickAdder";
 import {SmartQuickEditor} from "../components/SmartQuickEditor";
-import {Popup, Button} from "semantic-ui-react";
+import {Popup, Divider, Button} from "semantic-ui-react";
 
 export interface IDailyCalendarProps {
   calendar: IDailyCalendar;
@@ -228,7 +228,7 @@ interface ICalendarActivityDayProps extends ICalendarDayProps {
 
 class CalendarActivityDay extends React.PureComponent<ICalendarActivityDayProps> {
   public render() {
-    const {highlighted, missed, ongoing, note } = this.props.occurrence || {
+    const {highlighted, missed, ongoing, note} = this.props.occurrence || {
       highlighted: false,
       missed: false,
       ongoing: false,
@@ -241,36 +241,25 @@ class CalendarActivityDay extends React.PureComponent<ICalendarActivityDayProps>
       ongoing && highlighted && "daily-calendar__activity-day--highlight",
       missed && "daily-calendar__activity-day--missed"
     ]);
-    const children = note ? "*" : "";
 
-    const cell = <CalendarDay
-        isWeekend={this.props.isWeekend}
-        isThisDay={this.props.isThisDay}
-        className={className}
-        onClick={this.handleClick}
-      >
-        {children}
-      </CalendarDay>;
+    const Marker = this.createMarker;
+    const Tooltip = this.createTooltip;
 
-    if (note) {
-      return <Popup
-        content={this.toHtml(note)}
-        inverted
-        trigger={cell}
-      />;
-    }
-
-    return cell;
-  }
-
-  toHtml(text: string) {
-    const paragraphs = text.split('\n');
-
-    return <div>
-      {paragraphs.map((v, i) => <p key={i}>
-        {v}
-      </p>)}
-    </div>;
+    return <Popup
+      content={
+        <Tooltip text={note}/>
+      }
+      inverted
+      trigger={
+        <CalendarDay
+          isWeekend={this.props.isWeekend}
+          isThisDay={this.props.isThisDay}
+          className={className}
+          onClick={this.handleClick}
+        >
+          {note && <Marker/>}
+        </CalendarDay>}
+    />;
   }
 
   handleClick = (event: any) => {
@@ -282,5 +271,31 @@ class CalendarActivityDay extends React.PureComponent<ICalendarActivityDayProps>
         this.props.dispatcher.onActivityOccurrenceSelected(this.props.occurrence);
       }
     }
+  }
+
+  createTooltip({text}: { text?: string }) {
+    const paragraphs = (text || '')
+      .split('\n')
+      .filter(n => n);
+
+    const showNotes = !!paragraphs.length;
+
+    return <div>
+      <div>
+        <b>Click</b> - for edit;
+        <br />
+        <b>Ctrl-click</b> - for toggle.
+      </div>
+
+      {showNotes && <Divider inverted horizontal>Note</Divider>}
+
+      {paragraphs.map((v, i) => <div key={v + i}>
+        {v}
+      </div>)}
+    </div>;
+  }
+
+  createMarker() {
+    return <div className='daily-calendar__activity-day-marker'></div>;
   }
 }

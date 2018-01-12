@@ -31,6 +31,7 @@
 .daily-calendar__day {
   cursor: pointer;
   border: 1px solid lightgray;
+  font-size: 0.8em;
 
   &:hover { box-shadow: 0 0 6px rgba(35, 173, 255, 1); }
 
@@ -46,10 +47,24 @@
 }
 
 .daily-calendar__activity-day {
-  background-color: darkgreen;
+  background-color: #21ba45;
   color: white;
+  position: relative;
 
-  &--ongoing { background-color: darkorange; }
-  &--highlight { background-color: red; }
-  &--missed { background-color: darkgray; }
+  &--ongoing { background-color: #f2711c; }
+  &--highlight { background-color: #cc1414; }
+  &--missed { background-color: gray; }
+}
+
+.daily-calendar__activity-day-marker {
+  @color: white;
+
+  width: 0;
+  weight: 0;
+  border-width: 0.45em;
+  border-style: solid;
+  border-color: @color @color transparent transparent;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
