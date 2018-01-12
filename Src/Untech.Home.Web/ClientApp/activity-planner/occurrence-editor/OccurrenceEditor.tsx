@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IActivityOccurrence} from '../api'
 import { TextArea, Form, Radio, Button } from "semantic-ui-react";
+import {pluralizeMonth} from "../../utils";
 
 export interface IOccurrenceEditorProps {
   occurrence: IActivityOccurrence;
@@ -33,9 +34,12 @@ export class OccurrenceEditor extends React.Component<IOccurrenceEditorProps, IO
   }
 
   public render() {
+    const when = new Date(this.props.occurrence.when);
+    const formattedWhen = `${when.getDate()} ${pluralizeMonth(when.getMonth() + 1)} ${when.getFullYear()}`;
+
     return <Form onSubmit={this.handleSubmit}>
       <Form.Group>
-        <label>{this.props.occurrence.when}</label>
+        <label>{formattedWhen}</label>
       </Form.Group>
 
       <Form.Field

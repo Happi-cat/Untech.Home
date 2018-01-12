@@ -17,9 +17,11 @@ export class MonthlyCalendar extends React.Component<IMonthlyCalendarProps> {
   public render() {
     const months = this.props.calendar.months;
 
-    const monthNames = months
-      .map(n => n.month)
-      .map(pluralizeMonth);
+    const headers = months.map(m => ({
+      key: m.year + '-' + m.month,
+      name: pluralizeMonth(m.month),
+      isThisMonth: m.isThisMonth
+    }));
 
     const groups = this.props.calendar.view.groups;
 
@@ -27,9 +29,12 @@ export class MonthlyCalendar extends React.Component<IMonthlyCalendarProps> {
       <thead>
         <tr>
           <th></th>
-          {monthNames.map(m => <th key={m} className='monthly-calendar__month'>{m}</th>)}
+          {headers.map(m => <CalendarMonth key={m.key} isThisMonth={m.isThisMonth}>
+            {m.name}
+          </CalendarMonth>)}
         </tr>
       </thead>
+
       {groups.map(g => <CalendarGroup
         key={g.name}
         group={g}
@@ -55,8 +60,28 @@ function CalendarGroup(props: ICalendarGroupProps) {
     {activities.map(a => <CalendarActivity
       key={a.name}
       activity={a}
-      months={props.months} />)}
+      months={props.months}
+    />)}
   </tbody>
+}
+
+interface ICalendarMonthProps {
+  isThisMonth: boolean;
+  className?: string;
+}
+
+class CalendarMonth extends React.PureComponent<ICalendarMonthProps> {
+  public render() {
+    const className = classNames([
+      'monthly-calendar__month',
+      this.props.isThisMonth && 'monthly-calendar__month--this',
+      this.props.className
+    ]);
+
+    return <td className={className}>
+      {this.props.children}
+    </td>;
+  }
 }
 
 interface ICalendarActivityProps {
@@ -71,28 +96,28 @@ function CalendarActivity(props: ICalendarActivityProps) {
 
     return {
       key: m.year + '-' + m.month,
-      count: activity ? activity.count : 0
+      count: activity ? activity.count : 0,
+      isThisMonth: m.isThisMonth
     };
   });
 
   return <tr className="monthly-calendar__activity">
     <th>{props.activity.name}</th>
-    {months.map(m => <CalendarActivityMonth key={m.key} count={m.count} />)}
+    {months.map(m => <CalendarActivityMonth key={m.key} count={m.count} isThisMonth={m.isThisMonth} />)}
   </tr>;
 }
 
-function CalendarActivityMonth({ count }: { count: number }) {
+function CalendarActivityMonth({ count, isThisMonth }: { count: number, isThisMonth: boolean }) {
   const level = count
     ? Math.floor(Math.log2(count)) + 1
     : 0;
 
   const className = classNames([
-    'monthly-calendar__month',
     level && ('monthly-calendar__month--level-' + level)
   ]);
 
-  return <td className={className}>
-    {count}
-  </td>;
+  return <CalendarMonth isThisMonth={isThisMonth} className={className}>
+    {count ? count : null}
+  </CalendarMonth>;
 }
 

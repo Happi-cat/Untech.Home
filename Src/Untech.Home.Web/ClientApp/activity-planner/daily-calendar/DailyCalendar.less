@@ -1,7 +1,7 @@
 .daily-calendar {
   font-size: 13px;
-  border-collapse: collapse;
-  border-spacing: 0;
+  border-collapse: separate;
+  border-spacing: 2px;
   overflow-x: scroll;
 
   td, th {
@@ -25,43 +25,31 @@
 }
 
 .daily-calendar tbody tr {
-  border-bottom: 2px solid lightgray;
+  border-bottom: 1px solid lightgray;
 }
 
 .daily-calendar__day {
   cursor: pointer;
   border: 1px solid lightgray;
 
-  &:hover {
-    border: 1px solid gray;
-  }
+  &:hover { box-shadow: 0 0 6px rgba(35, 173, 255, 1); }
 
   &--weekend {
-    @color: lightgreen;
+    @color: lightgray;
 
     background: linear-gradient(135deg, rgba(0, 0, 0, 0) 49.9%, @color 49.9%, @color 60%, rgba(0, 0, 0, 0) 60%) fixed,
       linear-gradient(135deg, @color 10%, rgba(0, 0, 0, 0) 10%) fixed;
-    background-size: 6px 6px;
+    background-size: 8px 8px;
   }
 
-  &--today {
-    border: 1px solid black;
-  }
+  &--today { border: 1px solid gray; }
 }
 
 .daily-calendar__activity-day {
   background-color: darkgreen;
   color: white;
 
-  &--ongoing {
-    background-color: darkorange;
-  }
-
-  &--highlight {
-    background-color: red;
-  }
-
-  &--missed {
-    background-color: darkgray;
-  }
+  &--ongoing { background-color: darkorange; }
+  &--highlight { background-color: red; }
+  &--missed { background-color: darkgray; }
 }

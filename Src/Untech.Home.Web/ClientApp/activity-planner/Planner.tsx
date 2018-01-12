@@ -51,7 +51,7 @@ export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, Ac
   reload = () => {
     Promise.all([
       apiService.getDailyCalendar(-20, 40),
-      apiService.getMonthlyCalendar(-11, 1),
+      apiService.getMonthlyCalendar(-9, 3),
     ]).then(data => {
       this.setState({
         daily: data[0],
