@@ -1,13 +1,13 @@
 import * as React from 'react';
-import {QuickEditor} from "./QuickEditor";
-import {Button} from "semantic-ui-react";
+import { QuickEditor } from "./QuickEditor";
+import { Button } from "semantic-ui-react";
 import './SmartQuickEditor.less';
 
 
 export interface ISmartQuickEditorProps {
   value: string;
-  onSave(value: string) : void;
-  onDelete() : void;
+  onSave(value: string): void;
+  onDelete(): void;
 }
 
 export interface ISmartQuickEditorState {
@@ -24,15 +24,15 @@ export class SmartQuickEditor extends React.Component<ISmartQuickEditorProps, IS
   public render() {
     if (this.state.editMode) {
       return <div>
-        <QuickEditor value={this.props.value} onSave={this.props.onSave} onCancel={this.handleCancel}/>
+        <QuickEditor value={this.props.value} onSave={this.props.onSave} onCancel={this.handleCancel} />
       </div>
     }
 
     return <div className="smart-quick-editor">
       <div className="smart-quick-editor__label">{this.props.value}</div>
       <Button.Group floated='right' size='mini'>
-        <Button onClick={this.props.onDelete} icon='trash'/>
-        <Button onClick={this.handleEdit} icon='edit' positive/>
+        <Button onClick={this.props.onDelete} icon='trash' color='orange' />
+        <Button onClick={this.handleEdit} icon='edit' positive />
       </Button.Group>
     </div>
   }

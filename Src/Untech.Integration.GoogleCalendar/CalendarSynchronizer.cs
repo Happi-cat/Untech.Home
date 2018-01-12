@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
@@ -24,16 +25,9 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 
 		public void Publish(ActivityOccurrenceSaved notification)
 		{
-			Event calendarEvent = FindCalendarEvent(notification) ?? new Event
-			{
-				ExtendedProperties = new Event.ExtendedPropertiesData
-				{
-					Private__ = new Dictionary<string, string>
-					{
-						[CalendarKey] = notification.Occurrence.Key.ToString()
-					}
-				}
-			};
+			var when = notification.Occurrence.When;
+			Event calendarEvent = FindCalendarEvent(notification)
+			 	?? GetDefaultCalendarEvent(notification, when);
 
 			var prefix = string.Join(" ", GetPrefixes(notification.Occurrence).Select(n => $"[{n}]"));
 
@@ -41,7 +35,7 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 			calendarEvent.Description = notification.Occurrence.Note;
 			calendarEvent.Start = new EventDateTime
 			{
-				Date = notification.Occurrence.When.ToString("yyyy-MM-dd")
+				Date = when.ToString("yyyy-MM-dd")
 			};
 			calendarEvent.End = calendarEvent.Start;
 
@@ -57,6 +51,32 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 					.Update(calendarEvent, "primary", calendarEvent.Id)
 					.Execute();
 			}
+		}
+
+		private static Event GetDefaultCalendarEvent(ActivityOccurrenceSaved notification, DateTime when)
+		{
+			return new Event
+			{
+				ExtendedProperties = new Event.ExtendedPropertiesData
+				{
+					Private__ = new Dictionary<string, string>
+					{
+						[CalendarKey] = notification.Occurrence.Key.ToString()
+					}
+				},
+				Reminders = new Event.RemindersData
+				{
+					UseDefault = false,
+					Overrides = new List<EventReminder>
+					{
+						new EventReminder
+						{
+							Method = "popup",
+							Minutes = (int) (when - when.AddDays(-1).AddHours(18)).TotalMinutes
+						}
+					}
+				}
+			};
 		}
 
 		public void Publish(ActivityOccurrenceDeleted notification)

@@ -123,7 +123,7 @@ namespace Untech.Home.Web
 			using (var stream = File.OpenRead("google.client_secret.json"))
 			{
 				string credPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-				credPath = Path.Combine(credPath, ".credentials/calendar-dotnet-quickstart.json");
+				credPath = Path.Combine(credPath, ".credentials/untech.home/calendar.json");
 
 				credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
 					GoogleClientSecrets.Load(stream).Secrets,

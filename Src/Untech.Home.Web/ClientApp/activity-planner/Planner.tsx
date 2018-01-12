@@ -1,12 +1,15 @@
 import {RouteComponentProps} from "react-router";
 import * as React from "react";
-import {apiService, IDailyCalendar, IMonthlyCalendar} from './api';
+import {apiService, IActivityOccurrence, IDailyCalendar, IMonthlyCalendar} from './api';
 import {MonthlyCalendar} from './monthly-calendar/MonthlyCalendar';
 import {DailyCalendar, IDailyCalendarDispatcher} from './daily-calendar/DailyCalendar';
+import {HorScrollable} from './components/HorScrollable';
+import {OccurrenceEditor} from "./occurrence-editor/OccurrenceEditor";
 
 interface ActivityPlannerState {
   daily?: IDailyCalendar;
   monthly?: IMonthlyCalendar;
+  selectedOccurrence?: IActivityOccurrence;
   loading: boolean;
 }
 
@@ -17,7 +20,7 @@ export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, Ac
     super(props);
     this.state = {loading: true};
 
-    this.dispatcher = ActivityPlanner.getDispatcher(this.reload);
+    this.dispatcher = this.getDispatcher();
   }
 
   public componentWillMount() {
@@ -30,8 +33,18 @@ export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, Ac
     }
 
     return <div>
-      <MonthlyCalendar calendar={this.state.monthly}/>
-      <DailyCalendar calendar={this.state.daily} dispatcher={this.dispatcher}/>
+      <HorScrollable>
+        <MonthlyCalendar calendar={this.state.monthly}/>
+      </HorScrollable>
+
+      <HorScrollable>
+        <DailyCalendar calendar={this.state.daily} dispatcher={this.dispatcher}/>
+      </HorScrollable>
+
+      {this.state.selectedOccurrence && <OccurrenceEditor
+        occurrence={this.state.selectedOccurrence}
+        onSubmit={this.handleOccurrenceSubmit}
+      />}
     </div>;
   }
 
@@ -48,19 +61,32 @@ export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, Ac
     });
   }
 
-  static getDispatcher(refreshCallback: Function): IDailyCalendarDispatcher {
+  handleOccurrenceSubmit = (occurrence : IActivityOccurrence) => {
+    apiService.updateActivityOccurrence({
+      key: occurrence.key,
+      note: occurrence.note,
+      highlighted: occurrence.highlighted,
+      missed: occurrence.missed
+    }).then(() => {
+      this.reload();
+    });
+  }
+
+  getDispatcher(): IDailyCalendarDispatcher {
+    var self = this;
+
     return {
       onAddGroup(name: string) {
         apiService.createGroup({
           name: name
         }).then(() => {
-          refreshCallback()
+          self.reload();
         });
       },
       onDeleteGroup(id: number) {
         apiService.deleteGroup(id)
           .then(() => {
-            refreshCallback()
+            self.reload();
           });
       },
       onAddActivity(groupId: number, name: string) {
@@ -68,7 +94,7 @@ export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, Ac
           groupKey: groupId,
           name: name
         }).then(() => {
-          refreshCallback()
+          self.reload();
         });
       },
       onUpdateActivity(id: number, name: string) {
@@ -76,7 +102,7 @@ export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, Ac
       onDelteActivity(id: number) {
         apiService.deleteActivity(id)
           .then(() => {
-            refreshCallback()
+            self.reload();
           });
       },
       onToggleActivityOccurrence(activityId: number, year: number, month: number, day: number) {
@@ -84,13 +110,12 @@ export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, Ac
           activityKey: activityId,
           when: `${year}-${month}-${day}T00:00:00Z`
         }).then(() => {
-          refreshCallback()
+          self.reload();
         });
       },
-      onActivityOccurrenceSelected(activityOccurrenceId: number) {
-
+      onActivityOccurrenceSelected(occurrence: IActivityOccurrence) {
+        self.setState({selectedOccurrence: occurrence});
       }
-    };
+    }
   }
-
 }

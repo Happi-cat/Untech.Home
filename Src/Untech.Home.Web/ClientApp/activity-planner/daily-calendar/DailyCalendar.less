@@ -2,12 +2,12 @@
   font-size: 13px;
   border-collapse: collapse;
   border-spacing: 0;
+  overflow-x: scroll;
 
   td, th {
     text-align: center;
     padding: 2px 5px;
   }
-
 }
 
 .daily-calendar__months {
@@ -31,7 +31,6 @@
 .daily-calendar__day {
   cursor: pointer;
   border: 1px solid lightgray;
-  width: 5em;
 
   &:hover {
     border: 1px solid gray;
@@ -52,7 +51,7 @@
 
 .daily-calendar__activity-day {
   background-color: darkgreen;
-  font-size: 5px;
+  color: white;
 
   &--ongoing {
     background-color: darkorange;

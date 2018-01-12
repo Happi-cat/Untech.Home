@@ -7,7 +7,7 @@ import {
   IActivitiesViewGroup,
   IActivitiesViewActivity
 } from '../api';
-import {pluralizeMonth} from '../../utils'
+import { pluralizeMonth } from '../../utils'
 
 export interface IMonthlyCalendarProps {
   calendar: IMonthlyCalendar;
@@ -27,14 +27,14 @@ export class MonthlyCalendar extends React.Component<IMonthlyCalendarProps> {
       <thead>
         <tr>
           <th></th>
-          {monthNames.map(m => <th key={m}>{m}</th>)}
+          {monthNames.map(m => <th key={m} className='monthly-calendar__month'>{m}</th>)}
         </tr>
-        </thead>
-        {groups.map(g => <CalendarGroup
-          key={g.name}
-          group={g}
-          months={months}
-        />)}
+      </thead>
+      {groups.map(g => <CalendarGroup
+        key={g.name}
+        group={g}
+        months={months}
+      />)}
     </table>;
   }
 }
@@ -45,7 +45,7 @@ interface ICalendarGroupProps {
 }
 
 function CalendarGroup(props: ICalendarGroupProps) {
-  const {name, activities} = props.group;
+  const { name, activities } = props.group;
 
   return <tbody>
     <tr className="monthly-calendar__group">
@@ -55,7 +55,7 @@ function CalendarGroup(props: ICalendarGroupProps) {
     {activities.map(a => <CalendarActivity
       key={a.name}
       activity={a}
-      months={props.months}/>)}
+      months={props.months} />)}
   </tbody>
 }
 
@@ -77,13 +77,13 @@ function CalendarActivity(props: ICalendarActivityProps) {
 
   return <tr className="monthly-calendar__activity">
     <th>{props.activity.name}</th>
-    {months.map(m => <CalendarActivityMonth key={m.key} count={m.count}/>)}
+    {months.map(m => <CalendarActivityMonth key={m.key} count={m.count} />)}
   </tr>;
 }
 
 function CalendarActivityMonth({ count }: { count: number }) {
   const level = count
-    ?  Math.floor(Math.log2(count)) + 1
+    ? Math.floor(Math.log2(count)) + 1
     : 0;
 
   const className = classNames([

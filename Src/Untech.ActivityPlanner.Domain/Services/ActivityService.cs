@@ -74,6 +74,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 		public Nothing Handle(UpdateActivityOccurrence request)
 		{
 			var occurrence = _occurrencesDataStorage.Find(request.Key);
+
 			var activity = _activityDataStorage.Find(occurrence.ActivityKey);
 
 			occurrence.Note = request.Note;
