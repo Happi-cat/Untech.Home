@@ -72,7 +72,7 @@ namespace Untech.FinancePlanner.Data
 				foreach (var taxon in rootTaxon.DescendantsAndSelf())
 				{
 					var daos = context.GetTable<FinancialJournalEntryDao>()
-						.Where(_ => _.TaxonKey == taxon.Key && _.When >= from && _.When < to)
+						.Where(n => n.TaxonKey == taxon.Key && n.When >= from && n.When < to)
 						.ToList();
 
 					entries.AddRange(daos.Select(FinancialJournalEntryDao.ToEntity));
