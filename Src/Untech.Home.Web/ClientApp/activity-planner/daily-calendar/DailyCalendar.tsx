@@ -20,6 +20,8 @@ export interface IDailyCalendarProps {
 export interface IDailyCalendarDispatcher {
   onAddGroup(name: string): void;
 
+  onUpdateGroup(id: number,  name: string): void;
+
   onDeleteGroup(id: number): void;
 
   onAddActivity(groupId: number, name: string): void;
@@ -163,7 +165,8 @@ class CalendarGroup extends React.Component<ICalendarGroupProps, ICalendarGroupS
     </tbody>
   }
 
-  handleGroupSave = () => {
+  handleGroupSave = (name: string) => {
+    this.props.dispatcher.onUpdateGroup(this.props.group.groupKey, name);
   };
   handleGroupDelete = () => {
     this.props.dispatcher.onDeleteGroup(this.props.group.groupKey);

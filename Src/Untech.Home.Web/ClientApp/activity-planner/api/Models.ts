@@ -70,6 +70,16 @@ export interface ICreateGroup {
   name: string;
 }
 
+export interface IUpdateActivity {
+  key: number;
+  name: string;
+}
+
+export interface IUpdateGroup {
+  key: number;
+  name: string;
+}
+
 export interface IToogleActivityOccurrence {
   activityKey: number;
   when: Date | string;

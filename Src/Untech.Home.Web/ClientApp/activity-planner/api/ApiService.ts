@@ -6,7 +6,9 @@ import {
   ICreateGroup,
   IUpdateActivityOccurrence,
   IToogleActivityOccurrence,
-  IToogleActivityOccurrences
+  IToogleActivityOccurrences,
+  IUpdateGroup,
+  IUpdateActivity
 } from './Models';
 
 export default class ApiService {
@@ -31,6 +33,17 @@ export default class ApiService {
     });
   }
 
+  public updateGroup(request: IUpdateGroup) {
+    return fetch('api/activity-planner/group/' + request.key, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(request)
+    });
+  }
+
   public deleteGroup(request: number) {
     return fetch('api/activity-planner/group/' + encodeURIComponent(request.toString()), { method: 'DELETE' })
       .then(response => response.json() as Promise<boolean>);
@@ -46,6 +59,18 @@ export default class ApiService {
       body: JSON.stringify(request)
     });
   }
+
+  public updateActivity(request: IUpdateActivity) {
+    return fetch('api/activity-planner/activity/' + request.key, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(request)
+    });
+  }
+
 
   public deleteActivity(request: number) {
     return fetch('api/activity-planner/activity/' + encodeURIComponent(request.toString()), { method: 'DELETE' })

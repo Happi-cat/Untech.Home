@@ -29,11 +29,27 @@ namespace Untech.Home.Web.Controllers
 		[HttpPost("group")]
 		public Group CreateGroup([FromBody]CreateGroup request) => _dispatcher.Process(request);
 
+		[HttpPut("group/{key}")]
+		public Group UpdateGroup(int key, [FromBody]UpdateGroup request)
+		{
+			if (key != request.Key) throw new ArgumentException("request.Key is invalid and doesn't match to key");
+
+			return _dispatcher.Process(request);
+		}
+
 		[HttpDelete("group/{key}")]
 		public bool DeleteGroup(int key) => _dispatcher.Process(new DeleteGroup(key));
 
 		[HttpPost("activity")]
 		public Activity CreateActivity([FromBody]CreateActivity request) => _dispatcher.Process(request);
+
+		[HttpPut("activity/{key}")]
+		public Activity UpdateActivity(int key, [FromBody]UpdateActivity request)
+		{
+			if (key != request.Key) throw new ArgumentException("request.Key is invalid and doesn't match to key");
+
+			return _dispatcher.Process(request);
+		}
 
 		[HttpDelete("activity/{key}")]
 		public bool DeleteActivity(int key) => _dispatcher.Process(new DeleteActivity(key));

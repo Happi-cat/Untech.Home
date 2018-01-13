@@ -83,6 +83,14 @@ export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, Ac
           self.reload();
         });
       },
+      onUpdateGroup(id: number,  name: string) {
+        apiService.updateGroup({
+          key: id,
+          name: name
+        }).then(() => {
+          self.reload();
+        });
+      },
       onDeleteGroup(id: number) {
         apiService.deleteGroup(id)
           .then(() => {
@@ -98,6 +106,12 @@ export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, Ac
         });
       },
       onUpdateActivity(id: number, name: string) {
+        apiService.updateActivity({
+          key: id,
+          name: name
+        }).then(() => {
+          self.reload();
+        });
       },
       onDelteActivity(id: number) {
         apiService.deleteActivity(id)

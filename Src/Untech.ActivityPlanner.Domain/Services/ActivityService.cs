@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Untech.ActivityPlanner.Domain.Models;
 using Untech.ActivityPlanner.Domain.Notifications;
 using Untech.ActivityPlanner.Domain.Requests;
@@ -10,6 +11,7 @@ using Untech.Practices.DataStorage;
 namespace Untech.ActivityPlanner.Domain.Services
 {
 	public class ActivityService : ICommandHandler<CreateActivity, Activity>,
+		ICommandHandler<UpdateActivity, Activity>,
 		ICommandHandler<DeleteActivity, bool>,
 		ICommandHandler<ToggleActivityOccurrence, Nothing>,
 		ICommandHandler<UpdateActivityOccurrence, Nothing>
@@ -44,10 +46,27 @@ namespace Untech.ActivityPlanner.Domain.Services
 			return _activityDataStorage.Create(activity);
 		}
 
-		public bool Handle(DeleteActivity request)
+		public Activity Handle(UpdateActivity request)
 		{
 			var activity = _activityDataStorage.Find(request.Key);
 
+			activity.ChangeName(request.Name);
+
+			return _activityDataStorage.Update(activity);
+		}
+
+		public bool Handle(DeleteActivity request)
+		{
+			var cannotDelete = _dispatcher
+				.Fetch(new OccurrencesQuery(DateTime.Today, DateTime.Today.AddYears(1)))
+				.Any(n => n.ActivityKey == request.Key);
+
+			if (cannotDelete)
+			{
+				return false;
+			}
+
+			var activity = _activityDataStorage.Find(request.Key);
 			return _activityDataStorage.Delete(activity);
 		}
 
