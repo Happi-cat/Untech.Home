@@ -19,18 +19,21 @@ namespace Untech.ActivityPlanner.Domain.Services
 		private readonly IDataStorage<ActivityOccurrence> _occurrencesDataStorage;
 
 		private readonly IDispatcher _dispatcher;
+		private readonly IQueueDispatcher _queueDispatcher;
 
 		public ActivityService(
 			IDataStorage<Group> groupDataStorage,
 			IDataStorage<Activity> activityDataStorage,
 			IDataStorage<ActivityOccurrence> occurrencesDataStorage,
-			IDispatcher dispatcher)
+			IDispatcher dispatcher,
+			IQueueDispatcher queueDispatcher)
 		{
 			_groupDataStorage = groupDataStorage;
 			_activityDataStorage = activityDataStorage;
 			_occurrencesDataStorage = occurrencesDataStorage;
 
 			_dispatcher = dispatcher;
+			_queueDispatcher = queueDispatcher;
 		}
 
 		public Activity Handle(CreateActivity request)
@@ -59,13 +62,13 @@ namespace Untech.ActivityPlanner.Domain.Services
 			{
 				occurrence = _occurrencesDataStorage.Create(new ActivityOccurrence(0, activity.Key, request.When));
 
-				_dispatcher.Publish(new ActivityOccurrenceSaved(activity, occurrence));
+				_queueDispatcher.Enqueue(new ActivityOccurrenceSaved(activity, occurrence));
 			}
 			else
 			{
 				_occurrencesDataStorage.Delete(occurrence);
 
-				_dispatcher.Publish(new ActivityOccurrenceDeleted(activity, occurrence));
+				_queueDispatcher.Enqueue(new ActivityOccurrenceDeleted(activity, occurrence));
 			}
 
 			return Nothing.AtAll;
@@ -83,7 +86,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 
 			occurrence = _occurrencesDataStorage.Update(occurrence);
 
-			_dispatcher.Publish(new ActivityOccurrenceSaved(activity, occurrence));
+			_queueDispatcher.Enqueue(new ActivityOccurrenceSaved(activity, occurrence));
 
 			return Nothing.AtAll;
 		}
