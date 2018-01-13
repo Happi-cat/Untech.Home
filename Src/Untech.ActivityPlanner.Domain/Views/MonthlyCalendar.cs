@@ -1,34 +1,20 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
-namespace Untech.Home.ActivityPlanner.Domain.Views
+namespace Untech.ActivityPlanner.Domain.Views
 {
+	[DataContract]
 	public class MonthlyCalendar
 	{
-		public DateTime From {get;set;}
+		public MonthlyCalendar(ActivitiesView view)
+		{
+			View = view;
+		}
 
-		public DateTime To {get;set;}
+		[DataMember]
+		public ActivitiesView View { get; }
 
-		public ICollection<CategoryMonthlyCalendar> Categories { get; set; }
-	}
-
-	public class CategoryMonthlyCalendar {
-		public int CategoryId {get;set;}
-
-		public string Name {get;set;}
-
-		public string Remarks {get;set;}
-
-		public ICollection<ActivityMonthlyCalendar> Activities {get;set;}
-	}
-
-	public class ActivityMonthlyCalendar {
-		public int ActivityId { get; set; }
-		public string Name { get; set; }
-		public string Remarks { get; set; }
-
-		public DateTime Month {get;set;}
-
-		public int OccurrencesCount {get;set;}
+		[DataMember]
+		public IReadOnlyCollection<MonthlyCalendarMonth> Months { get; set; }
 	}
 }

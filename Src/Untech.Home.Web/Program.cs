@@ -2,8 +2,6 @@ using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Untech.FinancePlanner.Data;
-using Untech.FinancePlanner.Data.Initializations;
 
 namespace Untech.Home.Web
 {
@@ -31,7 +29,8 @@ namespace Untech.Home.Web
 
 		public static void EnsureDatabaseCreated()
 		{
-			DbInitializer.Initialize(() => new FinancialPlannerContext(), @"..\..\Configs\");
+			FinancePlanner.Data.Initializations.DbInitializer.Initialize(() => new FinancePlanner.Data.FinancialPlannerContext(), @"..\..\Configs\");
+			ActivityPlanner.Data.Initializations.DbInitializer.Initialize(() => new ActivityPlanner.Data.ActivityPlannerContext());
 		}
 	}
 }

@@ -10,7 +10,7 @@ namespace Untech.FinancePlanner.Data.Cache
 	{
 		private readonly Func<IDataContext> _contextFactory;
 
-		public CacheStorage(Func<IDataContext> contextFactory)
+		public CacheStorage(Func<FinancialPlannerContext> contextFactory)
 		{
 			_contextFactory = contextFactory;
 		}

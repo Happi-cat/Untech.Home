@@ -17,7 +17,7 @@ namespace Untech.FinancePlanner.Data
 		private readonly Func<IDataContext> _contextFactory;
 		private readonly IQueryDispatcher _dispatcher;
 
-		public FinancialJournalEntryStorage(IQueryDispatcher dispatcher, Func<IDataContext> connectionFactory)
+		public FinancialJournalEntryStorage(IQueryDispatcher dispatcher, Func<FinancialPlannerContext> connectionFactory)
 		{
 			_contextFactory = connectionFactory;
 			_dispatcher = dispatcher;

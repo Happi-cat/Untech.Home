@@ -3,7 +3,6 @@ import { RouteComponentProps } from 'react-router';
 import { ITaxonTree, IFinancialJournalEntry, apiService } from './api';
 import { JournalMenu } from './financial-journal/JournalMenu';
 import { Journal, IFinancialJournalEntryChange } from './financial-journal/Journal';
-import { pluralizeMonth } from './../utils';
 import { Grid } from 'semantic-ui-react';
 
 interface IFinancialJournalProps {
@@ -31,17 +30,8 @@ export class FinancialJournal extends React.Component<RouteComponentProps<IFinan
         this.load(this.props.match.params);
     }
 
-    public componentDidMount() {
-        console.log('didMount');
-    }
-
-
     public componentWillReceiveProps(props: RouteComponentProps<IFinancialJournalProps>) {
         this.load(props.match.params);
-    }
-
-    public componentWillUnmount() {
-        console.log('unmounted');
     }
 
     public render() {

@@ -13,8 +13,9 @@ for:
 image: Visual Studio 2017
 install:
   - ps: 'Install-Product node $env:nodejs_version'
+  - cmd: git submodule update --init --recursive
 before_build:
-  - ps: |-
+  - cmd: |-
       cd .\Src
       nuget restore
       cd .\Untech.Home.Web

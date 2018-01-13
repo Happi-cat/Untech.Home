@@ -1,27 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Runtime.Serialization;
+using Untech.Practices.DataStorage;
 
-namespace Untech.Home.ActivityPlanner.Domain.Models
+namespace Untech.ActivityPlanner.Domain.Models
 {
-	public class Activity
+	[DataContract]
+	public class Activity : IAggregateRoot
 	{
-		public int Id { get; set; }
-		public string Name { get; set; }
-		public string Remarks { get; set; }
-		public int CategoryId { get; set; }
-		public ICollection<Occurrence> Occurrences { get; set; }
-		public ICollection<RemindPromise> RemindPromises { get; set; }
-		public ICollection<Reminder> Reminders { get; set; }
-
-		public IEnumerable<Reminder> GetReminders()
+		private Activity()
 		{
-			foreach (var promise in RemindPromises)
-			{
-				var reminder = promise.GetReminder(this);
-				if (reminder != null)
-				{
-					yield return reminder;
-				}
-			}
+
+		}
+
+		public Activity(int key, int groupKey, string name)
+		{
+			Key = key;
+			GroupKey = groupKey;
+			Name = name;
+		}
+
+		[DataMember]
+		public int Key { get; private set; }
+
+		[DataMember]
+		public string Name { get; private set; }
+
+		[DataMember]
+		public int GroupKey { get; private set; }
+
+		public void ChangeName(string name)
+		{
+			if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+
+			Name = name;
 		}
 	}
 }

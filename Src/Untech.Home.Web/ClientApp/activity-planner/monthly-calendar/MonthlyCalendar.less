@@ -1,0 +1,28 @@
+.monthly-calendar {
+  font-size: 13px;
+  border-collapse: separate;
+  border-spacing: 3px;
+
+  td, th {
+    text-align: center;
+    padding: 2px 5px;
+  }
+}
+
+.monthly-calendar__month {
+  font-size: 0.9em;
+  font-family: Consolas, Menlo, Monaco, monospace;
+  border: 1px solid lightgray;
+
+  &:hover { box-shadow: 0 0 6px rgba(35, 173, 255, 1); }
+
+  @original-color: #52d1ff;
+
+  &--level-1 { background-color: #EEEEEE; }
+  &--level-2 { background-color: #c6e48b; }
+  &--level-3 { background-color: #7bc96f; }
+  &--level-4 { background-color: #239a3b; }
+  &--level-5 { background-color: #196127; }
+
+  &--this { border: 1px solid gray; }
+}

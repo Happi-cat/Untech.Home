@@ -1,34 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using Untech.Home.ActivityPlanner.Domain.Models;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
-namespace Untech.Home.ActivityPlanner.Domain.Views
+namespace Untech.ActivityPlanner.Domain.Views
 {
+	[DataContract]
 	public class DailyCalendar
 	{
-		public DateTime From {get;set;}
+		public DailyCalendar(ActivitiesView view)
+		{
+			View = view;
+		}
 
-		public DateTime To {get;set;}
+		[DataMember]
+		public ActivitiesView View { get; private set; }
 
-		public ICollection<CategoryDailyCalendar> Categories { get; set; }
-	}
-
-	public class CategoryDailyCalendar {
-		public int CategoryId {get;set;}
-
-		public string Name {get;set;}
-
-		public string Remarks {get;set;}
-
-		public ICollection<ActivityDailyCalendar> Activities {get;set;}
-	}
-
-	public class ActivityDailyCalendar
-	{
-		public int ActivityId { get; set; }
-		public string Name { get; set; }
-		public string Remarks { get; set; }
-
-		public ICollection<Occurrence> Occurrences { get; set; }
+		[DataMember]
+		public IReadOnlyCollection<DailyCalendarMonth> Months { get; set; }
 	}
 }

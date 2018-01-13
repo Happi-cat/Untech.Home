@@ -27,7 +27,7 @@ namespace Untech.FinancePlanner.Data
 
 		private readonly Func<IDataContext> _contextFactory;
 
-		public TaxonStorage(Func<IDataContext> contextFactory)
+		public TaxonStorage(Func<FinancialPlannerContext> contextFactory)
 		{
 			_contextFactory = contextFactory;
 		}
