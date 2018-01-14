@@ -253,8 +253,8 @@ class CalendarActivityDay extends React.PureComponent<ICalendarActivityDayProps>
       missed && "daily-calendar__activity-day--missed"
     ]);
 
-    const Marker = this.createMarker;
-    const Tooltip = this.createTooltip;
+    const Marker = CalendarActivityDay.createMarker;
+    const Tooltip = CalendarActivityDay.createTooltip;
 
     return <Popup
       content={
@@ -282,9 +282,9 @@ class CalendarActivityDay extends React.PureComponent<ICalendarActivityDayProps>
         this.props.dispatcher.onActivityOccurrenceSelected(this.props.occurrence);
       }
     }
-  }
+  };
 
-  createTooltip({text}: { text?: string }) {
+  static createTooltip({text}: { text?: string }) {
     const paragraphs = (text || '')
       .split('\n')
       .filter(n => n);
@@ -306,7 +306,7 @@ class CalendarActivityDay extends React.PureComponent<ICalendarActivityDayProps>
     </div>;
   }
 
-  createMarker() {
+  static createMarker() {
     return <div className='daily-calendar__activity-day-marker'></div>;
   }
 }
