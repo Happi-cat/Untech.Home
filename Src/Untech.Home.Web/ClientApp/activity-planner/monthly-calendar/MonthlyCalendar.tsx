@@ -104,7 +104,12 @@ function CalendarActivity(props: ICalendarActivityProps) {
 
   return <tr className="monthly-calendar__activity">
     <th>{props.activity.name}</th>
-    {months.map(m => <CalendarActivityMonth key={m.key} count={m.count} isThisMonth={m.isThisMonth} />)}
+
+    {months.map(m => <CalendarActivityMonth
+      key={m.key}
+      count={m.count}
+      isThisMonth={m.isThisMonth}
+    />)}
   </tr>;
 }
 
@@ -121,4 +126,3 @@ function CalendarActivityMonth({ count, isThisMonth }: { count: number, isThisMo
     {count ? count : null}
   </CalendarMonth>;
 }
-

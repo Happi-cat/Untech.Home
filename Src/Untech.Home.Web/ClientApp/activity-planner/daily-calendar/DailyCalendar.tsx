@@ -20,7 +20,7 @@ export interface IDailyCalendarProps {
 export interface IDailyCalendarDispatcher {
   onAddGroup(name: string): void;
 
-  onUpdateGroup(id: number,  name: string): void;
+  onUpdateGroup(id: number, name: string): void;
 
   onDeleteGroup(id: number): void;
 
@@ -57,8 +57,9 @@ export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
       <tr className="daily-calendar__months">
         <th/>
         <th/>
-        {months.map(m => <td key={m.key} colSpan={m.daysCount}>{m.name}</td>)}
+        {months.map(m => <td className="daily-calendar__month" key={m.key} colSpan={m.daysCount}>{m.name}</td>)}
       </tr>
+
       <tr className="daily-calendar__days">
         <th/>
         <th/>
@@ -66,6 +67,7 @@ export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
           {d.day}
         </CalendarDay>)}
       </tr>
+
       <tr className="daily-calendar__days-of-week">
         <th/>
         <th/>
@@ -74,18 +76,22 @@ export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
         </CalendarDay>)}
       </tr>
       </thead>
+
       {groups.map(g => <CalendarGroup
         key={g.name}
         group={g}
         allDays={days}
         dispatcher={this.props.dispatcher}
       />)}
+
       <tfoot>
-      <td/>
-      <td>
-        <QuickAdder onSave={this.props.dispatcher.onAddGroup} placeholder="Add group..."/>
-      </td>
-      <td colSpan={days.length}/>
+      <tr>
+        <td/>
+        <td>
+          <QuickAdder onSave={this.props.dispatcher.onAddGroup} placeholder="Add group..."/>
+        </td>
+        <td colSpan={days.length}/>
+      </tr>
       </tfoot>
     </table>;
   }
@@ -152,11 +158,13 @@ class CalendarGroup extends React.Component<ICalendarGroupProps, ICalendarGroupS
       </th>
       <td colSpan={this.props.allDays.length}/>
     </tr>
+
     {this.state.expanded && activities.map(a => <CalendarActivity
       key={a.name}
       activity={a}
       allDays={this.props.allDays}
       dispatcher={this.props.dispatcher}/>)}
+
     {this.state.expanded && <tr>
       <td/>
       <td><QuickAdder onSave={this.handleActivityAdd} placeholder="Add activity..."/></td>
@@ -286,7 +294,7 @@ class CalendarActivityDay extends React.PureComponent<ICalendarActivityDayProps>
     return <div>
       <div>
         <b>Click</b> - for edit;
-        <br />
+        <br/>
         <b>Ctrl-click</b> - for toggle.
       </div>
 
