@@ -156,6 +156,7 @@ class CalendarGroup extends React.Component<ICalendarGroupProps, ICalendarGroupS
       <th>
         <SmartQuickEditor value={name} onSave={this.handleGroupSave} onDelete={this.handleGroupDelete}/>
       </th>
+
       <td colSpan={this.props.allDays.length}/>
     </tr>
 

@@ -19,10 +19,13 @@
   border: 1px solid @color-grey-2;
 }
 
-.calendar-hoverable-cell() {
-  .calendar-cell();
-
+.hoverable() {
   cursor: pointer;
 
   &:hover { box-shadow: 0 0 6px @color-secondary-1-2; }
+}
+
+.calendar-hoverable-cell() {
+  .calendar-cell();
+  .hoverable();
 }

@@ -17,7 +17,7 @@
 }
 
 .daily-calendar__day {
-  .calendar-hoverable-cell();
+  .calendar-cell();
 
   &--weekend {
     .background-gradient-lines(@color-grey-2);
@@ -26,6 +26,10 @@
   &--today {
     border: 1px solid gray;
   }
+}
+
+tbody .daily-calendar__day {
+  .hoverable();
 }
 
 .daily-calendar__activity-day {
