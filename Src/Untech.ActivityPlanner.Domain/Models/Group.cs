@@ -24,11 +24,13 @@ namespace Untech.ActivityPlanner.Domain.Models
 		[DataMember]
 		public string Name { get; private set; }
 
-		public void ChangeName(string name)
+		public Group Rename(string name)
 		{
 			if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
 
 			Name = name;
+
+			return this;
 		}
 	}
 }
