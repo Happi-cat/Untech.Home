@@ -29,7 +29,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 		{
 			var group = _dataStorage.Find(request.Key);
 
-			group.Rename(request.Name);
+			group.Name = request.Name;
 
 			return _dataStorage.Update(group);
 		}

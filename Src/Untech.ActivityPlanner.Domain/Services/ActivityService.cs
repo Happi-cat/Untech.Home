@@ -50,7 +50,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 		{
 			var activity = _activityDataStorage.Find(request.Key);
 
-			activity.Rename(request.Name);
+			activity.Name = request.Name;
 
 			return _activityDataStorage.Update(activity);
 		}
