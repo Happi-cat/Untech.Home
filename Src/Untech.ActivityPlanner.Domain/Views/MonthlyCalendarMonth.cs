@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Untech.Home;
 
 namespace Untech.ActivityPlanner.Domain.Views
 {
 	[DataContract]
-	public class MonthlyCalendarMonth
+	public class MonthlyCalendarMonth : IHasMonthInfo
 	{
 		public MonthlyCalendarMonth(DateTime thatMonth)
 		{

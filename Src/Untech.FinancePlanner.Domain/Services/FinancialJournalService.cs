@@ -15,10 +15,14 @@ namespace Untech.FinancePlanner.Domain.Services
 	{
 		private readonly IDataStorage<FinancialJournalEntry> _dataStorage;
 		private readonly IDispatcher _dispatcher;
+		private readonly IQueueDispatcher _queueDispatcher;
 
-		public FinancialJournalService(IDispatcher dispatcher, IDataStorage<FinancialJournalEntry> dataStorage)
+		public FinancialJournalService(IDispatcher dispatcher,
+			IQueueDispatcher queueDispatcher,
+			IDataStorage<FinancialJournalEntry> dataStorage)
 		{
 			_dispatcher = dispatcher;
+			_queueDispatcher = queueDispatcher;
 			_dataStorage = dataStorage;
 		}
 
@@ -41,7 +45,7 @@ namespace Untech.FinancePlanner.Domain.Services
 				When = when.Date
 			});
 
-			_dispatcher.Publish(new FinancialJournalEntrySaved(entry));
+			_queueDispatcher.Enqueue(new FinancialJournalEntrySaved(entry));
 
 			return entry;
 		}
@@ -53,7 +57,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 			if (result)
 			{
-				_dispatcher.Publish(new FinancialJournalEntryDeleted(entry));
+				_queueDispatcher.Enqueue(new FinancialJournalEntryDeleted(entry));
 			}
 
 			return result;
@@ -69,7 +73,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 			_dataStorage.Update(entry);
 
-			_dispatcher.Publish(new FinancialJournalEntrySaved(entry));
+			_queueDispatcher.Enqueue(new FinancialJournalEntrySaved(entry));
 			return entry;
 		}
 	}

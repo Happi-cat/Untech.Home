@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Untech.ActivityPlanner.Domain.Models;
+using Untech.Home;
 
 namespace Untech.ActivityPlanner.Domain.Views
 {
 	[DataContract]
-	public class DailyCalendarDay
+	public class DailyCalendarDay : IHasDayInfo
 	{
 		public DailyCalendarDay(DateTime thatDay)
 		{

@@ -5,6 +5,7 @@ using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.FinancePlanner.Domain.ViewModels;
+using Untech.Home;
 using Untech.Practices;
 using Untech.Practices.Collections;
 using Untech.Practices.CQRS.Dispatching;
@@ -29,7 +30,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		public MonthlyFinancialReport Handle(MonthlyFinancialReportQuery request)
 		{
-			var cacheKey = GetKey(request.Year, request.Month);
+			var cacheKey = GetKey(request.AsMonthDate());
 			var report = _cacheStorage.Get<MonthlyFinancialReport>(cacheKey);
 
 			if (report == null)
@@ -43,12 +44,12 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		public void Publish(FinancialJournalEntrySaved notification)
 		{
-			_cacheStorage.Drop(GetKey(notification.When.Year, notification.When.Month));
+			_cacheStorage.Drop(GetKey(notification.Entry.When));
 		}
 
 		public void Publish(FinancialJournalEntryDeleted notification)
 		{
-			_cacheStorage.Drop(GetKey(notification.When.Year, notification.When.Month));
+			_cacheStorage.Drop(GetKey(notification.Entry.When));
 		}
 
 		private MonthlyFinancialReport BuildReport(MonthlyFinancialReportQuery request)
@@ -70,16 +71,18 @@ namespace Untech.FinancePlanner.Domain.Services
 			};
 		}
 
-		private CacheKey GetKey(int year, int month)
+		private CacheKey GetKey(DateTime when)
 		{
-			return new CacheKey("reports", $"monthly-financial-report/{year}/{month}");
+			return new CacheKey("reports", $"monthly-financial-report/{when.Year}/{when.Month}");
 		}
 
 		private IReadOnlyDictionary<int, TaxonTree> GetTaxons()
 		{
 			var rootTaxon = _dispatcher.Fetch(new TaxonTreeQuery { Deep = -1 });
 
-			return rootTaxon.DescendantsAndSelf().ToDictionary(n => n.Key, n => n);
+			return rootTaxon
+				.DescendantsAndSelf()
+				.ToDictionary(n => n.Key);
 		}
 
 		private class DayReportBuilder
@@ -104,12 +107,13 @@ namespace Untech.FinancePlanner.Domain.Services
 				return report;
 			}
 
-			private MonthlyFinancialReportDayEntry BuildDayReportEntry(FinancialJournalEntry entry) => new MonthlyFinancialReportDayEntry(GetName(entry.TaxonKey), entry.TaxonKey)
-			{
-				Remarks = entry.Remarks,
-				Actual = entry.Actual,
-				Forecasted = entry.Forecasted
-			};
+			private MonthlyFinancialReportDayEntry BuildDayReportEntry(FinancialJournalEntry entry) =>
+				new MonthlyFinancialReportDayEntry(GetName(entry.TaxonKey), entry.TaxonKey)
+				{
+					Remarks = entry.Remarks,
+					Actual = entry.Actual,
+					Forecasted = entry.Forecasted
+				};
 
 			private string GetName(int taxonKey)
 			{

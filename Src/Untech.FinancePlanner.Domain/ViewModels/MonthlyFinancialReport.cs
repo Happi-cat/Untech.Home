@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Untech.Home;
 
 namespace Untech.FinancePlanner.Domain.ViewModels
 {
 	[DataContract]
-	public class MonthlyFinancialReport
+	public class MonthlyFinancialReport : IHasMonthInfo
 	{
 		public MonthlyFinancialReport(int year, int month)
 		{

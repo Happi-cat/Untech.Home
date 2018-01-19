@@ -50,7 +50,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 		{
 			var activity = _activityDataStorage.Find(request.Key);
 
-			activity.ChangeName(request.Name);
+			activity.Name = request.Name;
 
 			return _activityDataStorage.Update(activity);
 		}
@@ -58,7 +58,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 		public bool Handle(DeleteActivity request)
 		{
 			var cannotDelete = _dispatcher
-				.Fetch(new OccurrencesQuery(DateTime.Today, DateTime.Today.AddYears(1)))
+				.Fetch(new OccurrencesQuery(DateTime.Today, TimeSpan.FromDays(365)))
 				.Any(n => n.ActivityKey == request.Key);
 
 			if (cannotDelete)
@@ -74,7 +74,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 		{
 			var activity = _activityDataStorage.Find(request.ActivityKey);
 
-			var occurrence = _dispatcher.Fetch(new OccurrencesQuery(request.When, request.When.AddDays(1)))
+			var occurrence = _dispatcher.Fetch(new OccurrencesQuery(request.When, TimeSpan.FromDays(1)))
 				.SingleOrDefault(n => n.ActivityKey == activity.Key && n.When == request.When.Date);
 
 			if (occurrence == null)

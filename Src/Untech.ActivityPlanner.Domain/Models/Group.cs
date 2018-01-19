@@ -7,9 +7,10 @@ namespace Untech.ActivityPlanner.Domain.Models
 	[DataContract]
 	public class Group : IAggregateRoot
 	{
+		private string _name;
+
 		private Group()
 		{
-
 		}
 
 		public Group(int key, string name)
@@ -22,13 +23,15 @@ namespace Untech.ActivityPlanner.Domain.Models
 		public int Key { get; private set; }
 
 		[DataMember]
-		public string Name { get; private set; }
-
-		public void ChangeName(string name)
+		public string Name
 		{
-			if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
+			get => _name;
+			set
+			{
+				if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
 
-			Name = name;
+				_name = value;
+			}
 		}
 	}
 }

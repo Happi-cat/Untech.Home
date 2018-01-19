@@ -2,16 +2,16 @@
 
 namespace Untech.ActivityPlanner.Domain.Notifications
 {
-	public class ActivityOccurrenceNotification
+	public abstract class ActivityOccurrenceNotification
 	{
-		public ActivityOccurrenceNotification(Activity activity, ActivityOccurrence occurrence)
+		protected ActivityOccurrenceNotification(Activity activity, ActivityOccurrence occurrence)
 		{
 			Activity = activity;
 			Occurrence = occurrence;
 		}
 
-		public Activity Activity { get; private set; }
+		public Activity Activity { get; }
 
-		public ActivityOccurrence Occurrence { get; private set; }
+		public ActivityOccurrence Occurrence { get; }
 	}
 }

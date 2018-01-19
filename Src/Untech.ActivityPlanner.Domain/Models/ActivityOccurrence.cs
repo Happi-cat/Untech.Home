@@ -9,7 +9,6 @@ namespace Untech.ActivityPlanner.Domain.Models
 	{
 		private ActivityOccurrence()
 		{
-
 		}
 
 		public ActivityOccurrence(int key, int activityKey, DateTime thatDay)
