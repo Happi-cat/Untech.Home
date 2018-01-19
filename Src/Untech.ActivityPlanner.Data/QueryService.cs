@@ -44,7 +44,7 @@ namespace Untech.ActivityPlanner.Data
 			{
 				return context
 					.GetTable<ActivityOccurrence>()
-					.Where(n => n.When >= request.From && n.When < request.To)
+					.Where(n => request.From <= n.When && n.When < request.To)
 					.ToList();
 			}
 		}

@@ -6,7 +6,7 @@ using Untech.ActivityPlanner.Domain.Models;
 namespace Untech.ActivityPlanner.Domain.Views
 {
 	[DataContract]
-	public class DailyCalendarDay
+	public class DailyCalendarDay : IHasDayInfo
 	{
 		public DailyCalendarDay(DateTime thatDay)
 		{

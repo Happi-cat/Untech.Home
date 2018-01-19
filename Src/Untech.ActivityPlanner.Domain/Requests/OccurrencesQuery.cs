@@ -13,6 +13,12 @@ namespace Untech.ActivityPlanner.Domain.Requests
 			To = to;
 		}
 
+		public OccurrencesQuery(DateTime from, TimeSpan range)
+		{
+			From = from;
+			To = from + range;
+		}
+
 		public DateTime From { get; private set; }
 
 		public DateTime To { get; private set; }

@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Untech.ActivityPlanner.Domain.Views
 {
 	[DataContract]
-	public class MonthlyCalendarMonth
+	public class MonthlyCalendarMonth : IHasMonthInfo
 	{
 		public MonthlyCalendarMonth(DateTime thatMonth)
 		{
