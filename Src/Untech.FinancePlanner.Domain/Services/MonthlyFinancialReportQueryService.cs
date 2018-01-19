@@ -76,14 +76,10 @@ namespace Untech.FinancePlanner.Domain.Services
 			return new CacheKey("reports", $"monthly-financial-report/{when.Year}/{when.Month}");
 		}
 
-		private IReadOnlyDictionary<int, TaxonTree> GetTaxons()
-		{
-			var rootTaxon = _dispatcher.Fetch(new TaxonTreeQuery { Deep = -1 });
-
-			return rootTaxon
-				.DescendantsAndSelf()
-				.ToDictionary(n => n.Key);
-		}
+		private IReadOnlyDictionary<int, TaxonTree> GetTaxons() => _dispatcher
+			.Fetch(new TaxonTreeQuery { Deep = -1 })
+			.DescendantsAndSelf()
+			.ToDictionary(n => n.Key);
 
 		private class DayReportBuilder
 		{

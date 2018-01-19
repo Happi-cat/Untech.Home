@@ -4,6 +4,7 @@ using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.FinancePlanner.Domain.ViewModels;
+using Untech.Home;
 using Untech.Practices;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
@@ -27,7 +28,7 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		public AnnualFinancialReport Handle(AnnualFinancialReportQuery request)
 		{
-			var thisMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+			var thisMonth = DateTime.Today.AsMonthDate();
 			var rootTaxon = _dispatcher.Fetch(new TaxonTreeQuery { Deep = 3 });
 
 			var builder = new MonthReportBuilder(_dispatcher, rootTaxon);
