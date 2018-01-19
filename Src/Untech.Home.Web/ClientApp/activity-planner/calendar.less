@@ -1,0 +1,31 @@
+@import '../colors.less';
+
+.calendar-table() {
+  font-size: 13px;
+
+  border-collapse: separate;
+  border-spacing: 4px;
+
+  td, th { padding: 2px 5px; }
+
+  th { text-align: left; }
+  td { text-align: center; }
+}
+
+.calendar-cell() {
+  font-size: 0.9em;
+  font-family: Consolas, Menlo, Monaco, monospace;
+
+  border: 1px solid @color-grey-2;
+}
+
+.hoverable() {
+  cursor: pointer;
+
+  &:hover { box-shadow: 0 0 6px @color-secondary-1-2; }
+}
+
+.calendar-hoverable-cell() {
+  .calendar-cell();
+  .hoverable();
+}

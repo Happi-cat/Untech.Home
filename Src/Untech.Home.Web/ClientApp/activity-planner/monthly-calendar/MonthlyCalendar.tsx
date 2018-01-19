@@ -28,7 +28,7 @@ export class MonthlyCalendar extends React.Component<IMonthlyCalendarProps> {
     return <table className="monthly-calendar">
       <thead>
         <tr>
-          <th></th>
+          <th />
           {headers.map(m => <CalendarMonth key={m.key} isThisMonth={m.isThisMonth}>
             {m.name}
           </CalendarMonth>)}
@@ -57,6 +57,7 @@ function CalendarGroup(props: ICalendarGroupProps) {
       <th>{name}</th>
       <td colSpan={props.months.length}></td>
     </tr>
+
     {activities.map(a => <CalendarActivity
       key={a.name}
       activity={a}
@@ -103,7 +104,12 @@ function CalendarActivity(props: ICalendarActivityProps) {
 
   return <tr className="monthly-calendar__activity">
     <th>{props.activity.name}</th>
-    {months.map(m => <CalendarActivityMonth key={m.key} count={m.count} isThisMonth={m.isThisMonth} />)}
+
+    {months.map(m => <CalendarActivityMonth
+      key={m.key}
+      count={m.count}
+      isThisMonth={m.isThisMonth}
+    />)}
   </tr>;
 }
 
@@ -120,4 +126,3 @@ function CalendarActivityMonth({ count, isThisMonth }: { count: number, isThisMo
     {count ? count : null}
   </CalendarMonth>;
 }
-

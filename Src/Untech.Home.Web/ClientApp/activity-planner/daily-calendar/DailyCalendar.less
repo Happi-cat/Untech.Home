@@ -1,64 +1,58 @@
+@import '../../colors.less';
+@import '../calendar.less';
+@import '../gradients.less';
+
 .daily-calendar {
-  font-size: 13px;
-  border-collapse: separate;
-  border-spacing: 3px;
-  overflow-x: scroll;
-
-  td, th {
-    text-align: center;
-    padding: 2px 5px;
-  }
+  .calendar-table();
 }
 
-.daily-calendar__months {
-  td {
-    background-color: lightgreen;
-  }
-  td:nth-child(2n+1) {
-    background-color: lighten(lightgreen, 20%);
-  }
-}
+.daily-calendar__month {
+  .calendar-cell();
 
-.daily-calendar tbody tr {
-  border-bottom: 1px solid lightgray;
+  background-color: @color-primary-1;
+
+  &:nth-child(2n+1) {
+    background-color: @color-primary-2;
+  }
 }
 
 .daily-calendar__day {
-  cursor: pointer;
-  border: 1px solid lightgray;
-  font-size: 0.9em;
-  font-family: Consolas, Menlo, Monaco, monospace;
-
-  &:hover { box-shadow: 0 0 6px rgba(35, 173, 255, 1); }
+  .calendar-cell();
 
   &--weekend {
-    @color: lightgray;
-
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0) 49.9%, @color 49.9%, @color 60%, rgba(0, 0, 0, 0) 60%) fixed,
-      linear-gradient(135deg, @color 10%, rgba(0, 0, 0, 0) 10%) fixed;
-    background-size: 8px 8px;
+    .background-gradient-lines(@color-grey-2);
   }
 
-  &--today { border: 1px solid gray; }
+  &--today {
+    border: 1px solid gray;
+  }
+}
+
+tbody .daily-calendar__day {
+  .hoverable();
 }
 
 .daily-calendar__activity-day {
-  background-color: #21ba45;
-  color: white;
+  background-color: @color-primary-0;
   position: relative;
 
-  &--ongoing { background-color: #f2711c; }
-  &--highlight { background-color: #cc1414; }
-  &--missed { background-color: gray; }
+  &--ongoing {
+    background-color: @color-secondary-1-0;
+  }
+  &--highlight {
+    background-color: @color-complement-0;
+  }
+  &--missed {
+    background-color: @color-grey-0;
+  }
 }
 
 .daily-calendar__activity-day-marker {
   @color: white;
 
   width: 0;
-  weight: 0;
-  border-width: 0.45em;
-  border-style: solid;
+  height: 0;
+  border: 0.4em solid transparent;
   border-color: @color @color transparent transparent;
   position: absolute;
   top: 0;

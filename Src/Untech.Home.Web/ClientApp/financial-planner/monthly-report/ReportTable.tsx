@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { IMonthlyFinancialReport, IMonthlyFinancialReportDayEntry } from './Models';
-import { MoneyView} from '../components';
+import { IMonthlyFinancialReport, IMonthlyFinancialReportDayEntry } from '../api/Models';
+import { MoneyView } from '../components';
 
 interface IMonthlyReportTableProps {
   report: IMonthlyFinancialReport;
