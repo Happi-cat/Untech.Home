@@ -44,13 +44,13 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		public void Publish(FinancialJournalEntrySaved notification)
 		{
-			var cacheKey = GetMonthlyReportKey(notification.When);
+			var cacheKey = GetMonthlyReportKey(notification.Entry.When);
 			_cacheStorage.Drop(cacheKey);
 		}
 
 		public void Publish(FinancialJournalEntryDeleted notification)
 		{
-			var cacheKey = GetMonthlyReportKey(notification.When);
+			var cacheKey = GetMonthlyReportKey(notification.Entry.When);
 			_cacheStorage.Drop(cacheKey);
 		}
 

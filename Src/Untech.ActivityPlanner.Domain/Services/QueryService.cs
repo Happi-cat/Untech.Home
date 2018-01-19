@@ -4,6 +4,7 @@ using System.Linq;
 using Untech.ActivityPlanner.Domain.Models;
 using Untech.ActivityPlanner.Domain.Requests;
 using Untech.ActivityPlanner.Domain.Views;
+using Untech.Home;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 
@@ -49,7 +50,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 					{
 						Activities = occurrences.GetValues(day).ToArray()
 					})
-					.GroupBy(n => n.AsMonth())
+					.GroupBy(n => n.AsMonthDate())
 					.Select(group => new DailyCalendarMonth(group.Key)
 					{
 						Days = group.OrderBy(n => n.Day).ToArray()
@@ -64,7 +65,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 
 			var occurrences = _dispatcher
 				.Fetch(request.Occurrences)
-				.ToKeyValues(n => n.When.AsMonth());
+				.ToKeyValues(n => n.When.AsMonthDate());
 
 			return new MonthlyCalendar(view)
 			{

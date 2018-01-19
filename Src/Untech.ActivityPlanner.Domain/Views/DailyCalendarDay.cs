@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Untech.ActivityPlanner.Domain.Models;
+using Untech.Home;
 
 namespace Untech.ActivityPlanner.Domain.Views
 {

@@ -11,7 +11,6 @@ namespace Untech.ActivityPlanner.Domain.Models
 
 		private Group()
 		{
-
 		}
 
 		public Group(int key, string name)

@@ -19,8 +19,8 @@ namespace Untech.ActivityPlanner.Domain.Requests
 			To = from + range;
 		}
 
-		public DateTime From { get; private set; }
+		public DateTime From { get; }
 
-		public DateTime To { get; private set; }
+		public DateTime To { get; }
 	}
 }

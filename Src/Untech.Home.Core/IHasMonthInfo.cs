@@ -1,4 +1,4 @@
-﻿namespace Untech.ActivityPlanner.Domain.Views
+﻿namespace Untech.Home
 {
 	public interface IHasMonthInfo
 	{

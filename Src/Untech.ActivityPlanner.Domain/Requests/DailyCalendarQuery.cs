@@ -17,6 +17,6 @@ namespace Untech.ActivityPlanner.Domain.Requests
 			Occurrences = new OccurrencesQuery(from.Date, to.Date);
 		}
 
-		public OccurrencesQuery Occurrences { get; private set; }
+		public OccurrencesQuery Occurrences { get; }
 	}
 }

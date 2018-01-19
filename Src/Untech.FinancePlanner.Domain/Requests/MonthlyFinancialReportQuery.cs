@@ -1,11 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 using Untech.FinancePlanner.Domain.ViewModels;
+using Untech.Home;
 using Untech.Practices.CQRS;
 
 namespace Untech.FinancePlanner.Domain.Requests
 {
 	[DataContract]
-	public class MonthlyFinancialReportQuery : IQuery<MonthlyFinancialReport>
+	public class MonthlyFinancialReportQuery : IQuery<MonthlyFinancialReport>,
+		IHasMonthInfo
 	{
 		public MonthlyFinancialReportQuery(int year, int month)
 		{

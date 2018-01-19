@@ -4,6 +4,7 @@ using System.Linq;
 using LinqToDB;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
+using Untech.Home;
 using Untech.Practices.Collections;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
@@ -60,7 +61,7 @@ namespace Untech.FinancePlanner.Data
 
 		public IEnumerable<FinancialJournalEntry> Handle(FinancialJournalQuery request)
 		{
-			var from = new DateTime(request.Year, request.Month, 1);
+			var from = request.AsMonthDate();
 			var to = from.AddMonths(1);
 
 			var rootTaxon = _dispatcher.Fetch(request.Taxon ?? new TaxonTreeQuery());

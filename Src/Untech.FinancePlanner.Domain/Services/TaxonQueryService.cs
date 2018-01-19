@@ -48,13 +48,11 @@ namespace Untech.FinancePlanner.Domain.Services
 			return elements;
 		}
 
-		private List<TaxonTree> GetElements(int parentTaxonKey)
-		{
-			return _dispatcher.Fetch(new TaxonElementsQuery(parentTaxonKey))
-				.Select(n => new TaxonTree(n.Key, n.ParentKey, n.Name, n.Description))
-				.ToList();
-		}
+		private List<TaxonTree> GetElements(int parentTaxonKey) => _dispatcher
+			.Fetch(new TaxonElementsQuery(parentTaxonKey))
+			.Select(n => new TaxonTree(n.Key, n.ParentKey, n.Name, n.Description))
+			.ToList();
 
-		private int DecrementDeep(int deep) => (deep > 0) ? --deep : deep;
+		private int DecrementDeep(int deep) => deep > 0 ? --deep : deep;
 	}
 }
