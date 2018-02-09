@@ -1,6 +1,8 @@
 using System;
+using System.Data;
 using System.Linq;
 using LinqToDB;
+using Untech.Home;
 using Untech.Practices.DataStorage;
 
 namespace Untech.ActivityPlanner.Data
@@ -20,8 +22,9 @@ namespace Untech.ActivityPlanner.Data
 			using (var context = _contextFactory())
 			{
 				return context
-					.GetTable<T>()
-					.SingleOrDefault(n => n.Key == key);
+						.GetTable<T>()
+						.SingleOrDefault(n => n.Key == key)
+					?? throw new ObjectNotFoundException(typeof(T), key);
 			}
 		}
 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.FinancePlanner.Domain.ViewModels;
@@ -26,24 +27,23 @@ namespace Untech.FinancePlanner.Domain.Services
 
 			return new TaxonTree(taxon.Key, taxon.ParentKey, taxon.Name, taxon.Description)
 			{
-				Elements = GetDescendants(taxon.Key, request.Deep)
+				Elements = GetDescendants(taxon.Key, new Depth(request.Deep))
 			};
 		}
 
-		private List<TaxonTree> GetDescendants(int parentTaxonKey, int deep)
+		private List<TaxonTree> GetDescendants(int parentTaxonKey, Depth depth)
 		{
-			if (deep == 0) return null;
+			if (depth.IsOver) return null;
 
-			deep = DecrementDeep(deep);
+			depth = depth.Decrement();
 
 			var elements = GetElements(parentTaxonKey);
 
-			if (deep != 0)
+			if (depth.IsOver) return elements;
+
+			foreach (var taxon in elements)
 			{
-				foreach (var taxon in elements)
-				{
-					taxon.Elements = GetDescendants(taxon.Key, deep);
-				}
+				taxon.Elements = GetDescendants(taxon.Key, depth);
 			}
 			return elements;
 		}
@@ -53,6 +53,19 @@ namespace Untech.FinancePlanner.Domain.Services
 			.Select(n => new TaxonTree(n.Key, n.ParentKey, n.Name, n.Description))
 			.ToList();
 
-		private int DecrementDeep(int deep) => deep > 0 ? --deep : deep;
+		/// <summary>
+		/// -1 - infinitely; 0 - over; +n - n levels.
+		/// </summary>
+		private struct Depth
+		{
+			private int _deep;
+
+			public Depth(int deep) => _deep = deep;
+
+			public Depth Decrement() => new Depth(_deep > 0 ? --_deep : _deep);
+
+			public bool IsOver => _deep == 0;
+		}
+
 	}
 }

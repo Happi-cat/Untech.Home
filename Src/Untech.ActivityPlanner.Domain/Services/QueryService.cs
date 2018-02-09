@@ -39,7 +39,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 		{
 			var view = Handle(new ActivitiesViewQuery());
 
-			var occurrences = _dispatcher
+			var occurrencesPerDay = _dispatcher
 				.Fetch(request.Occurrences)
 				.ToKeyValues(n => n.When.Date);
 
@@ -48,7 +48,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 				Months = GetDays(request.Occurrences)
 					.Select(day => new DailyCalendarDay(day)
 					{
-						Activities = occurrences.GetValues(day).ToArray()
+						Activities = occurrencesPerDay.GetValues(day).ToArray()
 					})
 					.GroupBy(n => n.AsMonthDate())
 					.Select(group => new DailyCalendarMonth(group.Key)
@@ -63,7 +63,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 		{
 			var view = Handle(new ActivitiesViewQuery());
 
-			var occurrences = _dispatcher
+			var occurrencesPerMonth = _dispatcher
 				.Fetch(request.Occurrences)
 				.ToKeyValues(n => n.When.AsMonthDate());
 
@@ -72,7 +72,7 @@ namespace Untech.ActivityPlanner.Domain.Services
 				Months = GetMonths(request.Occurrences)
 					.Select(month => new MonthlyCalendarMonth(month)
 					{
-						Activities = occurrences
+						Activities = occurrencesPerMonth
 							.GetValues(month)
 							.GroupBy(n => n.ActivityKey)
 							.Select(n => new MonthlyCalendarMonthActivity(n.Key, n.Count(m => !m.Missed)))

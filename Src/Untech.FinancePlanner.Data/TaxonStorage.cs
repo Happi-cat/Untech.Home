@@ -4,6 +4,7 @@ using System.Linq;
 using LinqToDB;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
+using Untech.Home;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.DataStorage;
 
@@ -42,7 +43,10 @@ namespace Untech.FinancePlanner.Data
 
 			using (var context = _contextFactory())
 			{
-				var dto = context.GetTable<TaxonDao>().SingleOrDefault(n => n.Key == key);
+				var dto = context
+						.GetTable<TaxonDao>()
+						.SingleOrDefault(n => n.Key == key)
+					?? throw new ObjectNotFoundException(typeof(Taxon), key);
 				return TaxonDao.ToEntity(dto);
 			}
 		}

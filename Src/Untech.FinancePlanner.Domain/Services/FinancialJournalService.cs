@@ -31,18 +31,12 @@ namespace Untech.FinancePlanner.Domain.Services
 			var taxon = _dispatcher.Fetch(new TaxonTreeQuery { TaxonKey = request.TaxonKey });
 			if (!taxon.IsSelectable) throw new InvalidOperationException("Taxon is no selectable");
 
-			var when = DateTime.Today;
-			if (when.Year != request.Year || when.Month != request.Month)
-			{
-				when = new DateTime(request.Year, request.Month, 1);
-			}
-
 			var entry = _dataStorage.Create(new FinancialJournalEntry(0, request.TaxonKey)
 			{
 				Remarks = request.Remarks,
 				Actual = request.Actual,
 				Forecasted = request.Forecasted,
-				When = when.Date
+				When = GetWhenFromRequest(request)
 			});
 
 			_queueDispatcher.Enqueue(new FinancialJournalEntrySaved(entry));
@@ -75,6 +69,15 @@ namespace Untech.FinancePlanner.Domain.Services
 
 			_queueDispatcher.Enqueue(new FinancialJournalEntrySaved(entry));
 			return entry;
+		}
+
+		private static DateTime GetWhenFromRequest(CreateFinancialJournalEntry request)
+		{
+			var when = DateTime.Today;
+
+			return when.Year != request.Year || when.Month != request.Month
+				? new DateTime(request.Year, request.Month, 1)
+				: when;
 		}
 	}
 }

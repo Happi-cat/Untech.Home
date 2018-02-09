@@ -28,7 +28,10 @@ namespace Untech.FinancePlanner.Data
 		{
 			using (var context = _contextFactory())
 			{
-				var dao = context.GetTable<FinancialJournalEntryDao>().SingleOrDefault(n => n.Key == key);
+				var dao = context
+						.GetTable<FinancialJournalEntryDao>()
+						.SingleOrDefault(n => n.Key == key)
+					?? throw new ObjectNotFoundException(typeof(FinancialJournalEntry), key);
 				return FinancialJournalEntryDao.ToEntity(dao);
 			}
 		}
