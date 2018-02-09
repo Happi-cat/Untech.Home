@@ -26,12 +26,9 @@ namespace Untech.ActivityPlanner.Domain.Models
 		public string Name
 		{
 			get => _name;
-			set
-			{
-				if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(nameof(value));
-
-				_name = value;
-			}
+			set => _name = !string.IsNullOrWhiteSpace(value)
+				? value
+				: throw new ArgumentException("Argument cannot be null, empty or whitespace", nameof(value));
 		}
 	}
 }
