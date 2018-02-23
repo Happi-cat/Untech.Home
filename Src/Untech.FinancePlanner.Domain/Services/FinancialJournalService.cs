@@ -2,8 +2,6 @@ using System;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
-using Untech.FinancePlanner.Domain.Requests.FinancialJournalEntry;
-using Untech.FinancePlanner.Domain.Requests.Taxon;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.DataStorage;

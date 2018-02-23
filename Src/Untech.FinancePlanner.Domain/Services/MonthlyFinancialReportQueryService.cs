@@ -4,8 +4,6 @@ using System.Linq;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
-using Untech.FinancePlanner.Domain.Requests.FinancialJournalEntry;
-using Untech.FinancePlanner.Domain.Requests.Taxon;
 using Untech.FinancePlanner.Domain.ViewModels;
 using Untech.Home;
 using Untech.Practices;

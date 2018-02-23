@@ -1,10 +1,11 @@
 ﻿using System.Runtime.Serialization;
+using Untech.ActivityPlanner.Domain.Models;
 using Untech.Practices.CQRS;
 
-namespace Untech.ActivityPlanner.Domain.Requests.Group
+namespace Untech.ActivityPlanner.Domain.Requests
 {
 	[DataContract]
-	public class CreateGroup : ICommand<Models.Group>
+	public class CreateGroup : ICommand<Group>
 	{
 		public CreateGroup(string name)
 		{

@@ -1,5 +1,4 @@
 ﻿using System;
-using Untech.ActivityPlanner.Domain.Requests.ActivityOccurrence;
 using Untech.ActivityPlanner.Domain.Views;
 using Untech.Practices.CQRS;
 

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Untech.ActivityPlanner.Domain.Models;
 using Untech.Practices.CQRS;
 
-namespace Untech.ActivityPlanner.Domain.Requests.ActivityOccurrence
+namespace Untech.ActivityPlanner.Domain.Requests
 {
-	public class OccurrencesQuery : IQuery<IEnumerable<Models.ActivityOccurrence>>
+	public class OccurrencesQuery : IQuery<IEnumerable<ActivityOccurrence>>
 	{
 		public OccurrencesQuery(DateTime from, DateTime to)
 		{

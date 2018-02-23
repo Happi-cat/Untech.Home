@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using Untech.ActivityPlanner.Domain.Models;
 using Untech.ActivityPlanner.Domain.Requests;
-using Untech.ActivityPlanner.Domain.Requests.Activity;
-using Untech.ActivityPlanner.Domain.Requests.Group;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.DataStorage;

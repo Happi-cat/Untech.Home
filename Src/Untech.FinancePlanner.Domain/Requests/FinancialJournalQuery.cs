@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Untech.FinancePlanner.Domain.Requests.Taxon;
+using Untech.FinancePlanner.Domain.Models;
 using Untech.Home;
 using Untech.Practices.CQRS;
 
-namespace Untech.FinancePlanner.Domain.Requests.FinancialJournalEntry
+namespace Untech.FinancePlanner.Domain.Requests
 {
-	public class FinancialJournalQuery : IQuery<IEnumerable<Models.FinancialJournalEntry>>,
+	public class FinancialJournalQuery : IQuery<IEnumerable<FinancialJournalEntry>>,
 		IHasMonthInfo
 	{
 		public FinancialJournalQuery(int year, int month)

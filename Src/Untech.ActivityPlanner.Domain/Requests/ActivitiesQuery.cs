@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using Untech.ActivityPlanner.Domain.Models;
 using Untech.Practices.CQRS;
 
-namespace Untech.ActivityPlanner.Domain.Requests.Activity
+namespace Untech.ActivityPlanner.Domain.Requests
 {
-	public class ActivitiesQuery : IQuery<IEnumerable<Models.Activity>>
+	public class ActivitiesQuery : IQuery<IEnumerable<Activity>>
 	{
 		public ActivitiesQuery(int groupKey)
 		{

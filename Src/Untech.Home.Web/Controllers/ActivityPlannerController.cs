@@ -3,9 +3,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Untech.ActivityPlanner.Domain.Models;
 using Untech.ActivityPlanner.Domain.Requests;
-using Untech.ActivityPlanner.Domain.Requests.Activity;
-using Untech.ActivityPlanner.Domain.Requests.ActivityOccurrence;
-using Untech.ActivityPlanner.Domain.Requests.Group;
 using Untech.ActivityPlanner.Domain.Views;
 using Untech.Practices.CQRS.Dispatching;
 

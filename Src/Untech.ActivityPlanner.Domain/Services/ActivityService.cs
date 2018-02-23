@@ -3,8 +3,6 @@ using System.Linq;
 using Untech.ActivityPlanner.Domain.Models;
 using Untech.ActivityPlanner.Domain.Notifications;
 using Untech.ActivityPlanner.Domain.Requests;
-using Untech.ActivityPlanner.Domain.Requests.Activity;
-using Untech.ActivityPlanner.Domain.Requests.ActivityOccurrence;
 using Untech.Practices;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;

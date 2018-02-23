@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
-namespace Untech.ActivityPlanner.Domain.Requests.ActivityOccurrence
+namespace Untech.ActivityPlanner.Domain.Requests
 {
 	[DataContract]
 	public class UpdateActivityOccurrence : ICommand
