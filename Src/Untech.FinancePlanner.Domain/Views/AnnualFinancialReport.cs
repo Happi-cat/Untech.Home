@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Untech.FinancePlanner.Domain.ViewModels
+namespace Untech.FinancePlanner.Domain.Views
 {
 	[DataContract]
 	public class AnnualFinancialReport

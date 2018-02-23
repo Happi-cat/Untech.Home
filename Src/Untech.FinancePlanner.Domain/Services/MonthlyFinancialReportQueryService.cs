@@ -4,7 +4,7 @@ using System.Linq;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
-using Untech.FinancePlanner.Domain.ViewModels;
+using Untech.FinancePlanner.Domain.Views;
 using Untech.Home;
 using Untech.Practices;
 using Untech.Practices.Collections;

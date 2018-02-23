@@ -1,4 +1,4 @@
-using Untech.FinancePlanner.Domain.ViewModels;
+using Untech.FinancePlanner.Domain.Views;
 using Untech.Practices.CQRS;
 
 namespace Untech.FinancePlanner.Domain.Requests
