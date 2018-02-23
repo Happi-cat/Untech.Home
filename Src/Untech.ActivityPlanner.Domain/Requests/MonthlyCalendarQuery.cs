@@ -1,5 +1,6 @@
 ﻿using System;
 using Untech.ActivityPlanner.Domain.Views;
+using Untech.Home;
 using Untech.Practices.CQRS;
 
 namespace Untech.ActivityPlanner.Domain.Requests
@@ -14,11 +15,9 @@ namespace Untech.ActivityPlanner.Domain.Requests
 
 		public MonthlyCalendarQuery(DateTime from, DateTime to)
 		{
-			Occurrences = new OccurrencesQuery(AlignToMonthStart(from), AlignToMonthStart(to));
+			Occurrences = new OccurrencesQuery(from.AsMonthDate(), to.AsMonthDate());
 		}
 
 		public OccurrencesQuery Occurrences { get; }
-
-		private static DateTime AlignToMonthStart(DateTime dateTime) => new DateTime(dateTime.Year, dateTime.Month, 1);
 	}
 }
