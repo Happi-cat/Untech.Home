@@ -1,12 +1,11 @@
 using System.Runtime.Serialization;
-using Untech.FinancePlanner.Domain.Models;
 using Untech.Practices;
 using Untech.Practices.CQRS;
 
-namespace Untech.FinancePlanner.Domain.Requests
+namespace Untech.FinancePlanner.Domain.Requests.FinancialJournalEntry
 {
 	[DataContract]
-	public class UpdateFinancialJournalEntry : ICommand<FinancialJournalEntry>
+	public class UpdateFinancialJournalEntry : ICommand<Models.FinancialJournalEntry>
 	{
 		public UpdateFinancialJournalEntry(int key)
 		{

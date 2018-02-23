@@ -4,6 +4,9 @@ using System.Linq;
 using LinqToDB;
 using Untech.ActivityPlanner.Domain.Models;
 using Untech.ActivityPlanner.Domain.Requests;
+using Untech.ActivityPlanner.Domain.Requests.Activity;
+using Untech.ActivityPlanner.Domain.Requests.ActivityOccurrence;
+using Untech.ActivityPlanner.Domain.Requests.Group;
 using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.ActivityPlanner.Data

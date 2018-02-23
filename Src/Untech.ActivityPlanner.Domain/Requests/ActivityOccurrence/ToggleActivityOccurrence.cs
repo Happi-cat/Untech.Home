@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
-namespace Untech.ActivityPlanner.Domain.Requests
+namespace Untech.ActivityPlanner.Domain.Requests.ActivityOccurrence
 {
 	[DataContract]
 	public class ToggleActivityOccurrence : ICommand

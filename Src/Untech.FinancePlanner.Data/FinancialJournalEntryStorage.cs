@@ -4,6 +4,8 @@ using System.Linq;
 using LinqToDB;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
+using Untech.FinancePlanner.Domain.Requests.FinancialJournalEntry;
+using Untech.FinancePlanner.Domain.Requests.Taxon;
 using Untech.Home;
 using Untech.Practices.Collections;
 using Untech.Practices.CQRS.Dispatching;

@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using Untech.FinancePlanner.Domain.Models;
 using Untech.Practices.CQRS;
 
-namespace Untech.FinancePlanner.Domain.Requests
+namespace Untech.FinancePlanner.Domain.Requests.Taxon
 {
-	public class TaxonElementsQuery : IQuery<IEnumerable<Taxon>>
+	public class TaxonElementsQuery : IQuery<IEnumerable<Models.Taxon>>
 	{
 		public TaxonElementsQuery(int taxonKey)
 		{

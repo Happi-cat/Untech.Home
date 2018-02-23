@@ -1,7 +1,7 @@
 using Untech.FinancePlanner.Domain.ViewModels;
 using Untech.Practices.CQRS;
 
-namespace Untech.FinancePlanner.Domain.Requests
+namespace Untech.FinancePlanner.Domain.Requests.Taxon
 {
 	public class TaxonTreeQuery : IQuery<TaxonTree>
 	{

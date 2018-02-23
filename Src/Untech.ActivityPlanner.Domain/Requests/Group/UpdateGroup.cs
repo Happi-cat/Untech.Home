@@ -1,13 +1,12 @@
 ﻿using System.Runtime.Serialization;
-using Untech.ActivityPlanner.Domain.Models;
 using Untech.Practices.CQRS;
 
-namespace Untech.ActivityPlanner.Domain.Requests
+namespace Untech.ActivityPlanner.Domain.Requests.Group
 {
 	[DataContract]
-	public class UpdateActivity : ICommand<Activity>
+	public class UpdateGroup : ICommand<Models.Group>
 	{
-		public UpdateActivity(int key, string name)
+		public UpdateGroup(int key, string name)
 		{
 			Key = key;
 			Name = name;

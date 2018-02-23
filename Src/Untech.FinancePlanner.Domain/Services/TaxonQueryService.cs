@@ -3,6 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
+using Untech.FinancePlanner.Domain.Requests.Taxon;
 using Untech.FinancePlanner.Domain.ViewModels;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;

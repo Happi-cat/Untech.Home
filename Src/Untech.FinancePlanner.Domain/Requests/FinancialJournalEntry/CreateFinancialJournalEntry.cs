@@ -1,12 +1,11 @@
 using System.Runtime.Serialization;
-using Untech.FinancePlanner.Domain.Models;
 using Untech.Practices;
 using Untech.Practices.CQRS;
 
-namespace Untech.FinancePlanner.Domain.Requests
+namespace Untech.FinancePlanner.Domain.Requests.FinancialJournalEntry
 {
 	[DataContract]
-	public class CreateFinancialJournalEntry : ICommand<FinancialJournalEntry>
+	public class CreateFinancialJournalEntry : ICommand<Models.FinancialJournalEntry>
 	{
 		public CreateFinancialJournalEntry(int taxonKey, int year, int month)
 		{
