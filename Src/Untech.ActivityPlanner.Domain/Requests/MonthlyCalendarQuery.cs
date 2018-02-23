@@ -15,11 +15,11 @@ namespace Untech.ActivityPlanner.Domain.Requests
 
 		public MonthlyCalendarQuery(DateTime from, DateTime to)
 		{
-			Occurrences = new OccurrencesQuery(Month(from), Month(to));
+			Occurrences = new OccurrencesQuery(AlignToMonthStart(from), AlignToMonthStart(to));
 		}
 
 		public OccurrencesQuery Occurrences { get; }
 
-		private static DateTime Month(DateTime dateTime) => new DateTime(dateTime.Year, dateTime.Month, 1);
+		private static DateTime AlignToMonthStart(DateTime dateTime) => new DateTime(dateTime.Year, dateTime.Month, 1);
 	}
 }
