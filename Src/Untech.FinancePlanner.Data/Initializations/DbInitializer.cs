@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using LinqToDB;
-using LinqToDB.Data;
 using Untech.FinancePlanner.Data.Cache;
 using Untech.FinancePlanner.Domain.Models;
+using Untech.Home;
 using YamlDotNet.RepresentationModel;
 
 namespace Untech.FinancePlanner.Data.Initializations
@@ -18,9 +16,9 @@ namespace Untech.FinancePlanner.Data.Initializations
 		{
 			using (var context = contextFactory())
 			{
-				EnsureTableExists<CacheEntry>(context);
-				EnsureTableExists<TaxonDao>(context);
-				EnsureTableExists<FinancialJournalEntryDao>(context);
+				context.EnsureTableExists<CacheEntry>();
+				context.EnsureTableExists<TaxonDao>();
+				context.EnsureTableExists<FinancialJournalEntryDao>();
 
 				if (context.Taxons.Any())
 				{
@@ -32,42 +30,6 @@ namespace Untech.FinancePlanner.Data.Initializations
 			Initialize(taxonStorage, BuiltInTaxonId.Expense, Path.Combine(directory, "Expenses.eyaml"));
 			Initialize(taxonStorage, BuiltInTaxonId.Saving, Path.Combine(directory, "Savings.eyaml"));
 			Initialize(taxonStorage, BuiltInTaxonId.Income, Path.Combine(directory, "Incomes.eyaml"));
-		}
-
-		private static void EnsureTableExists<T>(DataConnection context)
-		{
-			if (IsTableExists<T>(context))
-			{
-				return;
-			}
-
-			context.CreateTable<T>();
-		}
-
-		private static bool IsTableExists<T>(DataConnection context)
-		{
-			var entityDescriptor = context.MappingSchema.GetEntityDescriptor(typeof(T));
-
-			return IsTableExists(context, entityDescriptor.TableName);
-		}
-
-		private static bool IsTableExists(DataConnection context, string tableName)
-		{
-			tableName = tableName ?? throw new ArgumentNullException(nameof(tableName));
-
-			var command = context.CreateCommand();
-			command.CommandText = "SELECT 1 FROM sqlite_master WHERE type='table' AND name=@pName";
-			command.CommandType = CommandType.Text;
-
-			var pName = command.CreateParameter();
-			pName.ParameterName = "@pName";
-			pName.Value = tableName;
-
-			command.Parameters.Add(pName);
-
-			var result = (long?)command.ExecuteScalar() ?? 0;
-
-			return result == 1;
 		}
 
 		private static void Initialize(TaxonStorage storage, int rootId, string filePath)

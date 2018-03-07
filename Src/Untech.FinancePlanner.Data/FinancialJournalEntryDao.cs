@@ -10,7 +10,6 @@ namespace Untech.FinancePlanner.Data
 	{
 		public FinancialJournalEntryDao()
 		{
-
 		}
 
 		public FinancialJournalEntryDao(FinancialJournalEntry entry)
