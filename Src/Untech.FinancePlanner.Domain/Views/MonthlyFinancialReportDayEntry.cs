@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using Untech.Practices;
 
-namespace Untech.FinancePlanner.Domain.ViewModels
+namespace Untech.FinancePlanner.Domain.Views
 {
 	[DataContract]
 	public class MonthlyFinancialReportDayEntry

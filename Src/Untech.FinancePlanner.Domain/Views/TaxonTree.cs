@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Untech.Practices.Collections;
 using Untech.FinancePlanner.Domain.Models;
+using Untech.Practices.Collections;
 using Untech.Practices.Linq;
-using System.Collections;
 
-namespace Untech.FinancePlanner.Domain.ViewModels
+namespace Untech.FinancePlanner.Domain.Views
 {
 	/// <summary>
 	/// Represents taxon tree model

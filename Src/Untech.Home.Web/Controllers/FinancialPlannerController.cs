@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
-using Untech.FinancePlanner.Domain.ViewModels;
+using Untech.FinancePlanner.Domain.Views;
 using Untech.Practices.CQRS.Dispatching;
 
 namespace Untech.Home.Web.Controllers

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using Untech.FinancePlanner.Domain.ViewModels;
+using Untech.FinancePlanner.Domain.Views;
 using Untech.Home;
 using Untech.Practices.CQRS;
 

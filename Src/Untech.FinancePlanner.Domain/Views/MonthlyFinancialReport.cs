@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Untech.Home;
 
-namespace Untech.FinancePlanner.Domain.ViewModels
+namespace Untech.FinancePlanner.Domain.Views
 {
 	[DataContract]
 	public class MonthlyFinancialReport : IHasMonthInfo
