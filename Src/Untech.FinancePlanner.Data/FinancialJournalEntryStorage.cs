@@ -31,7 +31,7 @@ namespace Untech.FinancePlanner.Data
 				var dao = context
 						.GetTable<FinancialJournalEntryDao>()
 						.SingleOrDefault(n => n.Key == key)
-					?? throw new ObjectNotFoundException(typeof(FinancialJournalEntry), key);
+					?? throw new AggregateRootNotFoundException(key);
 				return FinancialJournalEntryDao.ToEntity(dao);
 			}
 		}

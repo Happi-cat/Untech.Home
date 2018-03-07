@@ -24,7 +24,7 @@ namespace Untech.ActivityPlanner.Data
 				return context
 						.GetTable<T>()
 						.SingleOrDefault(n => n.Key == key)
-					?? throw new ObjectNotFoundException(typeof(T), key);
+					?? throw new AggregateRootNotFoundException(key);
 			}
 		}
 

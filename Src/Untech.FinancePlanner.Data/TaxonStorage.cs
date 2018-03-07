@@ -46,7 +46,7 @@ namespace Untech.FinancePlanner.Data
 				var dto = context
 						.GetTable<TaxonDao>()
 						.SingleOrDefault(n => n.Key == key)
-					?? throw new ObjectNotFoundException(typeof(Taxon), key);
+					?? throw new AggregateRootNotFoundException(key);
 				return TaxonDao.ToEntity(dto);
 			}
 		}
