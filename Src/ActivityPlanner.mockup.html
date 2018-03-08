@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=800, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style lang="stylesheet/css">
+        body{
+            font-size: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: gray;
+        }
+        .activity {
+            padding-left: 100px;
+            height: 1em;
+
+            border-bottom: 1px solid lightgray;
+        }
+
+        .activity:nth-child(even) {
+            background: lightyellow;
+        }
+
+        .activity__day {
+            width: 1em;
+            height: 1em;
+            float: left;
+            border-left: 1px solid lightgray;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .activity__day:hover {
+            background: yellowgreen;
+        }
+
+        .activity__day--active-past {
+            background: green;
+        }
+
+        .activity__day--active-today {
+            background: goldenrod;
+        }
+
+        .activity__day--active-future {
+            background: gold;
+        }
+
+        .activity__reminder {
+            width: 0;
+            height: 0;
+
+            border: 0.25em solid red;
+            border-color: red red transparent transparent;
+
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .activity__day--weekend,
+        .header__day--weekend {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0) 49.9%, lightgray 49.9%, lightgray 60%, rgba(0, 0, 0, 0) 60%) fixed,
+            linear-gradient(135deg, lightgray 10%, rgba(0, 0, 0, 0) 10%) fixed;
+            background-size: 6px 6px;
+        }
+
+        .header {
+            padding-left: 100px;
+            height: 4em;
+            background: orange;
+
+            border-bottom: 1px solid lightgray;
+        }
+
+        .header__day {
+            width: 1em;
+            height: 4em;
+            float: left;
+            position: relative;
+
+            border-left: 1px solid white;
+        }
+
+        .header__day>div {
+            line-height: 1em;
+            transform: rotate(-90deg);
+            margin-top: 45px;
+        }
+
+        .header__start,
+        .activity__start {
+            float: left;
+            position: relative;
+            margin-left: -100px;
+            line-height: 1em;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="header__start"></div>
+        <div class="header__day">
+            <div>20.09</div>
+        </div>
+        <div class="header__day">
+            <div>21.09</div>
+        </div>
+        <div class="header__day">
+            <div>22.09</div>
+        </div>
+        <div class="header__day header__day--weekend">
+            <div>23.09</div>
+        </div>
+        <div class="header__day header__day--weekend">
+            <div>24.09</div>
+        </div>
+        <div class="header__day">
+            <div>25.09</div>
+        </div>
+        <div class="header__day">
+            <div>26.09</div>
+        </div>
+        <div class="header__day">
+            <div>27.09</div>
+        </div>
+        <div class="header__day">
+            <div>28.09</div>
+        </div>
+        <div class="header__day">
+            <div>29.09</div>
+        </div>
+        <div class="header__day header__day--weekend">
+            <div>30.09</div>
+        </div>
+        <div class="header__day header__day--weekend">
+            <div>01.10</div>
+        </div>
+        <div class="header__day">
+            <div>02.10</div>
+        </div>
+        <div class="header__day">
+            <div>03.10</div>
+        </div>
+        <div class="header__day">
+            <div>04.10</div>
+        </div>
+        <div class="header__day">
+            <div>05.10</div>
+        </div>
+        <div class="header__day">
+            <div>06.10</div>
+        </div>
+        <div class="header__day header__day--weekend">
+            <div>07.10</div>
+        </div>
+        <div class="header__day header__day--weekend">
+            <div>08.10</div>
+        </div>
+    </div>
+
+    <div class="activity">
+        <div class="activity__start">activity</div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--active-past"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--active-today"></div>
+        <div class="activity__day">
+            <div class="activity__reminder"></div>
+        </div>
+        <div class="activity__day activity__day--active-future">
+            <div class="activity__reminder"></div>
+        </div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--active-future"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--active-future activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+    </div>
+
+    <div class="activity">
+        <div class="activity__start">activity</div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--active-past"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--active-future"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--active-future"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+    </div>
+
+    <div class="activity">
+        <div class="activity__start">activity</div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--active-past"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--active-future"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+    </div>
+
+    <div class="activity">
+        <div class="activity__start">activity</div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--active-past"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--active-past"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--active-future"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day"></div>
+        <div class="activity__day activity__day--weekend"></div>
+        <div class="activity__day activity__day--weekend"></div>
+    </div>
+
+</body>
+
+</html>

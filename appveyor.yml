@@ -1,0 +1,31 @@
+version: '1.0.{build}'
+environment:
+  nodejs_version: '6'
+for:
+  - branches:
+      only:
+        - master
+    configuration: Release
+  - branches:
+      only:
+        - develop
+    configuration: Debug
+image: Visual Studio 2017
+install:
+  - ps: 'Install-Product node $env:nodejs_version'
+  - cmd: git submodule update --init --recursive
+before_build:
+  - cmd: |-
+      cd .\Src
+      nuget restore
+      cd .\Untech.Home.Web
+      npm install less@latest -g
+      npm install
+build:
+  project: Src\Untech.Home.sln
+  verbosity: minimal
+cache:
+  - packages -> **\packages.config
+  - node_modules
+  - '%LocalAppData%\NuGet\Cache'
+  - '%LocalAppData%\NuGet\v3-cache'
