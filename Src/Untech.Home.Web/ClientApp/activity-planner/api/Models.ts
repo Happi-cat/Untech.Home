@@ -1,5 +1,9 @@
+export type GroupKey = number;
+export type ActivityKey = number;
+export type OccurrenceKey = number;
+
 export interface IActivityOccurrence {
-  key: number;
+  key: OccurrenceKey;
   activityKey: number;
   when: Date;
   note?: string;
@@ -9,12 +13,12 @@ export interface IActivityOccurrence {
 }
 
 export interface IActivitiesViewActivity {
-  activityKey: number;
+  activityKey: ActivityKey;
   name: string;
 }
 
 export interface IActivitiesViewGroup {
-  groupKey: number;
+  groupKey: GroupKey;
   name: string;
   activities: IActivitiesViewActivity[]
 }
@@ -45,7 +49,7 @@ export interface IDailyCalendar {
 }
 
 export interface IMonthlyCalendarMonthActivity {
-  activityKey: number;
+  activityKey: ActivityKey;
   count: number;
 }
 
@@ -63,7 +67,7 @@ export interface IMonthlyCalendar {
 
 export interface ICreateActivity {
   name: string;
-  groupKey: number;
+  groupKey: GroupKey;
 }
 
 export interface ICreateGroup {
@@ -71,27 +75,27 @@ export interface ICreateGroup {
 }
 
 export interface IUpdateActivity {
-  key: number;
+  key: GroupKey;
   name: string;
 }
 
 export interface IUpdateGroup {
-  key: number;
+  key: GroupKey;
   name: string;
 }
 
 export interface IToogleActivityOccurrence {
-  activityKey: number;
+  activityKey: ActivityKey;
   when: Date | string;
 }
 
 export interface IToogleActivityOccurrences {
-  activityKey: number;
+  activityKey: ActivityKey;
   when: Date[] | string[];
 }
 
 export interface IUpdateActivityOccurrence {
-  key: number;
+  key: OccurrenceKey;
   note?: string;
   highlighted: boolean;
   missed: boolean;
