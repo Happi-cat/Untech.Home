@@ -18,11 +18,11 @@ namespace Untech.Home.Web.Controllers
 			_dispatcher = dispatcher;
 		}
 
-		[HttpGet("calendar/daily/{fromDay}-{toDay}")]
+		[HttpGet("calendar/daily/range({fromDay};{toDay})")]
 		public DailyCalendar GetDailyCalendar(int fromDay, int toDay) => _dispatcher
 			.Fetch(new DailyCalendarQuery(fromDay, toDay));
 
-		[HttpGet("calendar/monthly/{fromMonth}-{toMonth}")]
+		[HttpGet("calendar/monthly/range({fromMonth};{toMonth})")]
 		public MonthlyCalendar GetMonthlyCalendar(int fromMonth, int toMonth) => _dispatcher
 			.Fetch(new MonthlyCalendarQuery(fromMonth, toMonth));
 
