@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Integration.GoogleCa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Home.Core", "Untech.Home.Core\Untech.Home.Core.csproj", "{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.ThingsPlanner.Domain", "Untech.ThingsPlanner.Domain\Untech.ThingsPlanner.Domain.csproj", "{3A3AB271-4193-4212-A74B-F00DEFBF1601}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.ObjectMapping.Abstractions", "..\External\Untech.Practices\Src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj", "{52E3B319-18D1-482A-86DE-8C159AD79547}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.DailySurvey.Domain", "Untech.DailySurvey.Domain\Untech.DailySurvey.Domain.csproj", "{4B70B792-F684-42AF-AED3-AAB3C5C95D4C}"
@@ -103,6 +105,10 @@ Global
 		{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A3AB271-4193-4212-A74B-F00DEFBF1601}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A3AB271-4193-4212-A74B-F00DEFBF1601}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A3AB271-4193-4212-A74B-F00DEFBF1601}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A3AB271-4193-4212-A74B-F00DEFBF1601}.Release|Any CPU.Build.0 = Release|Any CPU
 		{52E3B319-18D1-482A-86DE-8C159AD79547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{52E3B319-18D1-482A-86DE-8C159AD79547}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52E3B319-18D1-482A-86DE-8C159AD79547}.Release|Any CPU.ActiveCfg = Release|Any CPU
