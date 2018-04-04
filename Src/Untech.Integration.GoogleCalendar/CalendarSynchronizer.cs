@@ -25,6 +25,8 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 
 		public void Publish(ActivityOccurrenceSaved notification)
 		{
+			if (notification.Occurrence.ExternalKey == Guid.Empty) return;
+
 			var when = notification.Occurrence.When;
 			Event calendarEvent = FindCalendarEvent(notification)
 			 	?? GetDefaultCalendarEvent(notification, when);
@@ -61,7 +63,7 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 				{
 					Private__ = new Dictionary<string, string>
 					{
-						[CalendarKey] = notification.Occurrence.Key.ToString()
+						[CalendarKey] = notification.Occurrence.ExternalKey.ToString()
 					}
 				},
 				Reminders = new Event.RemindersData
@@ -81,6 +83,8 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 
 		public void Publish(ActivityOccurrenceDeleted notification)
 		{
+			if (notification.Occurrence.ExternalKey == Guid.Empty) return;
+
 			Event calendarEvent = FindCalendarEvent(notification);
 
 			if (calendarEvent != null)
@@ -98,7 +102,7 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 			eventsRequest.MaxResults = 1;
 			eventsRequest.PrivateExtendedProperty = new Repeatable<string>(new[]
 			{
-				$"{CalendarKey}={notification.Occurrence.Key}"
+				$"{CalendarKey}={notification.Occurrence.ExternalKey}"
 			});
 
 			return eventsRequest
