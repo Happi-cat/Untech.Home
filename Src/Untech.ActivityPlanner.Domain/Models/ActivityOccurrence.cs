@@ -14,12 +14,16 @@ namespace Untech.ActivityPlanner.Domain.Models
 		public ActivityOccurrence(int key, int activityKey, DateTime thatDay)
 		{
 			Key = key;
+			ExternalKey = Guid.NewGuid();
 			ActivityKey = activityKey;
 			When = thatDay.Date;
 		}
 
 		[DataMember]
 		public int Key { get; private set; }
+
+		[DataMember]
+		public Guid ExternalKey { get; private set; }
 
 		[DataMember]
 		public int ActivityKey { get; private set; }
