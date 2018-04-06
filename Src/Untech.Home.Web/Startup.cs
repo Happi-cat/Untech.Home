@@ -21,6 +21,7 @@ using Untech.ActivityPlanner.Integration.GoogleCalendar;
 using Untech.FinancePlanner.Data;
 using Untech.FinancePlanner.Data.Cache;
 using Untech.FinancePlanner.Domain.Models;
+using Untech.Home.Data;
 using Untech.Practices;
 using Untech.Practices.CQRS;
 using Untech.Practices.CQRS.Dispatching;
@@ -98,9 +99,9 @@ namespace Untech.Home.Web
 			container.Register<IDataStorage<FinancialJournalEntry>, FinancialJournalEntryStorage>();
 			container.Register<IDataStorage<Taxon>, TaxonStorage>();
 
-			container.Register<IDataStorage<Group>, GenericDataStorage<Group>>();
+			container.Register<IDataStorage<Group>, GroupDataStorage>();
 			container.Register<IDataStorage<Activity>, ActivityDataStorage>();
-			container.Register<IDataStorage<ActivityOccurrence>, GenericDataStorage<ActivityOccurrence>>();
+			container.Register<IDataStorage<ActivityOccurrence>, ActivityOccurrenceDataStorage>();
 
 			var assembly = new[]
 			{

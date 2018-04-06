@@ -1,11 +1,16 @@
 ﻿using LinqToDB.Mapping;
 using Untech.FinancePlanner.Domain.Models;
+using Untech.Practices.DataStorage;
+using Untech.Practices.ObjectMapping;
 
 namespace Untech.FinancePlanner.Data
 {
 	[Table("Taxons")]
-	public class TaxonDao
+	public class TaxonDao : IAggregateRoot
 	{
+		public static readonly IMap<Taxon, TaxonDao> ToDaoMap = new AdHocMap<Taxon, TaxonDao>(t => new TaxonDao(t));
+		public static readonly IMap<TaxonDao, Taxon> ToEntityMap = new AdHocMap<TaxonDao, Taxon>(ToEntity);
+
 		public TaxonDao()
 		{
 
