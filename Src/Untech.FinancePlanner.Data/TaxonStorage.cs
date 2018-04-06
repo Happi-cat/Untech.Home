@@ -25,7 +25,7 @@ namespace Untech.FinancePlanner.Data
 		}
 
 		public TaxonStorage(Func<FinancialPlannerContext> contextFactory)
-			: base(contextFactory, TaxonDao.ToDaoMap, TaxonDao.ToEntityMap)
+			: base(contextFactory, DaoMapper.Instance, DaoMapper.Instance)
 		{
 		}
 

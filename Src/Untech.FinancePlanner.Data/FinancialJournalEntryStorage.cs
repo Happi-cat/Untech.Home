@@ -18,7 +18,7 @@ namespace Untech.FinancePlanner.Data
 		private readonly IQueryDispatcher _dispatcher;
 
 		public FinancialJournalEntryStorage(IQueryDispatcher dispatcher, Func<FinancialPlannerContext> contextFactory)
-			: base(contextFactory, FinancialJournalEntryDao.ToDaoMap, FinancialJournalEntryDao.ToEntityMap)
+			: base(contextFactory, DaoMapper.Instance, DaoMapper.Instance)
 		{
 			_dispatcher = dispatcher;
 		}

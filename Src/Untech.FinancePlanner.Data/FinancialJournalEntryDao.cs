@@ -10,12 +10,6 @@ namespace Untech.FinancePlanner.Data
 	[Table("FinancialJournalEntries")]
 	public class FinancialJournalEntryDao : IAggregateRoot
 	{
-		public static readonly IMap<FinancialJournalEntry, FinancialJournalEntryDao> ToDaoMap =
-			new AdHocMap<FinancialJournalEntry, FinancialJournalEntryDao>(t => new FinancialJournalEntryDao(t));
-
-		public static readonly IMap<FinancialJournalEntryDao, FinancialJournalEntry> ToEntityMap =
-			new AdHocMap<FinancialJournalEntryDao, FinancialJournalEntry>(ToEntity);
-
 		public FinancialJournalEntryDao()
 		{
 		}

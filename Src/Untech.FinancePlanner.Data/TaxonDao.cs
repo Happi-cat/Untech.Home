@@ -8,12 +8,8 @@ namespace Untech.FinancePlanner.Data
 	[Table("Taxons")]
 	public class TaxonDao : IAggregateRoot
 	{
-		public static readonly IMap<Taxon, TaxonDao> ToDaoMap = new AdHocMap<Taxon, TaxonDao>(t => new TaxonDao(t));
-		public static readonly IMap<TaxonDao, Taxon> ToEntityMap = new AdHocMap<TaxonDao, Taxon>(ToEntity);
-
 		public TaxonDao()
 		{
-
 		}
 
 		public TaxonDao(Taxon entry)
