@@ -35,6 +35,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Home.Core", "Untech.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.ObjectMapping.Abstractions", "..\External\Untech.Practices\Src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj", "{52E3B319-18D1-482A-86DE-8C159AD79547}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.ReadingList.Domain", "Untech.ReadingList.Domain\Untech.ReadingList.Domain.csproj", "{197D60F8-611B-4FED-8B8F-58E1920922C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.ReadingList.Data", "Untech.ReadingList.Data\Untech.ReadingList.Data.csproj", "{AD8B98EB-EDF2-45B5-9847-9F438936FBA4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +101,14 @@ Global
 		{52E3B319-18D1-482A-86DE-8C159AD79547}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52E3B319-18D1-482A-86DE-8C159AD79547}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52E3B319-18D1-482A-86DE-8C159AD79547}.Release|Any CPU.Build.0 = Release|Any CPU
+		{197D60F8-611B-4FED-8B8F-58E1920922C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{197D60F8-611B-4FED-8B8F-58E1920922C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{197D60F8-611B-4FED-8B8F-58E1920922C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{197D60F8-611B-4FED-8B8F-58E1920922C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD8B98EB-EDF2-45B5-9847-9F438936FBA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD8B98EB-EDF2-45B5-9847-9F438936FBA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD8B98EB-EDF2-45B5-9847-9F438936FBA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD8B98EB-EDF2-45B5-9847-9F438936FBA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
