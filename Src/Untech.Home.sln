@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Integration.GoogleCa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Home.Core", "Untech.Home.Core\Untech.Home.Core.csproj", "{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.ObjectMapping.Abstractions", "..\External\Untech.Practices\Src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj", "{52E3B319-18D1-482A-86DE-8C159AD79547}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52E3B319-18D1-482A-86DE-8C159AD79547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52E3B319-18D1-482A-86DE-8C159AD79547}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52E3B319-18D1-482A-86DE-8C159AD79547}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52E3B319-18D1-482A-86DE-8C159AD79547}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +108,7 @@ Global
 		{0F2A25B4-A03A-4E2E-B610-DD8791984C55} = {77EB491E-6C4C-4AC7-8594-359E1ADC6F85}
 		{62CA161E-B8AB-4791-9C61-490833870AF6} = {77EB491E-6C4C-4AC7-8594-359E1ADC6F85}
 		{FFD831F9-DDA8-405F-8D70-59365058D680} = {77EB491E-6C4C-4AC7-8594-359E1ADC6F85}
+		{52E3B319-18D1-482A-86DE-8C159AD79547} = {77EB491E-6C4C-4AC7-8594-359E1ADC6F85}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B8A325F9-7549-4ED8-8BDA-13DEC0BDB03F}
