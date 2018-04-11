@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using LinqToDB;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.Home;
@@ -12,8 +15,7 @@ using Untech.Practices.CQRS.Handlers;
 namespace Untech.FinancePlanner.Data
 {
 	public class FinancialJournalEntryStorage : GenericDataStorage<FinancialJournalEntry, FinancialJournalEntryDao>,
-
-		IQueryHandler<FinancialJournalQuery, IEnumerable<FinancialJournalEntry>>
+		IQueryAsyncHandler<FinancialJournalQuery, IEnumerable<FinancialJournalEntry>>
 	{
 		private readonly IQueryDispatcher _dispatcher;
 
@@ -23,7 +25,8 @@ namespace Untech.FinancePlanner.Data
 			_dispatcher = dispatcher;
 		}
 
-		public IEnumerable<FinancialJournalEntry> Handle(FinancialJournalQuery request)
+		public async Task<IEnumerable<FinancialJournalEntry>> HandleAsync(FinancialJournalQuery request,
+			CancellationToken cancellationToken)
 		{
 			var from = request.AsMonthDate();
 			var to = from.AddMonths(1);
@@ -36,9 +39,9 @@ namespace Untech.FinancePlanner.Data
 			{
 				foreach (var taxon in rootTaxon.DescendantsAndSelf())
 				{
-					var daos = GetTable(context)
+					var daos = await GetTable(context)
 						.Where(n => n.TaxonKey == taxon.Key && from <= n.When && n.When < to)
-						.ToList();
+						.ToListAsync(cancellationToken);
 
 					entries.AddRange(daos.Select(FinancialJournalEntryDao.ToEntity));
 				}

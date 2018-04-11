@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using Untech.FinancePlanner.Domain.Models;
+using Untech.Home;
 using Untech.Practices;
 
 namespace Untech.FinancePlanner.Domain.Views
@@ -47,6 +50,35 @@ namespace Untech.FinancePlanner.Domain.Views
 				var today = DateTime.Today;
 				return today.Year == Year && today.Month == Month;
 			}
+		}
+
+		public static AnnualFinancialReportMonth Create(DateTime month, IEnumerable<AnnualFinancialReportMonthEntry> entries)
+		{
+			var report = new AnnualFinancialReportMonth(month)
+			{
+				Entries = entries
+					.Where(e => e.IsActualOrForecastedPresent())
+					.ToList()
+			};
+
+			var incomes = report.Entries
+				.Where(n => n.TaxonKey == BuiltInTaxonId.Income)
+				.ToList();
+			var expenses = report.Entries
+				.Where(n => n.TaxonKey == BuiltInTaxonId.Expense)
+				.ToList();
+
+			report.ActualTotals = incomes
+				.Sum(n => n.ActualTotals)
+				.Subtract(expenses
+					.Sum(n => n.ActualTotals));
+
+			report.ForecastedTotals = incomes
+				.Sum(n => n.ForecastedTotals)
+				.Subtract(expenses
+					.Sum(n => n.ForecastedTotals));
+
+			return report;
 		}
 	}
 }

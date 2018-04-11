@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Untech.ActivityPlanner.Domain.Models;
 using Untech.ActivityPlanner.Domain.Notifications;
 using Untech.ActivityPlanner.Domain.Requests;
@@ -10,23 +12,23 @@ using Untech.Practices.DataStorage;
 
 namespace Untech.ActivityPlanner.Domain.Services
 {
-	public class ActivityService : ICommandHandler<CreateActivity, Activity>,
-		ICommandHandler<UpdateActivity, Activity>,
-		ICommandHandler<DeleteActivity, bool>,
-		ICommandHandler<ToggleActivityOccurrence, Nothing>,
-		ICommandHandler<UpdateActivityOccurrence, Nothing>
+	public class ActivityService : ICommandAsyncHandler<CreateActivity, Activity>,
+		ICommandAsyncHandler<UpdateActivity, Activity>,
+		ICommandAsyncHandler<DeleteActivity, bool>,
+		ICommandAsyncHandler<ToggleActivityOccurrence, Nothing>,
+		ICommandAsyncHandler<UpdateActivityOccurrence, Nothing>
 	{
-		private readonly IDataStorage<Group> _groupDataStorage;
-		private readonly IDataStorage<Activity> _activityDataStorage;
-		private readonly IDataStorage<ActivityOccurrence> _occurrencesDataStorage;
+		private readonly IAsyncDataStorage<Group> _groupDataStorage;
+		private readonly IAsyncDataStorage<Activity> _activityDataStorage;
+		private readonly IAsyncDataStorage<ActivityOccurrence> _occurrencesDataStorage;
 
 		private readonly IDispatcher _dispatcher;
 		private readonly IQueueDispatcher _queueDispatcher;
 
 		public ActivityService(
-			IDataStorage<Group> groupDataStorage,
-			IDataStorage<Activity> activityDataStorage,
-			IDataStorage<ActivityOccurrence> occurrencesDataStorage,
+			IAsyncDataStorage<Group> groupDataStorage,
+			IAsyncDataStorage<Activity> activityDataStorage,
+			IAsyncDataStorage<ActivityOccurrence> occurrencesDataStorage,
 			IDispatcher dispatcher,
 			IQueueDispatcher queueDispatcher)
 		{
@@ -38,27 +40,29 @@ namespace Untech.ActivityPlanner.Domain.Services
 			_queueDispatcher = queueDispatcher;
 		}
 
-		public Activity Handle(CreateActivity request)
+		public async Task<Activity> HandleAsync(CreateActivity request, CancellationToken cancellationToken)
 		{
-			var group = _groupDataStorage.Find(request.GroupKey);
+			var group = await _groupDataStorage.FindAsync(request.GroupKey, cancellationToken);
 			var activity = new Activity(0, group.Key, request.Name);
 
-			return _activityDataStorage.Create(activity);
+			return await _activityDataStorage.CreateAsync(activity, cancellationToken);
 		}
 
-		public Activity Handle(UpdateActivity request)
+		public async Task<Activity> HandleAsync(UpdateActivity request, CancellationToken cancellationToken)
 		{
-			var activity = _activityDataStorage.Find(request.Key);
+			var activity = await _activityDataStorage.FindAsync(request.Key, cancellationToken);
 
 			activity.Name = request.Name;
 
-			return _activityDataStorage.Update(activity);
+			return await _activityDataStorage.UpdateAsync(activity, cancellationToken);
 		}
 
-		public bool Handle(DeleteActivity request)
+		public async Task<bool> HandleAsync(DeleteActivity request, CancellationToken cancellationToken)
 		{
-			var cannotDelete = _dispatcher
-				.Fetch(new OccurrencesQuery(DateTime.Today, TimeSpan.FromDays(365)))
+			var occurrences = await _dispatcher
+				.FetchAsync(new OccurrencesQuery(DateTime.Today, TimeSpan.FromDays(365)), cancellationToken);
+			var cannotDelete =
+				occurrences
 				.Any(n => n.ActivityKey == request.Key);
 
 			if (cannotDelete)
@@ -66,27 +70,28 @@ namespace Untech.ActivityPlanner.Domain.Services
 				return false;
 			}
 
-			var activity = _activityDataStorage.Find(request.Key);
-			return _activityDataStorage.Delete(activity);
+			var activity = await _activityDataStorage.FindAsync(request.Key, cancellationToken);
+			return await _activityDataStorage.DeleteAsync(activity, cancellationToken);
 		}
 
-		public Nothing Handle(ToggleActivityOccurrence request)
+		public async Task<Nothing> HandleAsync(ToggleActivityOccurrence request, CancellationToken cancellationToken)
 		{
-			var activity = _activityDataStorage.Find(request.ActivityKey);
+			var activity = await _activityDataStorage.FindAsync(request.ActivityKey, cancellationToken);
 
-			var occurrence = _dispatcher
-				.Fetch(new OccurrencesQuery(request.When, TimeSpan.FromDays(1)))
+			var occurrences = await _dispatcher
+				.FetchAsync(new OccurrencesQuery(request.When, TimeSpan.FromDays(1)), cancellationToken);
+			var occurrence = occurrences
 				.SingleOrDefault(n => n.ActivityKey == activity.Key && n.When == request.When.Date);
 
 			if (occurrence == null)
 			{
-				occurrence = _occurrencesDataStorage.Create(new ActivityOccurrence(0, activity.Key, request.When));
+				occurrence = await _occurrencesDataStorage.CreateAsync(new ActivityOccurrence(0, activity.Key, request.When), cancellationToken);
 
 				_queueDispatcher.Enqueue(new ActivityOccurrenceSaved(activity, occurrence));
 			}
 			else
 			{
-				_occurrencesDataStorage.Delete(occurrence);
+				await _occurrencesDataStorage.DeleteAsync(occurrence, cancellationToken);
 
 				_queueDispatcher.Enqueue(new ActivityOccurrenceDeleted(activity, occurrence));
 			}
@@ -94,17 +99,17 @@ namespace Untech.ActivityPlanner.Domain.Services
 			return Nothing.AtAll;
 		}
 
-		public Nothing Handle(UpdateActivityOccurrence request)
+		public async Task<Nothing> HandleAsync(UpdateActivityOccurrence request, CancellationToken cancellationToken)
 		{
-			var occurrence = _occurrencesDataStorage.Find(request.Key);
+			var occurrence = await _occurrencesDataStorage.FindAsync(request.Key, cancellationToken);
 
-			var activity = _activityDataStorage.Find(occurrence.ActivityKey);
+			var activity = await _activityDataStorage.FindAsync(occurrence.ActivityKey, cancellationToken);
 
 			occurrence.Note = request.Note;
 			occurrence.Highlighted = request.Highlighted;
 			occurrence.Missed = request.Missed;
 
-			occurrence = _occurrencesDataStorage.Update(occurrence);
+			occurrence = await _occurrencesDataStorage.UpdateAsync(occurrence, cancellationToken);
 
 			_queueDispatcher.Enqueue(new ActivityOccurrenceSaved(activity, occurrence));
 

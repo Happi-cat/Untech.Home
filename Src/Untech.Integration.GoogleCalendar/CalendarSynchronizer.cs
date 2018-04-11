@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
@@ -11,8 +13,8 @@ using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 {
-	public class CalendarSynchronizer : INotificationHandler<ActivityOccurrenceSaved>,
-		INotificationHandler<ActivityOccurrenceDeleted>
+	public class CalendarSynchronizer : INotificationAsyncHandler<ActivityOccurrenceSaved>,
+		INotificationAsyncHandler<ActivityOccurrenceDeleted>
 	{
 		private const string CalendarKey = "untech.home.activityPlanner.occurrenceKey";
 
@@ -23,13 +25,13 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 			_service = new CalendarService(initializer);
 		}
 
-		public void Publish(ActivityOccurrenceSaved notification)
+		public async Task PublishAsync(ActivityOccurrenceSaved notification, CancellationToken cancellationToken)
 		{
 			if (notification.Occurrence.ExternalKey == Guid.Empty) return;
 
 			var when = notification.Occurrence.When;
-			Event calendarEvent = FindCalendarEvent(notification)
-			 	?? GetDefaultCalendarEvent(notification, when);
+			Event calendarEvent = await FindCalendarEventAsync(notification, cancellationToken)
+				?? GetDefaultCalendarEvent(notification, when);
 
 			var prefix = string.Join(" ", GetPrefixes(notification.Occurrence).Select(n => $"[{n}]"));
 
@@ -43,15 +45,15 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 
 			if (string.IsNullOrEmpty(calendarEvent.Id))
 			{
-				_service.Events
+				await _service.Events
 					.Insert(calendarEvent, "primary")
-					.Execute();
+					.ExecuteAsync(cancellationToken);
 			}
 			else
 			{
-				_service.Events
+				await _service.Events
 					.Update(calendarEvent, "primary", calendarEvent.Id)
-					.Execute();
+					.ExecuteAsync(cancellationToken);
 			}
 		}
 
@@ -81,21 +83,21 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 			};
 		}
 
-		public void Publish(ActivityOccurrenceDeleted notification)
+		public async Task PublishAsync(ActivityOccurrenceDeleted notification, CancellationToken cancellationToken)
 		{
 			if (notification.Occurrence.ExternalKey == Guid.Empty) return;
 
-			Event calendarEvent = FindCalendarEvent(notification);
+			Event calendarEvent = await FindCalendarEventAsync(notification, cancellationToken);
 
 			if (calendarEvent != null)
 			{
-				_service.Events
+				await _service.Events
 					.Delete("primary", calendarEvent.Id)
-					.Execute();
+					.ExecuteAsync(cancellationToken);
 			}
 		}
 
-		private Event FindCalendarEvent(ActivityOccurrenceNotification notification)
+		private async Task<Event> FindCalendarEventAsync(ActivityOccurrenceNotification notification, CancellationToken cancellationToken)
 		{
 			var eventsRequest = _service.Events.List("primary");
 
@@ -105,10 +107,10 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 				$"{CalendarKey}={notification.Occurrence.ExternalKey}"
 			});
 
-			return eventsRequest
-				.Execute()
-				.Items
-				.SingleOrDefault();
+			var response = await eventsRequest
+				.ExecuteAsync(cancellationToken);
+
+			return response.Items.SingleOrDefault();
 		}
 
 		private IEnumerable<string> GetPrefixes(ActivityOccurrence occurrence)

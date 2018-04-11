@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using LinqToDB;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.Home.Data;
@@ -9,7 +12,7 @@ using Untech.Practices.CQRS.Handlers;
 namespace Untech.FinancePlanner.Data
 {
 	public class TaxonStorage : GenericDataStorage<Taxon, TaxonDao>,
-		IQueryHandler<TaxonElementsQuery, IEnumerable<Taxon>>
+		IQueryAsyncHandler<TaxonElementsQuery, IEnumerable<Taxon>>
 	{
 		private static readonly IReadOnlyList<Taxon> s_builtIns;
 
@@ -35,13 +38,27 @@ namespace Untech.FinancePlanner.Data
 			return builtInTaxon ?? base.Find(key);
 		}
 
+		public override Task<Taxon> FindAsync(int key, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var builtInTaxon = s_builtIns.SingleOrDefault(n => n.Key == key);
+
+			if (builtInTaxon != null) return Task.FromResult(builtInTaxon);
+			return base.FindAsync(key, cancellationToken);
+		}
+
 		public override Taxon Update(Taxon entity)
 		{
 			if (entity.IsRoot) return entity;
 			return base.Update(entity);
 		}
 
-		public IEnumerable<Taxon> Handle(TaxonElementsQuery request)
+		public override Task<Taxon> UpdateAsync(Taxon entity, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			if (entity.IsRoot) return Task.FromResult(entity);
+			return base.UpdateAsync(entity, cancellationToken);
+		}
+
+		public async Task<IEnumerable<Taxon>> HandleAsync(TaxonElementsQuery request, CancellationToken cancellationToken)
 		{
 			if (request.TaxonKey == 0)
 			{
@@ -50,10 +67,11 @@ namespace Untech.FinancePlanner.Data
 
 			using (var context = GetContext())
 			{
-				return GetTable(context)
+				var daos = await GetTable(context)
 					.Where(n => n.ParentKey == request.TaxonKey)
-					.ToList()
-					.Select(TaxonDao.ToEntity);
+					.ToListAsync(cancellationToken);
+
+				return daos.Select(TaxonDao.ToEntity);
 			}
 		}
 	}

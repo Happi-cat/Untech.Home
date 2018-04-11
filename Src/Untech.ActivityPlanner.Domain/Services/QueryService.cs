@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Untech.ActivityPlanner.Domain.Models;
 using Untech.ActivityPlanner.Domain.Requests;
 using Untech.ActivityPlanner.Domain.Views;
@@ -10,9 +12,9 @@ using Untech.Practices.CQRS.Handlers;
 
 namespace Untech.ActivityPlanner.Domain.Services
 {
-	public class QueryService : IQueryHandler<ActivitiesViewQuery, ActivitiesView>,
-		IQueryHandler<DailyCalendarQuery, DailyCalendar>,
-		IQueryHandler<MonthlyCalendarQuery, MonthlyCalendar>
+	public class QueryService : IQueryAsyncHandler<ActivitiesViewQuery, ActivitiesView>,
+		IQueryAsyncHandler<DailyCalendarQuery, DailyCalendar>,
+		IQueryAsyncHandler<MonthlyCalendarQuery, MonthlyCalendar>
 	{
 		private readonly IQueryDispatcher _dispatcher;
 
@@ -21,27 +23,31 @@ namespace Untech.ActivityPlanner.Domain.Services
 			_dispatcher = dispatcher;
 		}
 
-		public ActivitiesView Handle(ActivitiesViewQuery request) => new ActivitiesView
+		public async Task<ActivitiesView> HandleAsync(ActivitiesViewQuery request, CancellationToken cancellationToken)
 		{
-			Groups = _dispatcher
-				.Fetch(new GroupsQuery())
-				.Select(group => new ActivitiesViewGroup(group)
-				{
-					Activities = _dispatcher
-						.Fetch(new ActivitiesQuery(group.Key))
-						.Select(n => new ActivitiesViewActivity(n))
-						.ToList()
-				})
-				.ToList()
-		};
+			var groups = await _dispatcher.FetchAsync(new GroupsQuery(), cancellationToken);
+			var activitiesPerGroup = await Task.WhenAll(groups
+				.Select(group => _dispatcher
+					.FetchAsync(new ActivitiesQuery(group.Key), cancellationToken)));
 
-		public DailyCalendar Handle(DailyCalendarQuery request)
+			return new ActivitiesView
+			{
+				Groups = groups.Select((group, i) => new ActivitiesViewGroup(group)
+					{
+						Activities = activitiesPerGroup[i]
+							.Select(n => new ActivitiesViewActivity(n))
+							.ToList()
+					})
+					.ToList()
+			};
+		}
+
+		public async Task<DailyCalendar> HandleAsync(DailyCalendarQuery request, CancellationToken cancellationToken)
 		{
-			var view = Handle(new ActivitiesViewQuery());
+			var view = await HandleAsync(new ActivitiesViewQuery(), cancellationToken);
 
-			var occurrencesPerDay = _dispatcher
-				.Fetch(request.Occurrences)
-				.ToKeyValues(n => n.When.Date);
+			var occurrences = await _dispatcher.FetchAsync(request.Occurrences, cancellationToken);
+			var occurrencesPerDay = occurrences.ToKeyValues(n => n.When.Date);
 
 			return new DailyCalendar(view)
 			{
@@ -59,13 +65,12 @@ namespace Untech.ActivityPlanner.Domain.Services
 			};
 		}
 
-		public MonthlyCalendar Handle(MonthlyCalendarQuery request)
+		public async Task<MonthlyCalendar> HandleAsync(MonthlyCalendarQuery request, CancellationToken cancellationToken)
 		{
-			var view = Handle(new ActivitiesViewQuery());
+			var view = await HandleAsync(new ActivitiesViewQuery(), cancellationToken);
 
-			var occurrencesPerMonth = _dispatcher
-				.Fetch(request.Occurrences)
-				.ToKeyValues(n => n.When.AsMonthDate());
+			var occurrences = await _dispatcher.FetchAsync(request.Occurrences, cancellationToken);
+			var occurrencesPerMonth = occurrences.ToKeyValues(n => n.When.AsMonthDate());
 
 			return new MonthlyCalendar(view)
 			{
