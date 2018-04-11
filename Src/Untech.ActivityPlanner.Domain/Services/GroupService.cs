@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Untech.ActivityPlanner.Domain.Models;
 using Untech.ActivityPlanner.Domain.Requests;
 using Untech.Practices.CQRS.Dispatching;
@@ -7,37 +9,38 @@ using Untech.Practices.DataStorage;
 
 namespace Untech.ActivityPlanner.Domain.Services
 {
-	public class GroupService : ICommandHandler<CreateGroup, Group>,
-		ICommandHandler<UpdateGroup, Group>,
-		ICommandHandler<DeleteGroup, bool>
+	public class GroupService : ICommandAsyncHandler<CreateGroup, Group>,
+		ICommandAsyncHandler<UpdateGroup, Group>,
+		ICommandAsyncHandler<DeleteGroup, bool>
 	{
-		private readonly IDataStorage<Group> _dataStorage;
+		private readonly IAsyncDataStorage<Group> _dataStorage;
 		private readonly IQueryDispatcher _disaptcher;
 
-		public GroupService(IDataStorage<Group> dataStorage, IQueryDispatcher disaptcher)
+		public GroupService(IAsyncDataStorage<Group> dataStorage, IQueryDispatcher disaptcher)
 		{
 			_dataStorage = dataStorage;
 			_disaptcher = disaptcher;
 		}
 
-		public Group Handle(CreateGroup request)
+		public Task<Group> HandleAsync(CreateGroup request, CancellationToken cancellationToken)
 		{
-			return _dataStorage.Create(new Group(0, request.Name));
+			return _dataStorage.CreateAsync(new Group(0, request.Name), cancellationToken);
 		}
 
-		public Group Handle(UpdateGroup request)
+		public async Task<Group> HandleAsync(UpdateGroup request, CancellationToken cancellationToken)
 		{
-			var group = _dataStorage.Find(request.Key);
+			var group = await _dataStorage.FindAsync(request.Key, cancellationToken);
 
 			group.Name = request.Name;
 
-			return _dataStorage.Update(group);
+			return await _dataStorage.UpdateAsync(group, cancellationToken);
 		}
 
-		public bool Handle(DeleteGroup request)
+		public async Task<bool> HandleAsync(DeleteGroup request, CancellationToken cancellationToken)
 		{
-			var cannotDelete = _disaptcher
-				.Fetch(new ActivitiesQuery(request.Key))
+			var activities = await _disaptcher
+				.FetchAsync(new ActivitiesQuery(request.Key), cancellationToken);
+			var cannotDelete = activities
 				.Any();
 
 			if (cannotDelete)
@@ -45,8 +48,8 @@ namespace Untech.ActivityPlanner.Domain.Services
 				return false;
 			}
 
-			var group = _dataStorage.Find(request.Key);
-			return _dataStorage.Delete(group);
+			var group = await _dataStorage.FindAsync(request.Key, cancellationToken);
+			return await _dataStorage.DeleteAsync(group, cancellationToken);
 		}
 	}
 }

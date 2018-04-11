@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
@@ -9,45 +11,45 @@ using Untech.Practices.DataStorage;
 namespace Untech.FinancePlanner.Domain.Services
 {
 	public class FinancialJournalService :
-		ICommandHandler<CreateFinancialJournalEntry, FinancialJournalEntry>,
-		ICommandHandler<DeleteFinancialJournalEntry, bool>,
-		ICommandHandler<UpdateFinancialJournalEntry, FinancialJournalEntry>
+		ICommandAsyncHandler<CreateFinancialJournalEntry, FinancialJournalEntry>,
+		ICommandAsyncHandler<DeleteFinancialJournalEntry, bool>,
+		ICommandAsyncHandler<UpdateFinancialJournalEntry, FinancialJournalEntry>
 	{
-		private readonly IDataStorage<FinancialJournalEntry> _dataStorage;
+		private readonly IAsyncDataStorage<FinancialJournalEntry> _dataStorage;
 		private readonly IDispatcher _dispatcher;
 		private readonly IQueueDispatcher _queueDispatcher;
 
 		public FinancialJournalService(IDispatcher dispatcher,
 			IQueueDispatcher queueDispatcher,
-			IDataStorage<FinancialJournalEntry> dataStorage)
+			IAsyncDataStorage<FinancialJournalEntry> dataStorage)
 		{
 			_dispatcher = dispatcher;
 			_queueDispatcher = queueDispatcher;
 			_dataStorage = dataStorage;
 		}
 
-		public FinancialJournalEntry Handle(CreateFinancialJournalEntry request)
+		public async Task<FinancialJournalEntry> HandleAsync(CreateFinancialJournalEntry request, CancellationToken cancellationToken)
 		{
-			var taxon = _dispatcher.Fetch(new TaxonTreeQuery { TaxonKey = request.TaxonKey });
+			var taxon = await _dispatcher.FetchAsync(new TaxonTreeQuery { TaxonKey = request.TaxonKey }, cancellationToken);
 			if (!taxon.IsSelectable) throw new InvalidOperationException("Taxon is no selectable");
 
-			var entry = _dataStorage.Create(new FinancialJournalEntry(0, request.TaxonKey)
+			var entry = await _dataStorage.CreateAsync(new FinancialJournalEntry(0, request.TaxonKey)
 			{
 				Remarks = request.Remarks,
 				Actual = request.Actual,
 				Forecasted = request.Forecasted,
 				When = GetWhenFromRequest(request)
-			});
+			}, cancellationToken);
 
 			_queueDispatcher.Enqueue(new FinancialJournalEntrySaved(entry));
 
 			return entry;
 		}
 
-		public bool Handle(DeleteFinancialJournalEntry request)
+		public async Task<bool> HandleAsync(DeleteFinancialJournalEntry request, CancellationToken cancellationToken)
 		{
-			var entry = _dataStorage.Find(request.Key);
-			var result = _dataStorage.Delete(entry);
+			var entry = await _dataStorage.FindAsync(request.Key, cancellationToken);
+			var result = await _dataStorage.DeleteAsync(entry, cancellationToken);
 
 			if (result)
 			{
@@ -57,15 +59,15 @@ namespace Untech.FinancePlanner.Domain.Services
 			return result;
 		}
 
-		public FinancialJournalEntry Handle(UpdateFinancialJournalEntry request)
+		public async Task<FinancialJournalEntry> HandleAsync(UpdateFinancialJournalEntry request, CancellationToken cancellationToken)
 		{
-			var entry = _dataStorage.Find(request.Key);
+			var entry = await _dataStorage.FindAsync(request.Key, cancellationToken);
 
 			entry.Remarks = request.Remarks;
 			entry.Actual = request.Actual;
 			entry.Forecasted = request.Forecasted;
 
-			_dataStorage.Update(entry);
+			await _dataStorage.UpdateAsync(entry, cancellationToken);
 
 			_queueDispatcher.Enqueue(new FinancialJournalEntrySaved(entry));
 			return entry;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LinqToDB;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.Home.Data;
@@ -11,7 +12,7 @@ using Untech.Practices.CQRS.Handlers;
 namespace Untech.FinancePlanner.Data
 {
 	public class TaxonStorage : GenericDataStorage<Taxon, TaxonDao>,
-		IQueryHandler<TaxonElementsQuery, IEnumerable<Taxon>>
+		IQueryAsyncHandler<TaxonElementsQuery, IEnumerable<Taxon>>
 	{
 		private static readonly IReadOnlyList<Taxon> s_builtIns;
 
@@ -57,7 +58,7 @@ namespace Untech.FinancePlanner.Data
 			return base.UpdateAsync(entity, cancellationToken);
 		}
 
-		public IEnumerable<Taxon> Handle(TaxonElementsQuery request)
+		public async Task<IEnumerable<Taxon>> HandleAsync(TaxonElementsQuery request, CancellationToken cancellationToken)
 		{
 			if (request.TaxonKey == 0)
 			{
@@ -66,10 +67,11 @@ namespace Untech.FinancePlanner.Data
 
 			using (var context = GetContext())
 			{
-				return GetTable(context)
+				var daos = await GetTable(context)
 					.Where(n => n.ParentKey == request.TaxonKey)
-					.ToList()
-					.Select(TaxonDao.ToEntity);
+					.ToListAsync(cancellationToken);
+
+				return daos.Select(TaxonDao.ToEntity);
 			}
 		}
 	}

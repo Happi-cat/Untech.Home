@@ -95,13 +95,13 @@ namespace Untech.Home.Web
 			container.RegisterSingleton<Func<ActivityPlannerContext>>(() => new ActivityPlannerContext());
 			container.RegisterSingleton(GetInitializer());
 
-			container.Register<ICacheStorage, CacheStorage>();
-			container.Register<IDataStorage<FinancialJournalEntry>, FinancialJournalEntryStorage>();
-			container.Register<IDataStorage<Taxon>, TaxonStorage>();
+			container.Register<IAsyncCacheStorage, CacheStorage>();
+			container.Register<IAsyncDataStorage<FinancialJournalEntry>, FinancialJournalEntryStorage>();
+			container.Register<IAsyncDataStorage<Taxon>, TaxonStorage>();
 
-			container.Register<IDataStorage<Group>, GroupDataStorage>();
-			container.Register<IDataStorage<Activity>, ActivityDataStorage>();
-			container.Register<IDataStorage<ActivityOccurrence>, ActivityOccurrenceDataStorage>();
+			container.Register<IAsyncDataStorage<Group>, GroupDataStorage>();
+			container.Register<IAsyncDataStorage<Activity>, ActivityDataStorage>();
+			container.Register<IAsyncDataStorage<ActivityOccurrence>, ActivityOccurrenceDataStorage>();
 
 			var assembly = new[]
 			{
@@ -116,9 +116,9 @@ namespace Untech.Home.Web
 
 			container.RegisterCollection(typeof(IPipelinePreProcessor<>), assembly);
 			container.RegisterCollection(typeof(IPipelinePostProcessor<,>), assembly);
-			container.Register(typeof(IQueryHandler<,>), assembly);
-			container.Register(typeof(ICommandHandler<,>), assembly);
-			container.RegisterCollection(typeof(INotificationHandler<>), assembly);
+			container.Register(typeof(IQueryAsyncHandler<,>), assembly);
+			container.Register(typeof(ICommandAsyncHandler<,>), assembly);
+			container.RegisterCollection(typeof(INotificationAsyncHandler<>), assembly);
 
 
 			container.RegisterSingleton<IDispatcher>(dispatcher);

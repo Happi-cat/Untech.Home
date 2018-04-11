@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Untech.ActivityPlanner.Domain.Models;
 using Untech.ActivityPlanner.Domain.Requests;
@@ -19,49 +21,67 @@ namespace Untech.Home.Web.Controllers
 		}
 
 		[HttpGet("calendar/daily/{fromDay}-{toDay}")]
-		public DailyCalendar GetDailyCalendar(int fromDay, int toDay) => _dispatcher
-			.Fetch(new DailyCalendarQuery(fromDay, toDay));
+		public Task<DailyCalendar> GetDailyCalendar(int fromDay, int toDay)
+		{
+			return _dispatcher
+				.FetchAsync(new DailyCalendarQuery(fromDay, toDay), CancellationToken.None);
+		}
 
 		[HttpGet("calendar/monthly/{fromMonth}-{toMonth}")]
-		public MonthlyCalendar GetMonthlyCalendar(int fromMonth, int toMonth) => _dispatcher
-			.Fetch(new MonthlyCalendarQuery(fromMonth, toMonth));
+		public Task<MonthlyCalendar> GetMonthlyCalendar(int fromMonth, int toMonth)
+		{
+			return _dispatcher
+				.FetchAsync(new MonthlyCalendarQuery(fromMonth, toMonth), CancellationToken.None);
+		}
 
 		[HttpPost("group")]
-		public Group CreateGroup([FromBody]CreateGroup request) => _dispatcher.Process(request);
+		public Task<Group> CreateGroup([FromBody]CreateGroup request)
+		{
+			return _dispatcher.ProcessAsync(request, CancellationToken.None);
+		}
 
 		[HttpPut("group/{key}")]
-		public Group UpdateGroup(int key, [FromBody]UpdateGroup request)
+		public Task<Group> UpdateGroup(int key, [FromBody]UpdateGroup request)
 		{
 			if (key != request.Key) throw new ArgumentException("request.Key is invalid and doesn't match to key");
 
-			return _dispatcher.Process(request);
+			return _dispatcher.ProcessAsync(request, CancellationToken.None);
 		}
 
 		[HttpDelete("group/{key}")]
-		public bool DeleteGroup(int key) => _dispatcher.Process(new DeleteGroup(key));
+		public Task<bool> DeleteGroup(int key)
+		{
+			return _dispatcher.ProcessAsync(new DeleteGroup(key), CancellationToken.None);
+		}
 
 		[HttpPost("activity")]
-		public Activity CreateActivity([FromBody]CreateActivity request) => _dispatcher.Process(request);
+		public Task<Activity> CreateActivity([FromBody]CreateActivity request)
+		{
+			return _dispatcher.ProcessAsync(request, CancellationToken.None);
+		}
 
 		[HttpPut("activity/{key}")]
-		public Activity UpdateActivity(int key, [FromBody]UpdateActivity request)
+		public Task<Activity> UpdateActivity(int key, [FromBody]UpdateActivity request)
 		{
 			if (key != request.Key) throw new ArgumentException("request.Key is invalid and doesn't match to key");
 
-			return _dispatcher.Process(request);
+			return _dispatcher.ProcessAsync(request, CancellationToken.None);
 		}
 
 		[HttpDelete("activity/{key}")]
-		public bool DeleteActivity(int key) => _dispatcher.Process(new DeleteActivity(key));
+		public Task<bool> DeleteActivity(int key)
+		{
+			return _dispatcher.ProcessAsync(new DeleteActivity(key), CancellationToken.None);
+		}
 
 		[HttpPost("activity/{key}/toggle-occurrence")]
-		public void ToggleActivityOccurrence(int key, [FromBody]DateTime occurrence)
+		public Task ToggleActivityOccurrence(int key, [FromBody]DateTime occurrence)
 		{
-			_dispatcher.Process(new ToggleActivityOccurrence(key, occurrence));
+			return _dispatcher.ProcessAsync(new ToggleActivityOccurrence(key, occurrence), CancellationToken.None);
 		}
 
 		[HttpPost("activity/{key}/toggle-occurrences")]
-		public void ToogleActivityOccurrences(int key, [FromBody]DateTime[] occurrences)
+		public Task ToogleActivityOccurrences(int key, [FromBody]DateTime[] occurrences)
 		{
 			var requests = occurrences
 				.Select(n => n.Date)
@@ -69,18 +89,15 @@ namespace Untech.Home.Web.Controllers
 				.Where(n => n.Count() % 2 == 1)
 				.Select(n => new ToggleActivityOccurrence(key, n.Key));
 
-			foreach (var request in requests)
-			{
-				_dispatcher.Process(request);
-			}
+			return Task.WhenAll(requests.Select(n => _dispatcher.ProcessAsync(n, CancellationToken.None)));
 		}
 
 		[HttpPut("occurrence/{key}")]
-		public void UpdateActivityOccurrence(int key, [FromBody] UpdateActivityOccurrence request)
+		public Task UpdateActivityOccurrence(int key, [FromBody] UpdateActivityOccurrence request)
 		{
 			if (request.Key != key) throw new ArgumentException("request.Key is invalid and doesn't match to key");
 
-			_dispatcher.Process(request);
+			return _dispatcher.ProcessAsync(request, CancellationToken.None);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.FinancePlanner.Domain.Views;
@@ -10,48 +11,53 @@ using Untech.Practices.DataStorage;
 
 namespace Untech.FinancePlanner.Domain.Services
 {
-	public class TaxonQueryService : IQueryHandler<TaxonTreeQuery, TaxonTree>
+	public class TaxonQueryService : IQueryAsyncHandler<TaxonTreeQuery, TaxonTree>
 	{
 		private readonly IQueryDispatcher _dispatcher;
-		private readonly IDataStorage<Taxon> _dataStorage;
+		private readonly IAsyncDataStorage<Taxon> _dataStorage;
 
-		public TaxonQueryService(IDataStorage<Taxon> dataStorage, IQueryDispatcher dispatcher)
+		public TaxonQueryService(IAsyncDataStorage<Taxon> dataStorage, IQueryDispatcher dispatcher)
 		{
 			_dispatcher = dispatcher;
 			_dataStorage = dataStorage;
 		}
 
-		public TaxonTree Handle(TaxonTreeQuery request)
+		public async Task<TaxonTree> HandleAsync(TaxonTreeQuery request, CancellationToken cancellationToken)
 		{
-			var taxon = _dataStorage.Find(request.TaxonKey);
+			var taxon = await _dataStorage.FindAsync(request.TaxonKey, cancellationToken);
 
 			return new TaxonTree(taxon.Key, taxon.ParentKey, taxon.Name, taxon.Description)
 			{
-				Elements = GetDescendants(taxon.Key, new Depth(request.Deep))
+				Elements = await GetDescendantsAsync(taxon.Key, new Depth(request.Deep), cancellationToken)
 			};
 		}
 
-		private List<TaxonTree> GetDescendants(int parentTaxonKey, Depth depth)
+		private async Task<List<TaxonTree>> GetDescendantsAsync(int parentTaxonKey, Depth depth, CancellationToken cancellationToken)
 		{
 			if (depth.IsOver) return null;
 
 			depth = depth.Decrement();
 
-			var elements = GetElements(parentTaxonKey);
+			var elements = await GetElementsAsync(parentTaxonKey, cancellationToken);
 
 			if (depth.IsOver) return elements;
 
 			foreach (var taxon in elements)
 			{
-				taxon.Elements = GetDescendants(taxon.Key, depth);
+				taxon.Elements = await GetDescendantsAsync(taxon.Key, depth, cancellationToken);
 			}
 			return elements;
 		}
 
-		private List<TaxonTree> GetElements(int parentTaxonKey) => _dispatcher
-			.Fetch(new TaxonElementsQuery(parentTaxonKey))
-			.Select(n => new TaxonTree(n.Key, n.ParentKey, n.Name, n.Description))
-			.ToList();
+		private async Task<List<TaxonTree>> GetElementsAsync(int parentTaxonKey, CancellationToken cancellationToken)
+		{
+			var taxonElements = await _dispatcher
+				.FetchAsync(new TaxonElementsQuery(parentTaxonKey), cancellationToken);
+
+			return taxonElements
+				.Select(n => new TaxonTree(n.Key, n.ParentKey, n.Name, n.Description))
+				.ToList();
+		}
 
 		/// <summary>
 		/// -1 - infinitely; 0 - over; +n - n levels.
@@ -66,6 +72,5 @@ namespace Untech.FinancePlanner.Domain.Services
 
 			public bool IsOver => _deep == 0;
 		}
-
 	}
 }

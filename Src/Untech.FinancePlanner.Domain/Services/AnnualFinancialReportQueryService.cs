@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
-using Untech.FinancePlanner.Domain.Models;
+using System.Threading;
+using System.Threading.Tasks;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.FinancePlanner.Domain.Views;
 using Untech.Home;
-using Untech.Practices;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.DataStorage.Cache;
@@ -13,46 +13,46 @@ using Untech.Practices.DataStorage.Cache;
 namespace Untech.FinancePlanner.Domain.Services
 {
 	public class AnnualFinancialReportQueryService :
-		IQueryHandler<AnnualFinancialReportQuery, AnnualFinancialReport>,
-		INotificationHandler<FinancialJournalEntrySaved>,
-		INotificationHandler<FinancialJournalEntryDeleted>
+		IQueryAsyncHandler<AnnualFinancialReportQuery, AnnualFinancialReport>,
+		INotificationAsyncHandler<FinancialJournalEntrySaved>,
+		INotificationAsyncHandler<FinancialJournalEntryDeleted>
 	{
 		private readonly IQueryDispatcher _dispatcher;
-		private readonly ICacheStorage _cacheStorage;
+		private readonly IAsyncCacheStorage _cacheStorage;
 
-		public AnnualFinancialReportQueryService(IQueryDispatcher dispatcher, ICacheStorage cacheStorage)
+		public AnnualFinancialReportQueryService(IQueryDispatcher dispatcher, IAsyncCacheStorage cacheStorage)
 		{
 			_dispatcher = dispatcher;
 			_cacheStorage = cacheStorage;
 		}
 
-		public AnnualFinancialReport Handle(AnnualFinancialReportQuery request)
+		public async Task<AnnualFinancialReport> HandleAsync(AnnualFinancialReportQuery request, CancellationToken cancellationToken)
 		{
 			var thisMonth = DateTime.Today.AsMonthDate();
-			var rootTaxon = _dispatcher.Fetch(new TaxonTreeQuery { Deep = 3 });
+			var rootTaxon = await _dispatcher.FetchAsync(new TaxonTreeQuery { Deep = 3 }, cancellationToken);
 
 			var builder = new MonthReportBuilder(_dispatcher, rootTaxon);
+			var months = await Task.WhenAll(Enumerable.Range(-3 + request.ShiftMonth, 12)
+				.Select(thisMonth.AddMonths)
+				.Select(n => GetReportFromCacheOrBuildAsync(n, builder, cancellationToken)));
 
 			return new AnnualFinancialReport
 			{
 				Entries = rootTaxon.Elements,
-				Months = Enumerable.Range(-3 + request.ShiftMonth, 12)
-					.Select(thisMonth.AddMonths)
-					.Select(n => GetReportFromCacheOrBuild(n, builder))
-					.ToList()
+				Months = months.ToList()
 			};
 		}
 
-		public void Publish(FinancialJournalEntrySaved notification)
+		public Task PublishAsync(FinancialJournalEntrySaved notification, CancellationToken cancellationToken)
 		{
 			var cacheKey = GetMonthlyReportKey(notification.Entry.When);
-			_cacheStorage.Drop(cacheKey);
+			return _cacheStorage.DropAsync(cacheKey, cancellationToken: cancellationToken);
 		}
 
-		public void Publish(FinancialJournalEntryDeleted notification)
+		public Task PublishAsync(FinancialJournalEntryDeleted notification, CancellationToken cancellationToken)
 		{
 			var cacheKey = GetMonthlyReportKey(notification.Entry.When);
-			_cacheStorage.Drop(cacheKey);
+			return _cacheStorage.DropAsync(cacheKey, cancellationToken: cancellationToken);
 		}
 
 		private static CacheKey GetMonthlyReportKey(DateTime when)
@@ -60,16 +60,16 @@ namespace Untech.FinancePlanner.Domain.Services
 			return new CacheKey("reports", $"annual-financial-report/month/{when.Year}/{when.Month}");
 		}
 
-		private AnnualFinancialReportMonth GetReportFromCacheOrBuild(DateTime thatMonth, MonthReportBuilder builder)
+		private async Task<AnnualFinancialReportMonth> GetReportFromCacheOrBuildAsync(DateTime thatMonth, MonthReportBuilder builder, CancellationToken cancellationToken)
 		{
 			var cacheKey = GetMonthlyReportKey(thatMonth);
-			var report = _cacheStorage.Get<AnnualFinancialReportMonth>(cacheKey);
+			var report = await _cacheStorage.GetAsync<AnnualFinancialReportMonth>(cacheKey, cancellationToken);
 
 			if (report == null)
 			{
-				report = builder.GetReport(thatMonth);
+				report = await builder.GetReportAsync(thatMonth, cancellationToken);
 
-				_cacheStorage.Set(cacheKey, report);
+				await _cacheStorage.SetAsync(cacheKey, report, cancellationToken);
 			}
 
 			return report;
@@ -89,78 +89,32 @@ namespace Untech.FinancePlanner.Domain.Services
 				_taxon = taxon;
 			}
 
-			public AnnualFinancialReportMonth GetReport(DateTime thatMonth)
+			public async Task<AnnualFinancialReportMonth> GetReportAsync(DateTime thatMonth, CancellationToken cancellationToken)
 			{
 				_thatMonth = thatMonth;
 
-				var report = new AnnualFinancialReportMonth(_thatMonth)
-				{
-					Entries = _taxon.GetElements()
-						.Select(BuildReportEntry)
-						.Where(IsNotEmptyActualOrForecasted)
-						.ToList()
-				};
+				var entries = await Task.WhenAll(_taxon.GetElements()
+					.Select(e => BuildReportEntryAsync(e, cancellationToken)));
 
-				var incomes = report.Entries
-					.Where(n => n.TaxonKey == BuiltInTaxonId.Income)
-					.ToList();
-				var expenses = report.Entries
-					.Where(n => n.TaxonKey == BuiltInTaxonId.Expense)
-					.ToList();
-
-				report.ActualTotals = incomes
-					.Sum(n => n.ActualTotals)
-					.Subtract(expenses
-						.Sum(n => n.ActualTotals));
-
-				report.ForecastedTotals = incomes
-					.Sum(n => n.ForecastedTotals)
-					.Subtract(expenses
-						.Sum(n => n.ForecastedTotals));
-
-				return report;
+				return AnnualFinancialReportMonth.Create(_thatMonth, entries);
 			}
 
-			private AnnualFinancialReportMonthEntry BuildReportEntry(TaxonTree currentTaxon)
+			private async Task<AnnualFinancialReportMonthEntry> BuildReportEntryAsync(TaxonTree currentTaxon, CancellationToken cancellationToken)
 			{
-				var financialJournalEntries = _dispatcher.Fetch(new FinancialJournalQuery(_thatMonth)
+				var financialJournalEntries = await _dispatcher.FetchAsync(new FinancialJournalQuery(_thatMonth)
 				{
 					Taxon = new TaxonTreeQuery
 					{
 						TaxonKey = currentTaxon.Key,
 						Deep = currentTaxon.GetElements().Any() ? 0 : -1
 					}
-				});
+				}, cancellationToken);
 
-				var entry = new AnnualFinancialReportMonthEntry(currentTaxon.Key)
-				{
-					Actual = financialJournalEntries.Sum(n => n.Actual),
-					Forecasted = financialJournalEntries.Sum(n => n.Forecasted),
-					Entries = currentTaxon.GetElements()
-						.Select(BuildReportEntry)
-						.Where(IsNotEmptyActualOrForecasted)
-						.ToList()
-				};
+				var entries = await Task.WhenAll(currentTaxon.GetElements()
+					.Select(e => BuildReportEntryAsync(e, cancellationToken)));
 
-				entry.ActualTotals = entry.Entries
-					.Select(n => n.ActualTotals)
-					.Concat(new[] { entry.Actual })
-					.Sum();
-
-				entry.ForecastedTotals = entry.Entries
-					.Select(n => n.ForecastedTotals)
-					.Concat(new[] { entry.Forecasted })
-					.Sum();
-
-				return entry;
+				return AnnualFinancialReportMonthEntry.Create(currentTaxon, financialJournalEntries, entries);
 			}
-		}
-
-		private static bool IsNotEmptyActualOrForecasted(AnnualFinancialReportMonthEntry entry)
-		{
-			return new[] { entry.ActualTotals, entry.ForecastedTotals }
-				.Select(n => n?.Amount ?? 0)
-				.Any(n => n != 0);
 		}
 	}
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
@@ -15,51 +17,52 @@ using Untech.Practices.DataStorage.Cache;
 namespace Untech.FinancePlanner.Domain.Services
 {
 	public class MonthlyFinancialReportQueryService :
-		IQueryHandler<MonthlyFinancialReportQuery, MonthlyFinancialReport>,
-		INotificationHandler<FinancialJournalEntrySaved>,
-		INotificationHandler<FinancialJournalEntryDeleted>
+		IQueryAsyncHandler<MonthlyFinancialReportQuery, MonthlyFinancialReport>,
+		INotificationAsyncHandler<FinancialJournalEntrySaved>,
+		INotificationAsyncHandler<FinancialJournalEntryDeleted>
 	{
 		private readonly IQueryDispatcher _dispatcher;
-		private readonly ICacheStorage _cacheStorage;
+		private readonly IAsyncCacheStorage _cacheStorage;
 
-		public MonthlyFinancialReportQueryService(IQueryDispatcher dispatcher, ICacheStorage cacheStorage)
+		public MonthlyFinancialReportQueryService(IQueryDispatcher dispatcher, IAsyncCacheStorage cacheStorage)
 		{
 			_dispatcher = dispatcher;
 			_cacheStorage = cacheStorage;
 		}
 
-		public MonthlyFinancialReport Handle(MonthlyFinancialReportQuery request)
+		public async Task<MonthlyFinancialReport> HandleAsync(MonthlyFinancialReportQuery request, CancellationToken cancellationToken)
 		{
 			var cacheKey = GetKey(request.AsMonthDate());
-			var report = _cacheStorage.Get<MonthlyFinancialReport>(cacheKey);
+			var report = await _cacheStorage.GetAsync<MonthlyFinancialReport>(cacheKey, cancellationToken);
 
 			if (report == null)
 			{
-				report = BuildReport(request);
-				_cacheStorage.Set(cacheKey, report);
+				report = await BuildReportAsync(request, cancellationToken);
+				await _cacheStorage.SetAsync(cacheKey, report, cancellationToken);
 			}
 
 			return report;
 		}
 
-		public void Publish(FinancialJournalEntrySaved notification)
+		public Task PublishAsync(FinancialJournalEntrySaved notification, CancellationToken cancellationToken)
 		{
-			_cacheStorage.Drop(GetKey(notification.Entry.When));
+			return _cacheStorage.DropAsync(GetKey(notification.Entry.When), cancellationToken: cancellationToken);
 		}
 
-		public void Publish(FinancialJournalEntryDeleted notification)
+		public Task PublishAsync(FinancialJournalEntryDeleted notification, CancellationToken cancellationToken)
 		{
-			_cacheStorage.Drop(GetKey(notification.Entry.When));
+			return _cacheStorage.DropAsync(GetKey(notification.Entry.When), cancellationToken: cancellationToken);
 		}
 
-		private MonthlyFinancialReport BuildReport(MonthlyFinancialReportQuery request)
+		private async Task<MonthlyFinancialReport> BuildReportAsync(MonthlyFinancialReportQuery request, CancellationToken cancellationToken)
 		{
-			var dayBuilder = new DayReportBuilder(GetTaxons());
+			var taxons = await GetTaxonsAsync(cancellationToken);
+			var dayBuilder = new DayReportBuilder(taxons);
 
-			var entries = _dispatcher.Fetch(new FinancialJournalQuery(request.Year, request.Month)
+			var entries = await _dispatcher.FetchAsync(new FinancialJournalQuery(request.Year, request.Month)
 			{
 				Taxon = new TaxonTreeQuery { Deep = -1 }
-			});
+			}, cancellationToken);
 
 			return new MonthlyFinancialReport(request.Year, request.Month)
 			{
@@ -76,10 +79,15 @@ namespace Untech.FinancePlanner.Domain.Services
 			return new CacheKey("reports", $"monthly-financial-report/{when.Year}/{when.Month}");
 		}
 
-		private IReadOnlyDictionary<int, TaxonTree> GetTaxons() => _dispatcher
-			.Fetch(new TaxonTreeQuery { Deep = -1 })
-			.DescendantsAndSelf()
-			.ToDictionary(n => n.Key);
+		private async Task<IReadOnlyDictionary<int, TaxonTree>> GetTaxonsAsync(CancellationToken cancellationToken)
+		{
+			var taxonTree = await _dispatcher
+				.FetchAsync(new TaxonTreeQuery { Deep = -1 }, cancellationToken);
+
+			return taxonTree
+				.DescendantsAndSelf()
+				.ToDictionary(n => n.Key);
+		}
 
 		private class DayReportBuilder
 		{
@@ -103,13 +111,15 @@ namespace Untech.FinancePlanner.Domain.Services
 				return report;
 			}
 
-			private MonthlyFinancialReportDayEntry BuildDayReportEntry(FinancialJournalEntry entry) =>
-				new MonthlyFinancialReportDayEntry(GetName(entry.TaxonKey), entry.TaxonKey)
+			private MonthlyFinancialReportDayEntry BuildDayReportEntry(FinancialJournalEntry entry)
+			{
+				return new MonthlyFinancialReportDayEntry(GetName(entry.TaxonKey), entry.TaxonKey)
 				{
 					Remarks = entry.Remarks,
 					Actual = entry.Actual,
 					Forecasted = entry.Forecasted
 				};
+			}
 
 			private string GetName(int taxonKey)
 			{

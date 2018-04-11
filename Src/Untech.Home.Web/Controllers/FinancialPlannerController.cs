@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
@@ -19,53 +21,71 @@ namespace Untech.Home.Web.Controllers
 		}
 
 		[HttpGet("report")]
-		public AnnualFinancialReport GetReport(int shiftMonth = 0) => _dispatcher
-			.Fetch(new AnnualFinancialReportQuery { ShiftMonth = shiftMonth });
+		public Task<AnnualFinancialReport> GetReport(int shiftMonth = 0)
+		{
+			return _dispatcher
+				.FetchAsync(new AnnualFinancialReportQuery { ShiftMonth = shiftMonth }, CancellationToken.None);
+		}
 
 		[HttpGet("report/{year}/{month}")]
-		public MonthlyFinancialReport GetMonthlyReport(int year, int month) => _dispatcher
-			.Fetch(new MonthlyFinancialReportQuery(year, month));
+		public Task<MonthlyFinancialReport> GetMonthlyReport(int year, int month)
+		{
+			return _dispatcher
+				.FetchAsync(new MonthlyFinancialReportQuery(year, month), CancellationToken.None);
+		}
 
 		[HttpGet("taxon")]
-		public TaxonTree GetTaxonTree(int deep) => _dispatcher
-			.Fetch(new TaxonTreeQuery { Deep = deep });
+		public Task<TaxonTree> GetTaxonTree(int deep)
+		{
+			return _dispatcher
+				.FetchAsync(new TaxonTreeQuery { Deep = deep }, CancellationToken.None);
+		}
 
 		[HttpGet("taxon/{taxonKey}")]
-		public TaxonTree GetTaxonTree(int taxonKey, int deep = 0) => _dispatcher
-			.Fetch(new TaxonTreeQuery { TaxonKey = taxonKey, Deep = deep });
+		public Task<TaxonTree> GetTaxonTree(int taxonKey, int deep = 0)
+		{
+			return _dispatcher
+				.FetchAsync(new TaxonTreeQuery { TaxonKey = taxonKey, Deep = deep }, CancellationToken.None);
+		}
 
 		[HttpGet("journal")]
-		public IEnumerable<FinancialJournalEntry> GetJournalEntries(int taxonId = 0, int deep = 0) => _dispatcher
-			.Fetch(new FinancialJournalQuery(DateTime.Today)
-			{
-				Taxon = new TaxonTreeQuery { TaxonKey = taxonId, Deep = deep }
-			});
+		public Task<IEnumerable<FinancialJournalEntry>> GetJournalEntries(int taxonId = 0, int deep = 0)
+		{
+			return _dispatcher
+				.FetchAsync(new FinancialJournalQuery(DateTime.Today)
+				{
+					Taxon = new TaxonTreeQuery { TaxonKey = taxonId, Deep = deep }
+				}, CancellationToken.None);
+		}
 
 		[HttpGet("journal/{year}/{month}")]
-		public IEnumerable<FinancialJournalEntry> GetJournalEntries(int year, int month, int taxonId = 0, int deep = 0) => _dispatcher
-			.Fetch(new FinancialJournalQuery(year, month)
-			{
-				Taxon = new TaxonTreeQuery { TaxonKey = taxonId, Deep = deep }
-			});
+		public Task<IEnumerable<FinancialJournalEntry>> GetJournalEntries(int year, int month, int taxonId = 0, int deep = 0)
+		{
+			return _dispatcher
+				.FetchAsync(new FinancialJournalQuery(year, month)
+				{
+					Taxon = new TaxonTreeQuery { TaxonKey = taxonId, Deep = deep }
+				}, CancellationToken.None);
+		}
 
 		[HttpPost("journal")]
-		public FinancialJournalEntry CreateJournalEntry([FromBody]CreateFinancialJournalEntry request)
+		public Task<FinancialJournalEntry> CreateJournalEntry([FromBody]CreateFinancialJournalEntry request)
 		{
-			return _dispatcher.Process(request);
+			return _dispatcher.ProcessAsync(request, CancellationToken.None);
 		}
 
 		[HttpPut("journal/{key}")]
-		public FinancialJournalEntry UpdateJournalEntry(int key, [FromBody]UpdateFinancialJournalEntry request)
+		public Task<FinancialJournalEntry> UpdateJournalEntry(int key, [FromBody]UpdateFinancialJournalEntry request)
 		{
 			if (request.Key != key) throw new ArgumentException(nameof(key));
 
-			return _dispatcher.Process(request);
+			return _dispatcher.ProcessAsync(request, CancellationToken.None);
 		}
 
 		[HttpDelete("journal/{key}")]
-		public bool DeleteJournalEntry(int key)
+		public Task<bool> DeleteJournalEntry(int key)
 		{
-			return _dispatcher.Process(new DeleteFinancialJournalEntry(key));
+			return _dispatcher.ProcessAsync(new DeleteFinancialJournalEntry(key), CancellationToken.None);
 		}
 	}
 }
