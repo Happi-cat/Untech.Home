@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Notifications;
@@ -93,32 +94,10 @@ namespace Untech.FinancePlanner.Domain.Services
 			{
 				_thatMonth = thatMonth;
 
-				var report = new AnnualFinancialReportMonth(_thatMonth)
-				{
-					Entries = _taxon.GetElements()
-						.Select(BuildReportEntry)
-						.Where(IsNotEmptyActualOrForecasted)
-						.ToList()
-				};
+				var entries = _taxon.GetElements()
+					.Select(BuildReportEntry);
 
-				var incomes = report.Entries
-					.Where(n => n.TaxonKey == BuiltInTaxonId.Income)
-					.ToList();
-				var expenses = report.Entries
-					.Where(n => n.TaxonKey == BuiltInTaxonId.Expense)
-					.ToList();
-
-				report.ActualTotals = incomes
-					.Sum(n => n.ActualTotals)
-					.Subtract(expenses
-						.Sum(n => n.ActualTotals));
-
-				report.ForecastedTotals = incomes
-					.Sum(n => n.ForecastedTotals)
-					.Subtract(expenses
-						.Sum(n => n.ForecastedTotals));
-
-				return report;
+				return AnnualFinancialReportMonth.Create(thatMonth, entries);
 			}
 
 			private AnnualFinancialReportMonthEntry BuildReportEntry(TaxonTree currentTaxon)
@@ -132,35 +111,11 @@ namespace Untech.FinancePlanner.Domain.Services
 					}
 				});
 
-				var entry = new AnnualFinancialReportMonthEntry(currentTaxon.Key)
-				{
-					Actual = financialJournalEntries.Sum(n => n.Actual),
-					Forecasted = financialJournalEntries.Sum(n => n.Forecasted),
-					Entries = currentTaxon.GetElements()
-						.Select(BuildReportEntry)
-						.Where(IsNotEmptyActualOrForecasted)
-						.ToList()
-				};
+				var subEntries = currentTaxon.GetElements()
+					.Select(BuildReportEntry);
 
-				entry.ActualTotals = entry.Entries
-					.Select(n => n.ActualTotals)
-					.Concat(new[] { entry.Actual })
-					.Sum();
-
-				entry.ForecastedTotals = entry.Entries
-					.Select(n => n.ForecastedTotals)
-					.Concat(new[] { entry.Forecasted })
-					.Sum();
-
-				return entry;
+				return AnnualFinancialReportMonthEntry.Create(currentTaxon, financialJournalEntries, subEntries);
 			}
-		}
-
-		private static bool IsNotEmptyActualOrForecasted(AnnualFinancialReportMonthEntry entry)
-		{
-			return new[] { entry.ActualTotals, entry.ForecastedTotals }
-				.Select(n => n?.Amount ?? 0)
-				.Any(n => n != 0);
 		}
 	}
 }

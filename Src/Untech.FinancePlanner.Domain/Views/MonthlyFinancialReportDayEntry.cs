@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using Untech.FinancePlanner.Domain.Models;
 using Untech.Practices;
 
 namespace Untech.FinancePlanner.Domain.Views
@@ -26,5 +27,15 @@ namespace Untech.FinancePlanner.Domain.Views
 
 		[DataMember]
 		public Money Forecasted { get; set; }
+
+		public static MonthlyFinancialReportDayEntry Create(string name, FinancialJournalEntry entry)
+		{
+			return new MonthlyFinancialReportDayEntry(name, entry.TaxonKey)
+			{
+				Remarks = entry.Remarks,
+				Actual = entry.Actual,
+				Forecasted = entry.Forecasted
+			};
+		}
 	}
 }

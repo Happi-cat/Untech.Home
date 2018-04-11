@@ -6,7 +6,6 @@ using Untech.FinancePlanner.Domain.Notifications;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.FinancePlanner.Domain.Views;
 using Untech.Home;
-using Untech.Practices;
 using Untech.Practices.Collections;
 using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
@@ -92,24 +91,11 @@ namespace Untech.FinancePlanner.Domain.Services
 
 			public MonthlyFinancialReportDay GetReport(IGrouping<DateTime, FinancialJournalEntry> dayEntries)
 			{
-				var report = new MonthlyFinancialReportDay(dayEntries.Key.Day)
-				{
-					Entries = dayEntries.Select(BuildDayReportEntry).ToList()
-				};
+				var entries = dayEntries
+					.Select(e => MonthlyFinancialReportDayEntry.Create(GetName(e.TaxonKey), e));
 
-				report.ActualTotals = report.Entries.Sum(n => n.Actual);
-				report.ForecastedTotals = report.Entries.Sum(n => n.Forecasted);
-
-				return report;
+				return MonthlyFinancialReportDay.Create(dayEntries.Key, entries);
 			}
-
-			private MonthlyFinancialReportDayEntry BuildDayReportEntry(FinancialJournalEntry entry) =>
-				new MonthlyFinancialReportDayEntry(GetName(entry.TaxonKey), entry.TaxonKey)
-				{
-					Remarks = entry.Remarks,
-					Actual = entry.Actual,
-					Forecasted = entry.Forecasted
-				};
 
 			private string GetName(int taxonKey)
 			{
