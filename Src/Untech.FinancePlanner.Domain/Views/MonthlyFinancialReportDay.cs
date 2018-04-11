@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using Untech.Practices;
 
@@ -23,5 +25,20 @@ namespace Untech.FinancePlanner.Domain.Views
 
 		[DataMember]
 		public IReadOnlyCollection<MonthlyFinancialReportDayEntry> Entries { get; set; }
+
+		public static MonthlyFinancialReportDay Create(DateTime day,
+			IEnumerable<MonthlyFinancialReportDayEntry> entries)
+		{
+			var report = new MonthlyFinancialReportDay(day.Day)
+			{
+				Entries = entries
+					.ToList()
+			};
+
+			report.ActualTotals = report.Entries.Sum(n => n.Actual);
+			report.ForecastedTotals = report.Entries.Sum(n => n.Forecasted);
+
+			return report;
+		}
 	}
 }
