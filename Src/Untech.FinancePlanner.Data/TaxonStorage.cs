@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
 using Untech.Home.Data;
@@ -35,10 +37,24 @@ namespace Untech.FinancePlanner.Data
 			return builtInTaxon ?? base.Find(key);
 		}
 
+		public override Task<Taxon> FindAsync(int key, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var builtInTaxon = s_builtIns.SingleOrDefault(n => n.Key == key);
+
+			if (builtInTaxon != null) return Task.FromResult(builtInTaxon);
+			return base.FindAsync(key, cancellationToken);
+		}
+
 		public override Taxon Update(Taxon entity)
 		{
 			if (entity.IsRoot) return entity;
 			return base.Update(entity);
+		}
+
+		public override Task<Taxon> UpdateAsync(Taxon entity, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			if (entity.IsRoot) return Task.FromResult(entity);
+			return base.UpdateAsync(entity, cancellationToken);
 		}
 
 		public IEnumerable<Taxon> Handle(TaxonElementsQuery request)

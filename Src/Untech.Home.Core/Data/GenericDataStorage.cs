@@ -1,12 +1,14 @@
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using LinqToDB;
 using Untech.Practices.DataStorage;
 using Untech.Practices.ObjectMapping;
 
 namespace Untech.Home.Data
 {
-	public class GenericDataStorage<T> : IDataStorage<T>
+	public class GenericDataStorage<T> : IDataStorage<T>, IAsyncDataStorage<T>
 		where T : class, IAggregateRoot
 	{
 		private readonly Func<IDataContext> _contextFactory;
@@ -27,12 +29,38 @@ namespace Untech.Home.Data
 			}
 		}
 
+		public virtual async Task<T> FindAsync(int key, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			using (var context = _contextFactory())
+			{
+				return await context
+						.GetTable<T>()
+						.SingleOrDefaultAsync(n => n.Key == key, cancellationToken)
+					?? throw new AggregateRootNotFoundException(key);
+			}
+		}
+
 		public virtual T Create(T entity)
 		{
 			using (var context = _contextFactory())
 			{
 				var key = context.InsertWithInt32Identity(entity);
-				return context.GetTable<T>().Single(n => n.Key == key);
+
+				return context
+					.GetTable<T>()
+					.Single(n => n.Key == key);
+			}
+		}
+
+		public virtual async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			using (var context = _contextFactory())
+			{
+				var key = await context.InsertWithInt32IdentityAsync(entity, cancellationToken);
+
+				return await context
+					.GetTable<T>()
+					.SingleAsync(n => n.Key == key, cancellationToken);
 			}
 		}
 
@@ -44,6 +72,16 @@ namespace Untech.Home.Data
 			}
 		}
 
+		public virtual async Task<bool> DeleteAsync(T entity,
+			CancellationToken cancellationToken = default(CancellationToken))
+		{
+			using (var context = _contextFactory())
+			{
+				return await context.DeleteAsync(entity, cancellationToken) > 0;
+			}
+		}
+
+
 		public virtual T Update(T entity)
 		{
 			using (var context = _contextFactory())
@@ -53,16 +91,25 @@ namespace Untech.Home.Data
 			}
 		}
 
+		public virtual async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			using (var context = _contextFactory())
+			{
+				await context.UpdateAsync(entity, cancellationToken);
+				return entity;
+			}
+		}
+
 		protected IDataContext GetContext() => _contextFactory();
 
 		protected ITable<T> GetTable(IDataContext context) => context.GetTable<T>();
 	}
 
-	public class GenericDataStorage<T, TDao> : IDataStorage<T>
+	public class GenericDataStorage<T, TDao> : IDataStorage<T>, IAsyncDataStorage<T>
 		where T : IAggregateRoot
 		where TDao : class, IAggregateRoot
 	{
-		private readonly IDataStorage<TDao> _innerDataStorage;
+		private readonly GenericDataStorage<TDao> _innerDataStorage;
 		private readonly Func<IDataContext> _contextFactory;
 		private readonly IMap<T, TDao> _mapToDao;
 		private readonly IMap<TDao, T> _mapToEntity;
@@ -80,9 +127,21 @@ namespace Untech.Home.Data
 			return ToEntity(_innerDataStorage.Find(key));
 		}
 
+		public virtual async Task<T> FindAsync(int key, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var dao = await _innerDataStorage.FindAsync(key, cancellationToken);
+			return ToEntity(dao);
+		}
+
 		public virtual T Create(T entity)
 		{
 			return ToEntity(_innerDataStorage.Create(ToDao(entity)));
+		}
+
+		public virtual async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var dao = await _innerDataStorage.CreateAsync(ToDao(entity), cancellationToken);
+			return ToEntity(dao);
 		}
 
 		public virtual bool Delete(T entity)
@@ -90,9 +149,20 @@ namespace Untech.Home.Data
 			return _innerDataStorage.Delete(ToDao(entity));
 		}
 
+		public virtual Task<bool> DeleteAsync(T entity, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			return _innerDataStorage.DeleteAsync(ToDao(entity), cancellationToken);
+		}
+
 		public virtual T Update(T entity)
 		{
 			return ToEntity(_innerDataStorage.Update(ToDao(entity)));
+		}
+
+		public virtual async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			var dao = await _innerDataStorage.UpdateAsync(ToDao(entity));
+			return ToEntity(dao);
 		}
 
 		protected IDataContext GetContext() => _contextFactory();
