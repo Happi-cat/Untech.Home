@@ -51,16 +51,16 @@ namespace Untech.Books.Librus.Models
 		/// <summary>
 		/// List of authors. Required.
 		/// </summary>
-		public IEnumerable<Author> Authors { get; set; }
+		public IReadOnlyCollection<Author> Authors { get; set; }
 
 		/// <summary>
 		/// List of genres. Optional.
 		/// </summary>
-		public IEnumerable<string> Genres { get; set; }
+		public IReadOnlyCollection<string> Genres { get; set; }
 
 		/// <summary>
 		/// Set of extra fields needs to be indexed. Optional.
 		/// </summary>
-		public IEnumerable<MetaField> Meta { get; set; }
+		public IReadOnlyCollection<MetaField> Meta { get; set; }
 	}
 }
