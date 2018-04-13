@@ -7,5 +7,9 @@
       <Project>{62CA161E-B8AB-4791-9C61-490833870AF6}</Project>
       <Name>Untech.Practices.DataStorage.Abstractions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Untech.Home.Core\Untech.Home.Core.csproj">
+      <Project>{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}</Project>
+      <Name>Untech.Home.Core</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
