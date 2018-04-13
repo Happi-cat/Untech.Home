@@ -25,11 +25,16 @@ namespace Untech.ReadingList.Data
 
 				if (request.Status == null)
 				{
-					return set.ToList();
+					return set
+						.OrderBy(n => n.Author)
+						.ThenBy(n => n.Title)
+						.ToList();
 				}
 
 				return set
 					.Where(n => n.Status == request.Status)
+					.OrderBy(n => n.Author)
+					.ThenBy(n => n.Title)
 					.ToList();
 			}
 		}
