@@ -14,7 +14,8 @@ namespace Untech.ReadingList.Data
 	public class ReadingListEntryDataStorage : GenericDataStorage<ReadingListEntry>,
 		IQueryHandler<ReadingListQuery, IEnumerable<ReadingListEntry>>,
 		IQueryHandler<AuthorsQuery, AuthorsView>,
-		IQueryHandler<AuthorsBooksQuery, IEnumerable<ReadingListEntry>>
+		IQueryHandler<AuthorsBooksQuery, IEnumerable<ReadingListEntry>>,
+		IQueryHandler<AuthorsSuggestionQuery, IEnumerable<string>>
 	{
 		public ReadingListEntryDataStorage(Func<ReadingListContext> contextFactory) : base(contextFactory)
 		{
@@ -71,6 +72,18 @@ namespace Untech.ReadingList.Data
 					.Where(n => n.Author == request.Author)
 					.OrderBy(n => n.Author)
 					.ThenBy(n => n.Title)
+					.ToList();
+			}
+		}
+
+		public IEnumerable<string> Handle(AuthorsSuggestionQuery request)
+		{
+			using (var context = GetContext())
+			{
+				return GetTable(context)
+					.Where(n => n.Author.StartsWith(request.SearchString))
+					.Select(n => n.Author)
+					.Distinct()
 					.ToList();
 			}
 		}
