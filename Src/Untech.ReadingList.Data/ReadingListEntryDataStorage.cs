@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FuzzyString;
 using LinqToDB;
 using Untech.Home.Data;
 using Untech.Practices.CQRS.Handlers;
@@ -78,14 +79,27 @@ namespace Untech.ReadingList.Data
 
 		public IEnumerable<string> Handle(AuthorsSuggestionQuery request)
 		{
+			List<string> authors;
+
 			using (var context = GetContext())
 			{
-				return GetTable(context)
-					.Where(n => n.Author.StartsWith(request.SearchString))
+				authors = GetTable(context)
 					.Select(n => n.Author)
 					.Distinct()
 					.ToList();
 			}
+
+			var options = new[]
+			{
+				FuzzyStringComparisonOptions.UseLevenshteinDistance,
+				FuzzyStringComparisonOptions.UseOverlapCoefficient,
+				FuzzyStringComparisonOptions.UseLongestCommonSubsequence,
+				FuzzyStringComparisonOptions.UseLongestCommonSubstring
+			};
+
+			return authors
+				.Where(n => n.ApproximatelyEquals(request.SearchString, FuzzyStringComparisonTolerance.Normal, options))
+				.ToList();
 		}
 	}
 }

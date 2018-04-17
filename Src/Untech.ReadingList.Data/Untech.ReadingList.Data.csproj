@@ -3,6 +3,7 @@
     <TargetFramework>netstandard1.6</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="FuzzyString.Standard" Version="1.1.1" />
     <PackageReference Include="linq2db.core" Version="1.9.0" />
     <PackageReference Include="Microsoft.Data.SQLite" Version="2.0.0" />
     <PackageReference Include="newtonsoft.json" Version="10.0.3" />
