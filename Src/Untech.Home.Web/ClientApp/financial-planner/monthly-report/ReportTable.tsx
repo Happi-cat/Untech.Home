@@ -61,7 +61,7 @@ export class MonthlyReportTable extends React.Component<IMonthlyReportTableProps
     forecasted = forecasted || {amount: 0, currency: {id: 'BYN'}};
 
 
-    return <tr key={index} onClick={() => this.handleMonthClick(entry.taxonKey)}>
+    return <tr className="-hoverable" key={index} onClick={() => this.handleMonthClick(entry.taxonKey)}>
       <td>
         {entry.name}
       </td>
