@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Untech.Practices.DataStorage;
 
@@ -7,12 +8,12 @@ namespace Untech.DailySurvey.Domain.Models
 	[DataContract]
 	public class Answer : IAggregateRoot
 	{
-		public Answer(int key, int questionKey, DateTime when, string value)
+		public Answer(int key, int questionKey, DateTime when, IReadOnlyCollection<string> selectedOptions)
 		{
 			Key = key;
 			QuestionKey = questionKey;
 			When = when;
-			Value = value;
+			SelectedOptions = selectedOptions;
 		}
 
 		[DataMember]
@@ -25,6 +26,6 @@ namespace Untech.DailySurvey.Domain.Models
 		public DateTime When { get; private set; }
 
 		[DataMember]
-		public string Value { get; private set; }
+		public IReadOnlyCollection<string> SelectedOptions { get; private set; }
 	}
 }

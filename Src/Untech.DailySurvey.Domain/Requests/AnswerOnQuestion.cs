@@ -7,16 +7,16 @@ namespace Untech.DailySurvey.Domain.Requests
 	[DataContract]
 	public class AnswerOnQuestion : ICommand
 	{
-		public AnswerOnQuestion(int questionKey, IReadOnlyCollection<string> selectedAnswers)
+		public AnswerOnQuestion(int questionKey, IReadOnlyCollection<string> selectedOptions)
 		{
 			QuestionKey = questionKey;
-			SelectedAnswers = selectedAnswers;
+			SelectedOptions = selectedOptions;
 		}
 
 		[DataMember]
 		public int QuestionKey { get; private set; }
 
 		[DataMember]
-		public IReadOnlyCollection<string> SelectedAnswers { get; private set; }
+		public IReadOnlyCollection<string> SelectedOptions { get; private set; }
 	}
 }

@@ -8,13 +8,13 @@ namespace Untech.DailySurvey.Domain.Requests
 	[DataContract]
 	public class CreateQuestion : ICommand<Question>
 	{
-		public CreateQuestion(string title)
+		public CreateQuestion(string text)
 		{
-			Title = title;
+			Text = text;
 		}
 
 		[DataMember]
-		public string Title { get; private set; }
+		public string Text { get; private set; }
 
 		[DataMember]
 		public QuestionPeriodicity Periodicity { get; set; }

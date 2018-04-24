@@ -52,8 +52,9 @@ namespace Untech.FinancePlanner.Data
 			{
 				return GetTable(context)
 					.Where(n => n.ParentKey == request.TaxonKey)
-					.ToList()
-					.Select(TaxonDao.ToEntity);
+					.AsEnumerable()
+					.Select(TaxonDao.ToEntity)
+					.ToList();
 			}
 		}
 	}

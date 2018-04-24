@@ -9,7 +9,10 @@ namespace Untech.DailySurvey.Domain.Requests
 	{
 		public MarkQuestionAsObsolete(int key)
 		{
-
+			Key = key;
 		}
+
+		[DataMember]
+		public int Key { get; private set; }
 	}
 }
