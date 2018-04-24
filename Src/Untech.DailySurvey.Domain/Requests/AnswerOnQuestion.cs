@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Untech.Practices.CQRS;
 
 namespace Untech.DailySurvey.Domain.Requests
@@ -6,16 +7,16 @@ namespace Untech.DailySurvey.Domain.Requests
 	[DataContract]
 	public class AnswerOnQuestion : ICommand
 	{
-		public AnswerOnQuestion(int questionKey, string selectedAnswer)
+		public AnswerOnQuestion(int questionKey, IReadOnlyCollection<string> selectedAnswers)
 		{
 			QuestionKey = questionKey;
-			SelectedAnswer = selectedAnswer;
+			SelectedAnswers = selectedAnswers;
 		}
 
 		[DataMember]
 		public int QuestionKey { get; private set; }
 
 		[DataMember]
-		public string SelectedAnswer { get; private set; }
+		public IReadOnlyCollection<string> SelectedAnswers { get; private set; }
 	}
 }

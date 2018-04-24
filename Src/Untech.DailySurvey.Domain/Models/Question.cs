@@ -20,7 +20,10 @@ namespace Untech.DailySurvey.Domain.Models
 		public string Text { get; private set; }
 
 		[DataMember]
-		public bool IsClosed { get; set; }
+		public QuestionPeriodicity Periodicity { get; set; }
+
+		[DataMember]
+		public QuestionType Type { get; set; }
 
 		[DataMember]
 		public bool IsObsolete { get; set; }

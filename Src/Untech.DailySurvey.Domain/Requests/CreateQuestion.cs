@@ -17,7 +17,10 @@ namespace Untech.DailySurvey.Domain.Requests
 		public string Title { get; private set; }
 
 		[DataMember]
-		public bool IsClosed { get; set; }
+		public QuestionPeriodicity Periodicity { get; set; }
+
+		[DataMember]
+		public QuestionType Type { get; set; }
 
 		[DataMember]
 		public IReadOnlyCollection<string> Options { get; set; }
