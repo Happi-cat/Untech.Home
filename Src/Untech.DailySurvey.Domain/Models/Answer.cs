@@ -16,16 +16,12 @@ namespace Untech.DailySurvey.Domain.Models
 			SelectedOptions = selectedOptions;
 		}
 
-		[DataMember]
-		public int Key { get; private set; }
+		[DataMember] public int Key { get; private set; }
 
-		[DataMember]
-		public int QuestionKey { get; private set; }
+		[DataMember] public int QuestionKey { get; private set; }
 
-		[DataMember]
-		public DateTime When { get; private set; }
+		[DataMember] public DateTime When { get; private set; }
 
-		[DataMember]
-		public IReadOnlyCollection<string> SelectedOptions { get; private set; }
+		[DataMember] public IReadOnlyCollection<string> SelectedOptions { get; private set; }
 	}
 }

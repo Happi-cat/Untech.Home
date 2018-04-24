@@ -13,10 +13,8 @@ namespace Untech.DailySurvey.Domain.Requests
 			SelectedOptions = selectedOptions;
 		}
 
-		[DataMember]
-		public int QuestionKey { get; private set; }
+		[DataMember] public int QuestionKey { get; private set; }
 
-		[DataMember]
-		public IReadOnlyCollection<string> SelectedOptions { get; private set; }
+		[DataMember] public IReadOnlyCollection<string> SelectedOptions { get; private set; }
 	}
 }

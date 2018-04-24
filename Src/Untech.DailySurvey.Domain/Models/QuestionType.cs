@@ -2,8 +2,8 @@
 {
 	public enum QuestionType
 	{
-		SingleSelect,
-		MultiSelect,
-		Opened
+		SingleSelect = 1,
+		MultiSelect = 2,
+		Opened = 3
 	}
 }

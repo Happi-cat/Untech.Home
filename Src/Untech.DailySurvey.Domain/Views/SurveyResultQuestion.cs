@@ -9,7 +9,6 @@ namespace Untech.DailySurvey.Domain.Views
 	{
 		private SurveyResultQuestion()
 		{
-
 		}
 
 		public SurveyResultQuestion(Question question)
@@ -17,10 +16,8 @@ namespace Untech.DailySurvey.Domain.Views
 			Question = question;
 		}
 
-		[DataMember]
-		public Question Question { get; private set; }
+		[DataMember] public Question Question { get; private set; }
 
-		[DataMember]
-		public IReadOnlyCollection<SurveyResultAnswer> Answers { get; set; }
+		[DataMember] public IReadOnlyCollection<SurveyResultAnswer> Answers { get; set; }
 	}
 }

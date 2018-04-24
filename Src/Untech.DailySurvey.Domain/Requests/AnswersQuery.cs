@@ -14,11 +14,9 @@ namespace Untech.DailySurvey.Domain.Requests
 			From = @from;
 			To = to;
 		}
-		
-		[DataMember]
-		public DateTime From { get; private set; }
-		
-		[DataMember]
-		public DateTime To { get; private set; }
+
+		[DataMember] public DateTime From { get; private set; }
+
+		[DataMember] public DateTime To { get; private set; }
 	}
 }

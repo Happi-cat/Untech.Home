@@ -13,16 +13,12 @@ namespace Untech.DailySurvey.Domain.Requests
 			Text = text;
 		}
 
-		[DataMember]
-		public string Text { get; private set; }
+		[DataMember] public string Text { get; private set; }
 
-		[DataMember]
-		public QuestionPeriodicity Periodicity { get; set; }
+		[DataMember] public QuestionPeriodicity Periodicity { get; set; }
 
-		[DataMember]
-		public QuestionType Type { get; set; }
+		[DataMember] public QuestionType Type { get; set; }
 
-		[DataMember]
-		public IReadOnlyCollection<string> Options { get; set; }
+		[DataMember] public IReadOnlyCollection<string> Options { get; set; }
 	}
 }

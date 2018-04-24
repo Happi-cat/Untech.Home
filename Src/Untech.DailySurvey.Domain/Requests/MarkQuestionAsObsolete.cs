@@ -12,7 +12,6 @@ namespace Untech.DailySurvey.Domain.Requests
 			Key = key;
 		}
 
-		[DataMember]
-		public int Key { get; private set; }
+		[DataMember] public int Key { get; private set; }
 	}
 }
