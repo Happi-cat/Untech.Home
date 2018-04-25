@@ -1,3 +1,6 @@
+export type TaxonKey = number;
+export type FinancialJournalEntryKey = number;
+
 export interface ICurrency {
   id: string
 }
@@ -8,8 +11,8 @@ export interface IMoney {
 }
 
 export interface ITaxonTree {
-  key: number,
-  parentKey: number,
+  key: TaxonKey,
+  parentKey: TaxonKey,
   name: string,
   description: string,
   isSelectable: boolean,
@@ -33,7 +36,7 @@ export interface IAnnualFinancialReportMonth {
 }
 
 export interface IAnnualFinancialReportMonthEntry {
-  taxonKey: number,
+  taxonKey: TaxonKey,
   name: string,
   description: string,
   actual?: IMoney,
@@ -58,15 +61,15 @@ export interface IMonthlyFinancialReportDay {
 
 export interface IMonthlyFinancialReportDayEntry {
   name: string;
-  taxonKey: number;
+  taxonKey: TaxonKey;
   remarks?: string;
   actual?: IMoney;
   forecasted?: IMoney;
 }
 
 export interface IFinancialJournalEntry {
-  key: number;
-  taxonKey: number;
+  key: FinancialJournalEntryKey;
+  taxonKey: TaxonKey;
   remarks: string;
   actual: IMoney;
   forecasted: IMoney;
@@ -74,7 +77,7 @@ export interface IFinancialJournalEntry {
 }
 
 export interface ICreateFinancialJournalEntryCommand {
-  taxonKey: number;
+  taxonKey: TaxonKey;
   remarks?: string;
   actual?: IMoney;
   forecasted?: IMoney;
@@ -83,12 +86,12 @@ export interface ICreateFinancialJournalEntryCommand {
 }
 
 export interface IUpdateFinancialJournalEntryCommand {
-  key: number;
+  key: FinancialJournalEntryKey;
   remarks?: string;
   actual?: IMoney;
   forecasted?: IMoney;
 }
 
 export interface IDeleteFinancialJournalEntryCommand {
-  key: number;
+  key: FinancialJournalEntryKey;
 }

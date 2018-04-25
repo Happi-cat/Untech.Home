@@ -1,16 +1,16 @@
 const moDict: { [mo: number]: string } = {
-    1: 'Jan',
-    2: 'Feb',
-    3: 'Mar',
-    4: 'Apr',
-    5: 'May',
-    6: 'Jun',
-    7: 'Jul',
-    8: 'Aug',
-    9: 'Sep',
-    10: 'Oct',
-    11: 'Nov',
-    12: 'Dec'
+  1: 'Jan',
+  2: 'Feb',
+  3: 'Mar',
+  4: 'Apr',
+  5: 'May',
+  6: 'Jun',
+  7: 'Jul',
+  8: 'Aug',
+  9: 'Sep',
+  10: 'Oct',
+  11: 'Nov',
+  12: 'Dec'
 };
 
 const dayOfWeekDict: { [d: number]: string } = {
@@ -24,7 +24,7 @@ const dayOfWeekDict: { [d: number]: string } = {
 };
 
 export function pluralizeMonth(month: number) {
-    return moDict[month];
+  return moDict[month];
 }
 
 export function pluralizeDayOfWeek(dayOfWeek: number) {
@@ -32,15 +32,15 @@ export function pluralizeDayOfWeek(dayOfWeek: number) {
 }
 
 export function humanizeNumber(value: number | string, fractionDigits?: number) {
-    const int = Number.parseFloat((value || 0).toString());
+  const int = Number.parseFloat((value || 0).toString());
 
-    return int
-        .toFixed(fractionDigits)
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return int
+    .toFixed(fractionDigits)
+    .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
 export function humanizeDate(value: Date | string) {
-    const date = new Date(value.toString());
+  const date = new Date(value.toString());
 
-    return date.toDateString();
+  return date.toDateString();
 }

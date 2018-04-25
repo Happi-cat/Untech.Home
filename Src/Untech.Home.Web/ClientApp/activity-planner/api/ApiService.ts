@@ -8,105 +8,63 @@ import {
   IToogleActivityOccurrence,
   IToogleActivityOccurrences,
   IUpdateGroup,
-  IUpdateActivity
+  IUpdateActivity, GroupKey, ActivityKey
 } from './Models';
 
 export default class ApiService {
   public getDailyCalendar(fromDay: number | string, toDay: number | string) {
-    return fetch('api/activity-planner/calendar/daily/' + fromDay + '-' + toDay)
+    return this.fetchJson('calendar/daily/range(' + fromDay + ';' + toDay + ')')
       .then(response => response.json() as Promise<IDailyCalendar>);
   }
 
   public getMonthlyCalendar(fromMonth: number | string, toMonth: number | string) {
-    return fetch('api/activity-planner/calendar/monthly/' + fromMonth + '-' + toMonth)
+    return this.fetchJson('calendar/monthly/range(' + fromMonth + ';' + toMonth + ')')
       .then(response => response.json() as Promise<IMonthlyCalendar>);
   }
 
   public createGroup(request: ICreateGroup) {
-    return fetch('api/activity-planner/group', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(request)
-    });
+    return this.fetchJson('group', 'POST', request);
   }
 
   public updateGroup(request: IUpdateGroup) {
-    return fetch('api/activity-planner/group/' + request.key, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(request)
-    });
+    return this.fetchJson('group/' + request.key, 'PUT', request);
   }
 
-  public deleteGroup(request: number) {
-    return fetch('api/activity-planner/group/' + encodeURIComponent(request.toString()), { method: 'DELETE' })
+  public deleteGroup(request: GroupKey) {
+    return this.fetchJson('group/' + encodeURIComponent(request.toString()), 'DELETE')
       .then(response => response.json() as Promise<boolean>);
   }
 
   public createActivity(request: ICreateActivity) {
-    return fetch('api/activity-planner/activity', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(request)
-    });
+    return this.fetchJson('activity', 'POST', request);
   }
 
   public updateActivity(request: IUpdateActivity) {
-    return fetch('api/activity-planner/activity/' + request.key, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(request)
-    });
+    return this.fetchJson('activity/' + request.key, 'PUT', request);
   }
 
 
-  public deleteActivity(request: number) {
-    return fetch('api/activity-planner/activity/' + encodeURIComponent(request.toString()), { method: 'DELETE' })
+  public deleteActivity(request: ActivityKey) {
+    return this.fetchJson('activity/' + encodeURIComponent(request.toString()), 'DELETE')
       .then(response => response.json() as Promise<boolean>);
   }
 
   public toggleActivityOccurrence(request: IToogleActivityOccurrence) {
-    return fetch('api/activity-planner/activity/' + encodeURIComponent(request.activityKey.toString()) + '/toggle-occurrence', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(request.when)
-    });
-  }
-
-  public toggleActivityOccurrences(request: IToogleActivityOccurrences) {
-    return fetch('api/activity-planner/activity/' + encodeURIComponent(request.activityKey.toString()) + '/toggle-occurrences', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(request.when)
-    });
+    return this.fetchJson('activity/' + encodeURIComponent(request.activityKey.toString()) + '/toggle-occurrence', 'POST', request.when);
   }
 
   public updateActivityOccurrence(request: IUpdateActivityOccurrence) {
-    return fetch('api/activity-planner/occurrence/' + encodeURIComponent(request.key.toString()), {
-      method: 'PUT',
+    return this.fetchJson('occurrence/' + encodeURIComponent(request.key.toString()), 'PUT', request);
+  }
+
+  fetchJson(url: string, method?: string, body?: any) {
+    return fetch('api/activity-planner/' + url, {
+      method: method || 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(request)
+      body: body ? JSON.stringify(body) : undefined
     });
   }
 }
