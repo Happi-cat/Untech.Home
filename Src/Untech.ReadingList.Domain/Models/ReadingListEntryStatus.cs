@@ -2,8 +2,8 @@
 {
 	public enum ReadingListEntryStatus
 	{
-		Unread,
-		Reading,
-		Completed,
+		Unread = 0,
+		Reading = 1,
+		Completed = 2,
 	}
 }

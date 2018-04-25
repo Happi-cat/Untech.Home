@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using FuzzyString;
-using LinqToDB;
 using Untech.Home.Data;
 using Untech.Practices.CQRS.Handlers;
-using Untech.Practices.DataStorage;
 using Untech.ReadingList.Domain.Models;
 using Untech.ReadingList.Domain.Requests;
 using Untech.ReadingList.Domain.Views;
@@ -53,7 +51,7 @@ namespace Untech.ReadingList.Data
 					Auhtors = GetTable(context)
 						.Select(n => n.Author)
 						.Distinct()
-						.ToList()
+						.AsEnumerable()
 						.Select(author => new AuthorsViewItem(author)
 						{
 							CompletedBooksCount = GetTable(context).Count(n => n.Author == author && n.Status == ReadingListEntryStatus.Completed),

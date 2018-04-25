@@ -42,13 +42,12 @@ namespace Untech.ReadingList.Domain.Models
 		{
 			get
 			{
-				if (Status == ReadingListEntryStatus.Reading)
+				switch (Status)
 				{
-					return DateTime.UtcNow - ReadingStarted.Value;
-				}
-				if (Status == ReadingListEntryStatus.Completed)
-				{
-					return ReadingCompleted.Value - ReadingStarted.Value;
+					case ReadingListEntryStatus.Reading:
+						return DateTime.UtcNow - ReadingStarted.Value;
+					case ReadingListEntryStatus.Completed:
+						return ReadingCompleted.Value - ReadingStarted.Value;
 				}
 
 				return TimeSpan.Zero;

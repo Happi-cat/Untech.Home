@@ -1,5 +1,4 @@
 ﻿using Untech.Practices;
-using Untech.Practices.CQRS.Dispatching;
 using Untech.Practices.CQRS.Handlers;
 using Untech.Practices.DataStorage;
 using Untech.ReadingList.Domain.Models;
@@ -13,13 +12,10 @@ namespace Untech.ReadingList.Domain.Services
 		ICommandHandler<StartReadingBook, Nothing>,
 		ICommandHandler<CompleteReadingBook, Nothing>
 	{
-		private readonly IQueryDispatcher _queryDispatcher;
 		private readonly IDataStorage<ReadingListEntry> _dataStorage;
 
-		public ReadingListService(IQueryDispatcher queryDispatcher,
-			IDataStorage<ReadingListEntry> dataStorage)
+		public ReadingListService(IDataStorage<ReadingListEntry> dataStorage)
 		{
-			_queryDispatcher = queryDispatcher;
 			_dataStorage = dataStorage;
 		}
 
