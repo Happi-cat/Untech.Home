@@ -10,7 +10,6 @@ namespace Untech.Home.Web
 	{
 		public static void Main(string[] args)
 		{
-			EnsureDatabaseCreated();
 			BuildWebHost(args).Run();
 		}
 
@@ -22,17 +21,21 @@ namespace Untech.Home.Web
 				.AddCommandLine(args)
 				.Build();
 
+			EnsureDatabaseCreated(config);
+
 			return WebHost.CreateDefaultBuilder(args)
 				.UseConfiguration(config)
 				.UseStartup<Startup>()
 				.Build();
 		}
 
-		public static void EnsureDatabaseCreated()
+		public static void EnsureDatabaseCreated(IConfiguration configuration)
 		{
-			var connectionStringFactory = new SqliteConnectionStringFactory("./databases");
-			FinancePlanner.Data.Initializations.DbInitializer.Initialize(() => new FinancePlanner.Data.FinancialPlannerContext(connectionStringFactory), @"..\..\Configs\");
-			ActivityPlanner.Data.Initializations.DbInitializer.Initialize(() => new ActivityPlanner.Data.ActivityPlannerContext(connectionStringFactory));
+			var connectionStringFactory = new SqliteConnectionStringFactory(configuration["Databases:Folder"]);
+			FinancePlanner.Data.Initializations.DbInitializer
+				.Initialize(() => new FinancePlanner.Data.FinancialPlannerContext(connectionStringFactory), @"..\..\Configs\");
+			ActivityPlanner.Data.Initializations.DbInitializer
+				.Initialize(() => new ActivityPlanner.Data.ActivityPlannerContext(connectionStringFactory));
 		}
 	}
 }
