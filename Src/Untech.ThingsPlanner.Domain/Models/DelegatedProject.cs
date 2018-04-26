@@ -1,11 +1,22 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Untech.ThingsPlanner.Domain.Models
 {
-	public class DelegatedProject : Thing
+	public abstract partial class Thing
 	{
-		public DateTime FollowUp { get; }
+		[DataContract]
+		public class DelegatedProject : Thing
+		{
+			public DelegatedProject(int key, string title) : base(ThingType.DelegatedProject, key, title)
+			{
+			}
 
-		public string Person { get; }
+			[DataMember]
+			public DateTime? FollowUp { get; set; }
+
+			[DataMember]
+			public string Person { get; set; }
+		}
 	}
 }

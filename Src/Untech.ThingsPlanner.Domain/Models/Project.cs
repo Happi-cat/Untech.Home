@@ -1,115 +1,108 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using Untech.Practices;
 
 namespace Untech.ThingsPlanner.Domain.Models
 {
-	public class Project : Thing
+	public abstract partial class Thing
 	{
-		private List<Thought> _thoughts = new List<Thought>();
-		private List<Task> _tasks = new List<Task>();
-
-		public DateTime Start { get; }
-
-		public DateTime End { get; }
-
-		public string Expectation { get; }
-
-		public IReadOnlyList<Thought> Brainstorm { get; }
-
-		public IReadOnlyList<Task> Tasks { get; }
-
-		public void AddThought(string title)
+		[DataContract]
+		public sealed class Project : Thing
 		{
-			_thoughts.Add(new Thought(title));
-		}
+			private readonly List<ProjectItem> _items = new List<ProjectItem>();
 
-		public void UpdateThought(Guid key, string newTitle)
-		{
-			_thoughts.RemoveAll(t => t.Key == key);
-
-			_thoughts.Add(new Thought(key, newTitle));
-		}
-
-		public void DeleteThought(Guid key)
-		{
-			_thoughts.RemoveAll(t => t.Key == key);
-		}
-
-		public void AddTask(string title)
-		{
-			_tasks.Add(new Task(title));
-		}
-
-		public void UpdateTask(Guid key, string newTitle)
-		{
-			var oldTask = _tasks.Find(t => t.Key == key);
-
-			_tasks.Remove(oldTask);
-			_tasks.Add(new Task(key, newTitle, oldTask.Done));
-		}
-
-		public void CompleteTask(Guid key)
-		{
-			var oldTask = _tasks.Find(t => t.Key == key);
-
-			_tasks.Remove(oldTask);
-			_tasks.Add(new Task(key, oldTask.Title, done: true));
-		}
-
-		public void DeleteTask(Guid key)
-		{
-			_tasks.RemoveAll(t => t.Key == key);
-		}
-
-		public class Thought : ValueObject<Thought>
-		{
-			public Thought(string title)
+			public Project(int key, string title) : base(ThingType.Project, key, title)
 			{
-				Key = Guid.NewGuid();
-				Title = title;
 			}
 
-			public Thought(Guid key, string title)
+			[DataMember]
+			public DateTime? Start { get; set; }
+
+			[DataMember]
+			public DateTime? End { get; set; }
+
+			[DataMember]
+			public string Expectation { get; }
+
+			[DataMember]
+			public IReadOnlyCollection<ProjectItem> Items => _items;
+
+			[DataMember]
+			public IEnumerable<ProjectItem> Thoughts => _items.Where(n => n.Type == ProjectItemType.Thought);
+
+			[DataMember]
+			public IEnumerable<ProjectItem> Tasks => _items.Where(n => n.Type == ProjectItemType.Task);
+
+			public void AddItem(ProjectItemType type, string title)
 			{
-				Key = key;
-				Title = title;
+				_items.Add(new ProjectItem(type, title));
 			}
 
-			public Guid Key { get; }
-
-			public string Title { get; }
-
-			protected override IEnumerable<object> GetEquatableProperties()
+			public void UpdateItem(Guid key, string newTitle, bool done = false)
 			{
-				yield return Key;
-			}
-		}
+				var oldItem = _items.Single(n => n.Key == key);
 
-		public class Task : ValueObject<Task>
-		{
-			public Task(string title)
-			{
-				Key = Guid.NewGuid();
-				Title = title;
-				Done = false;
+				_items.Remove(oldItem);
+
+				_items.Add(new ProjectItem(key, oldItem.Type, newTitle, done));
 			}
 
-			public Task(Guid key, string title, bool done = false)
+			public void ChangeItemType(Guid key, ProjectItemType newType)
 			{
-				Key = key;
-				Title = title;
+				var oldItem = _items.Single(n => n.Key == key);
+
+				_items.Remove(oldItem);
+
+				_items.Add(new ProjectItem(key, newType, oldItem.Title));
 			}
 
-			public Guid Key { get; }
-
-			public string Title { get; }
-
-			public bool Done { get; }
-
-			protected override IEnumerable<object> GetEquatableProperties()
+			public void DeleteItem(Guid key)
 			{
-				yield return Key;
+				_items.RemoveAll(t => t.Key == key);
+			}
+
+			public enum ProjectItemType
+			{
+				Thought = 1,
+				Task = 2
+			}
+
+			[DataContract]
+			public class ProjectItem : ValueObject<ProjectItem>
+			{
+				public ProjectItem(ProjectItemType type, string title)
+				{
+					Key = Guid.NewGuid();
+					Type = type;
+					Title = title;
+				}
+
+				public ProjectItem(Guid key, ProjectItemType type, string title, bool done = false)
+				{
+					Key = key;
+					Type = type;
+					Title = title;
+					Done = done;
+				}
+
+				[DataMember]
+				public Guid Key { get; private set; }
+
+				[DataMember]
+				public ProjectItemType Type { get; private set; }
+
+				[DataMember]
+				public string Title { get; private set; }
+
+				[DataMember]
+				public bool Done { get; private set; }
+
+				protected override IEnumerable<object> GetEquatableProperties()
+				{
+					yield return Key;
+				}
 			}
 		}
 	}

@@ -1,13 +1,25 @@
-﻿using Untech.Practices.DataStorage;
+﻿using System.Runtime.Serialization;
+using Untech.Practices.DataStorage;
 
 namespace Untech.ThingsPlanner.Domain.Models
 {
-	public class Thing : IAggregateRoot
+	[DataContract]
+	public abstract partial class Thing : IAggregateRoot
 	{
-		public int Key { get; }
+		protected Thing(ThingType type, int key, string title)
+		{
+			Type = type;
+			Key = key;
+			Title = title;
+		}
 
-		public string Title { get; }
+		[DataMember]
+		public int Key { get; private set; }
 
-		public ThingStatus Status { get; }
+		[DataMember]
+		public string Title { get; private set; }
+
+		[DataMember]
+		public ThingType Type { get; private set; }
 	}
 }

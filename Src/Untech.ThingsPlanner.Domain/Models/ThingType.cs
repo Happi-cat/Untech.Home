@@ -1,6 +1,6 @@
 ﻿namespace Untech.ThingsPlanner.Domain.Models
 {
-	public enum ThingStatus
+	public enum ThingType
 	{
 		Idea,
 		Project,

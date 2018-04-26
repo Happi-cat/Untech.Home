@@ -1,52 +1,18 @@
-﻿namespace Untech.ThingsPlanner.Domain.Requests
+﻿using System.Runtime.Serialization;
+using Untech.Practices.CQRS;
+using Untech.ThingsPlanner.Domain.Models;
+
+namespace Untech.ThingsPlanner.Domain.Requests
 {
-	public class CreateThing
+	[DataContract]
+	public class CreateIdea : ICommand<Thing.Idea>
 	{
+		public CreateIdea(string title)
+		{
+			Title = title;
+		}
 
-	}
-
-	public class DropThing
-	{
-
-	}
-
-	public class DelayThing
-	{
-
-	}
-
-	public class ConvertThingIntoProject
-	{
-
-	}
-
-	public class DelegateThingToPerson
-	{
-
-	}
-
-	public class UpdateProjectBrief
-	{
-
-	}
-
-	public class TrackProjectBrainstorm
-	{
-
-	}
-
-	public class AddTaskOnProject
-	{
-
-	}
-
-	public class DeleteTaskOnProject
-	{
-
-	}
-
-	public class UpdateTaskOnProject
-	{
-
+		[DataMember]
+		public string Title { get; private set; }
 	}
 }
