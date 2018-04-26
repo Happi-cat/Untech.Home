@@ -2,17 +2,19 @@
 @import '../calendar.less';
 
 .monthly-calendar {
-  .calendar-table();
-}
+  & {
+    .calendar-table();
+  }
 
-.monthly-calendar__month {
-  .calendar-cell();
+  .month {
+    .calendar-cell();
+  }
 
-  &--level-1 { background-color: @color-secondary-2-1; }
-  &--level-2 { background-color: @color-secondary-2-2; }
-  &--level-3 { background-color: @color-secondary-2-0; color: white; }
-  &--level-4 { background-color: @color-secondary-2-3; color: white; }
-  &--level-5 { background-color: @color-secondary-2-4; color: white; }
+  .month.-level-1 { background-color: @color-secondary-2-1; }
+  .month.-level-2 { background-color: @color-secondary-2-2; }
+  .month.-level-3 { background-color: @color-secondary-2-0; color: white; }
+  .month.-level-4 { background-color: @color-secondary-2-3; color: white; }
+  .month.-level-5 { background-color: @color-secondary-2-4; color: white; }
 
-  &--this { border: 1px solid @color-grey-3; }
+  .month.-this { border: 1px solid @color-grey-3; }
 }

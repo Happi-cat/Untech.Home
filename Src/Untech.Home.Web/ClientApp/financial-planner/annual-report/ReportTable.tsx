@@ -104,7 +104,7 @@ class ReportBody extends React.Component<IReportBodyProps, IReportBodyState> {
       : <Icon name='triangle left' />
 
     let heading = model.elements && model.elements.length
-      ? <th className='report-heading report-heading--clickable' onClick={() => this.toggleExpanded(model.taxonKey)}>{icon}{model.name}</th>
+      ? <th className='report-heading -clickable' onClick={() => this.toggleExpanded(model.taxonKey)}>{icon}{model.name}</th>
       : <th className='report-heading'>{model.name}</th>;
 
     return <tr key={model.taxonKey} className={cls}>
@@ -142,8 +142,8 @@ class ReportCell extends React.Component<IReportMonthProps, {}> {
   public render() {
     const { isPast, isNow } = this.props.model;
     const cls = classNames('report-month', {
-      'report-month--past': isPast,
-      'report-month--now': isNow
+      '-past': isPast,
+      '-now': isNow
     });
 
     return <td className={cls} children={this.props.children} onClick={this.handleClick} />;
