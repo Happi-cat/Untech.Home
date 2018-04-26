@@ -2,6 +2,7 @@ using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Untech.Home.Data;
 
 namespace Untech.Home.Web
 {
@@ -29,8 +30,9 @@ namespace Untech.Home.Web
 
 		public static void EnsureDatabaseCreated()
 		{
-			FinancePlanner.Data.Initializations.DbInitializer.Initialize(() => new FinancePlanner.Data.FinancialPlannerContext(), @"..\..\Configs\");
-			ActivityPlanner.Data.Initializations.DbInitializer.Initialize(() => new ActivityPlanner.Data.ActivityPlannerContext());
+			var connectionStringFactory = new SqliteConnectionStringFactory("./");
+			FinancePlanner.Data.Initializations.DbInitializer.Initialize(() => new FinancePlanner.Data.FinancialPlannerContext(connectionStringFactory), @"..\..\Configs\");
+			ActivityPlanner.Data.Initializations.DbInitializer.Initialize(() => new ActivityPlanner.Data.ActivityPlannerContext(connectionStringFactory));
 		}
 	}
 }

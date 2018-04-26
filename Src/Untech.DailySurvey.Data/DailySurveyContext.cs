@@ -1,13 +1,14 @@
 ﻿using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
+using Untech.Home.Data;
 
 namespace Untech.DailySurvey.Data
 {
 	public class DailySurveyContext : DataConnection
 	{
-		public DailySurveyContext()
-			: base(new SQLiteDataProvider(), "Data Source=daily_survey.db")
+		public DailySurveyContext(SqliteConnectionStringFactory connectionStringFactory)
+			: base(new SQLiteDataProvider(), connectionStringFactory.GetConnectionString("daily_survey.db"))
 		{
 		}
 
