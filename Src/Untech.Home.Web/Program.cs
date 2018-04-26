@@ -30,7 +30,7 @@ namespace Untech.Home.Web
 
 		public static void EnsureDatabaseCreated()
 		{
-			var connectionStringFactory = new SqliteConnectionStringFactory("./");
+			var connectionStringFactory = new SqliteConnectionStringFactory("./databases");
 			FinancePlanner.Data.Initializations.DbInitializer.Initialize(() => new FinancePlanner.Data.FinancialPlannerContext(connectionStringFactory), @"..\..\Configs\");
 			ActivityPlanner.Data.Initializations.DbInitializer.Initialize(() => new ActivityPlanner.Data.ActivityPlannerContext(connectionStringFactory));
 		}
