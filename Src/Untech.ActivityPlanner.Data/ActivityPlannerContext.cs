@@ -8,7 +8,7 @@ namespace Untech.ActivityPlanner.Data
 {
 	public class ActivityPlannerContext : DataConnection
 	{
-		public ActivityPlannerContext(SqliteConnectionStringFactory connectionStringFactory)
+		public ActivityPlannerContext(IConnectionStringFactory connectionStringFactory)
 			: base(new SQLiteDataProvider(), connectionStringFactory.GetConnectionString("activity_planner.db"))
 		{
 			var b = MappingSchema.GetFluentMappingBuilder();

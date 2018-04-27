@@ -8,7 +8,7 @@ namespace Untech.FinancePlanner.Data
 {
 	public class FinancialPlannerContext : DataConnection
 	{
-		public FinancialPlannerContext(SqliteConnectionStringFactory connectionStringFactory)
+		public FinancialPlannerContext(IConnectionStringFactory connectionStringFactory)
 			: base(new SQLiteDataProvider(), connectionStringFactory.GetConnectionString("financial_planner.db"))
 		{
 		}

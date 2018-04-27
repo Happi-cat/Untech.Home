@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Untech.Home.Data
 {
-	public class SqliteConnectionStringFactory
+	public class SqliteConnectionStringFactory : IConnectionStringFactory
 	{
 		private readonly string _databaseFolder;
 

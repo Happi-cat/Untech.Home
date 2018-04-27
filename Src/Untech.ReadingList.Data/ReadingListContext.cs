@@ -8,7 +8,7 @@ namespace Untech.ReadingList.Data
 {
 	public class ReadingListContext : DataConnection
 	{
-		public ReadingListContext(SqliteConnectionStringFactory connectionStringFactory)
+		public ReadingListContext(IConnectionStringFactory connectionStringFactory)
 			: base(new SQLiteDataProvider(), connectionStringFactory.GetConnectionString("reading_list.db"))
 		{
 			var b = MappingSchema.GetFluentMappingBuilder();

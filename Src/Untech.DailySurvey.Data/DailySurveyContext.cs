@@ -7,7 +7,7 @@ namespace Untech.DailySurvey.Data
 {
 	public class DailySurveyContext : DataConnection
 	{
-		public DailySurveyContext(SqliteConnectionStringFactory connectionStringFactory)
+		public DailySurveyContext(IConnectionStringFactory connectionStringFactory)
 			: base(new SQLiteDataProvider(), connectionStringFactory.GetConnectionString("daily_survey.db"))
 		{
 		}
