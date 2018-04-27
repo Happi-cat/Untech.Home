@@ -1,7 +1,9 @@
 using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.Extensions.Configuration;
+using Untech.Home.Data;
 
 namespace Untech.Home.Web
 {
@@ -9,7 +11,6 @@ namespace Untech.Home.Web
 	{
 		public static void Main(string[] args)
 		{
-			EnsureDatabaseCreated();
 			BuildWebHost(args).Run();
 		}
 
@@ -18,8 +19,11 @@ namespace Untech.Home.Web
 			var config = new ConfigurationBuilder()
 				.SetBasePath(Directory.GetCurrentDirectory())
 				.AddJsonFile("hosting.json", optional: true)
+				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
 				.AddCommandLine(args)
 				.Build();
+
+			EnsureDatabaseCreated(config);
 
 			return WebHost.CreateDefaultBuilder(args)
 				.UseConfiguration(config)
@@ -27,10 +31,13 @@ namespace Untech.Home.Web
 				.Build();
 		}
 
-		public static void EnsureDatabaseCreated()
+		public static void EnsureDatabaseCreated(IConfiguration configuration)
 		{
-			FinancePlanner.Data.Initializations.DbInitializer.Initialize(() => new FinancePlanner.Data.FinancialPlannerContext(), @"..\..\Configs\");
-			ActivityPlanner.Data.Initializations.DbInitializer.Initialize(() => new ActivityPlanner.Data.ActivityPlannerContext());
+			var connectionStringFactory = new SqliteConnectionStringFactory(configuration["Databases:Folder"]);
+			FinancePlanner.Data.Initializations.DbInitializer
+				.Initialize(() => new FinancePlanner.Data.FinancialPlannerContext(connectionStringFactory), @"..\..\Configs\");
+			ActivityPlanner.Data.Initializations.DbInitializer
+				.Initialize(() => new ActivityPlanner.Data.ActivityPlannerContext(connectionStringFactory));
 		}
 	}
 }

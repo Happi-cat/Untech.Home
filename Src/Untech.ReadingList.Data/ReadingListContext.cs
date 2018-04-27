@@ -1,14 +1,15 @@
 ﻿using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
+using Untech.Home.Data;
 using Untech.ReadingList.Domain.Models;
 
 namespace Untech.ReadingList.Data
 {
 	public class ReadingListContext : DataConnection
 	{
-		public ReadingListContext()
-			: base(new SQLiteDataProvider(), "Data Source=reading_list.db")
+		public ReadingListContext(IConnectionStringFactory connectionStringFactory)
+			: base(new SQLiteDataProvider(), connectionStringFactory.GetConnectionString("reading_list.db"))
 		{
 			var b = MappingSchema.GetFluentMappingBuilder();
 

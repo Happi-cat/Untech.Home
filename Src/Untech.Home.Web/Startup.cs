@@ -91,8 +91,10 @@ namespace Untech.Home.Web
 				new Dispatcher(new DispatcherContainer(container)));
 			var queueDispatcher = new SimpleQueueDispatcher(dispatcher);
 
-			container.RegisterSingleton<Func<FinancialPlannerContext>>(() => new FinancialPlannerContext());
-			container.RegisterSingleton<Func<ActivityPlannerContext>>(() => new ActivityPlannerContext());
+			var connectionStringFactory = new SqliteConnectionStringFactory(Configuration["Databases:Folder"]);
+
+			container.RegisterSingleton<Func<FinancialPlannerContext>>(() => new FinancialPlannerContext(connectionStringFactory));
+			container.RegisterSingleton<Func<ActivityPlannerContext>>(() => new ActivityPlannerContext(connectionStringFactory));
 			container.RegisterSingleton(GetInitializer());
 
 			container.Register<ICacheStorage, CacheStorage>();
