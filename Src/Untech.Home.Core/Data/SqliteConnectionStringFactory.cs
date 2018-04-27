@@ -17,8 +17,6 @@ namespace Untech.Home.Data
 			var builder = new DbConnectionStringBuilder
 			{
 				{ "Data Source", Path.Combine(_databaseFolder, fileName) },
-				{ "Pooling", "True" },
-				{ "Max Pool Size", 100 }
 			};
 
 			return builder.ConnectionString;

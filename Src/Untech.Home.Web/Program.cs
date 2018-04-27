@@ -1,6 +1,7 @@
 using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.Extensions.Configuration;
 using Untech.Home.Data;
 
@@ -18,6 +19,7 @@ namespace Untech.Home.Web
 			var config = new ConfigurationBuilder()
 				.SetBasePath(Directory.GetCurrentDirectory())
 				.AddJsonFile("hosting.json", optional: true)
+				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
 				.AddCommandLine(args)
 				.Build();
 
