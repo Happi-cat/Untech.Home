@@ -9,6 +9,6 @@ namespace Untech.Users.Domain
 	{
 		[DataMember] public Guid Key { get; private set; }
 
-		[DataMember] public int TelegramId { get; set; }
+		[DataMember] public int? TelegramId { get; set; }
 	}
 }
