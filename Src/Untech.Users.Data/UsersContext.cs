@@ -13,7 +13,7 @@ namespace Untech.Users.Data
 			var b = MappingSchema.GetFluentMappingBuilder();
 
 			b.Entity<User>().HasTableName("Users")
-				.Property(n => n.Key).IsPrimaryKey()
+				.Property(n => n.Key).IsIdentity().IsPrimaryKey()
 				.Property(n => n.TelegramId).IsNullable();
 		}
 	}
