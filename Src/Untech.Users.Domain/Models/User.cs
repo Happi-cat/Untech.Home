@@ -5,9 +5,9 @@ using Untech.Practices.DataStorage;
 namespace Untech.Users.Domain
 {
 	[DataContract]
-	public class User : IAggregateRoot<Guid>
+	public class User : IAggregateRoot
 	{
-		[DataMember] public Guid Key { get; private set; }
+		[DataMember] public int Key { get; private set; }
 
 		[DataMember] public int? TelegramId { get; set; }
 	}
