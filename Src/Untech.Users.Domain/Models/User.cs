@@ -6,8 +6,22 @@ namespace Untech.Users.Domain.Models
 	[DataContract]
 	public class User : IAggregateRoot
 	{
-		[DataMember] public int Key { get; private set; }
+		/// <summary>
+		/// For deserializer
+		/// </summary>
+		private User()
+		{
+		}
 
-		[DataMember] public int? TelegramId { get; set; }
+		public User(int key)
+		{
+			Key = key;
+		}
+
+		[DataMember]
+		public int Key { get; private set; }
+
+		[DataMember]
+		public int? TelegramId { get; set; }
 	}
 }

@@ -27,7 +27,7 @@ namespace Untech.Users.Domain.Services
 				if (user != null) throw new ArgumentException("TelegramId");
 			}
 
-			return _dataStorage.Create(new User
+			return _dataStorage.Create(new User(0)
 			{
 				TelegramId = request.TelegramId
 			});
