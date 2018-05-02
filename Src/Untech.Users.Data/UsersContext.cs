@@ -1,7 +1,7 @@
 ﻿using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using Untech.Home.Data;
-using Untech.Users.Domain;
+using Untech.Users.Domain.Models;
 
 namespace Untech.Users.Data
 {

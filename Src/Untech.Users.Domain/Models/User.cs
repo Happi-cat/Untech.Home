@@ -1,8 +1,7 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using Untech.Practices.DataStorage;
 
-namespace Untech.Users.Domain
+namespace Untech.Users.Domain.Models
 {
 	[DataContract]
 	public class User : IAggregateRoot
