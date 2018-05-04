@@ -18,18 +18,12 @@ export class OccurrenceEditor extends React.Component<IOccurrenceEditorProps, IO
   constructor(props: any) {
     super(props);
 
-    this.state = {
-      note: this.props.occurrence.note || "",
-      highlighted: this.props.occurrence.highlighted,
-      missed: this.props.occurrence.missed
-    };
+    this.state = this.getStateFromProps(props);
   }
 
   public componentWillReceiveProps(nextProps: IOccurrenceEditorProps) {
-    this.state = {
-      note: nextProps.occurrence.note || "",
-      highlighted: nextProps.occurrence.highlighted,
-      missed: nextProps.occurrence.missed
+    if (nextProps.occurrence != this.props.occurrence) {
+      this.setState(this.getStateFromProps(nextProps));
     }
   }
 
@@ -95,5 +89,13 @@ export class OccurrenceEditor extends React.Component<IOccurrenceEditorProps, IO
     }
 
     this.props.onSubmit(value);
+  }
+
+  getStateFromProps(nextProps: IOccurrenceEditorProps) {
+    return {
+      note: nextProps.occurrence.note || "",
+      highlighted: nextProps.occurrence.highlighted,
+      missed: nextProps.occurrence.missed
+    }
   }
 }

@@ -29,7 +29,7 @@ export class SmartQuickEditor extends React.Component<ISmartQuickEditorProps, IS
     }
 
     return <div className="smart-quick-editor">
-      <div className="smart-quick-editor__label">{this.props.value}</div>
+      <div className="label">{this.props.value}</div>
       <Button.Group floated='right' size='mini'>
         <Button onClick={this.props.onDelete} icon='trash' color='orange' />
         <Button onClick={this.handleEdit} icon='edit' positive />
@@ -40,6 +40,7 @@ export class SmartQuickEditor extends React.Component<ISmartQuickEditorProps, IS
   handleEdit = () => {
     this.setState({ editMode: true });
   }
+
   handleCancel = () => {
     this.setState({ editMode: false });
   }

@@ -54,13 +54,13 @@ export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
 
     return <table className="daily-calendar">
       <thead>
-      <tr className="daily-calendar__months">
+      <tr className="months">
         <th/>
         <th/>
-        {months.map(m => <td className="daily-calendar__month" key={m.key} colSpan={m.daysCount}>{m.name}</td>)}
+        {months.map(m => <td className="month" key={m.key} colSpan={m.daysCount}>{m.name}</td>)}
       </tr>
 
-      <tr className="daily-calendar__days">
+      <tr className="days">
         <th/>
         <th/>
         {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend} isThisDay={d.isThisDay}>
@@ -68,7 +68,7 @@ export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
         </CalendarDay>)}
       </tr>
 
-      <tr className="daily-calendar__days-of-week">
+      <tr className="days-of-week">
         <th/>
         <th/>
         {days.map(d => <CalendarDay key={d.key} isWeekend={d.isWeekend} isThisDay={d.isThisDay}>
@@ -112,9 +112,9 @@ class CalendarDay extends React.PureComponent<ICalendarDayProps> {
   public render() {
     const {isWeekend, isThisDay, className, ...other} = this.props;
     const elementClassName = classNames([
-      'daily-calendar__day',
-      isWeekend && 'daily-calendar__day--weekend',
-      isThisDay && 'daily-calendar__day--today',
+      'day',
+      isWeekend && '-weekend',
+      isThisDay && '-today',
       className
     ]);
 
@@ -149,7 +149,7 @@ class CalendarGroup extends React.Component<ICalendarGroupProps, ICalendarGroupS
       : 'triangle right';
 
     return <tbody>
-    <tr className="daily-calendar__group">
+    <tr className="group">
       <th>
         <Button size='mini' icon={icon} onClick={this.toggleExpanded}/>
       </th>
@@ -211,7 +211,7 @@ class CalendarActivity extends React.PureComponent<ICalendarActivityProps> {
       };
     });
 
-    return <tr className="daily-calendar__activity">
+    return <tr className="activity">
       <th/>
       <th>
         <SmartQuickEditor value={this.props.activity.name} onSave={this.handleSave} onDelete={this.handleDelete}/>
@@ -248,10 +248,10 @@ class CalendarActivityDay extends React.PureComponent<ICalendarActivityDayProps>
     };
 
     const className = classNames([
-      this.props.occurrence && "daily-calendar__activity-day",
-      ongoing && "daily-calendar__activity-day--ongoing",
-      ongoing && highlighted && "daily-calendar__activity-day--highlight",
-      missed && "daily-calendar__activity-day--missed"
+      this.props.occurrence && "activity-day",
+      ongoing && "-ongoing",
+      ongoing && highlighted && "-highlight",
+      missed && "-missed"
     ]);
 
     const Marker = CalendarActivityDay.createMarker;
@@ -308,6 +308,6 @@ class CalendarActivityDay extends React.PureComponent<ICalendarActivityDayProps>
   }
 
   static createMarker() {
-    return <div className='daily-calendar__activity-day-marker'></div>;
+    return <div className='activity-day-marker'></div>;
   }
 }

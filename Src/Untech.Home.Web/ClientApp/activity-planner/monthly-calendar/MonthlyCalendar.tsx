@@ -13,7 +13,7 @@ export interface IMonthlyCalendarProps {
   calendar: IMonthlyCalendar;
 }
 
-export class MonthlyCalendar extends React.Component<IMonthlyCalendarProps> {
+export class MonthlyCalendar extends React.PureComponent<IMonthlyCalendarProps> {
   public render() {
     const months = this.props.calendar.months;
 
@@ -29,14 +29,14 @@ export class MonthlyCalendar extends React.Component<IMonthlyCalendarProps> {
       <thead>
         <tr>
           <th />
-          {headers.map(m => <CalendarMonth key={m.key} isThisMonth={m.isThisMonth}>
+          {headers.map(m => <Month key={m.key} isThisMonth={m.isThisMonth}>
             {m.name}
-          </CalendarMonth>)}
+          </Month>)}
         </tr>
       </thead>
 
-      {groups.map(g => <CalendarGroup
-        key={g.name}
+      {groups.map(g => <Group
+        key={g.groupKey}
         group={g}
         months={months}
       />)}
@@ -49,17 +49,17 @@ interface ICalendarGroupProps {
   months: IMonthlyCalendarMonth[];
 }
 
-function CalendarGroup(props: ICalendarGroupProps) {
+function Group(props: ICalendarGroupProps) {
   const { name, activities } = props.group;
 
   return <tbody>
-    <tr className="monthly-calendar__group">
+    <tr className="group">
       <th>{name}</th>
       <td colSpan={props.months.length}></td>
     </tr>
 
-    {activities.map(a => <CalendarActivity
-      key={a.name}
+    {activities.map(a => <Activity
+      key={a.activityKey}
       activity={a}
       months={props.months}
     />)}
@@ -71,11 +71,11 @@ interface ICalendarMonthProps {
   className?: string;
 }
 
-class CalendarMonth extends React.PureComponent<ICalendarMonthProps> {
+class Month extends React.PureComponent<ICalendarMonthProps> {
   public render() {
     const className = classNames([
-      'monthly-calendar__month',
-      this.props.isThisMonth && 'monthly-calendar__month--this',
+      'month',
+      this.props.isThisMonth && '-this',
       this.props.className
     ]);
 
@@ -90,7 +90,7 @@ interface ICalendarActivityProps {
   months: IMonthlyCalendarMonth[];
 }
 
-function CalendarActivity(props: ICalendarActivityProps) {
+function Activity(props: ICalendarActivityProps) {
   const activityKey = props.activity.activityKey;
   const months = props.months.map(m => {
     const activity = m.activities.find(ma => ma.activityKey == activityKey);
@@ -102,10 +102,10 @@ function CalendarActivity(props: ICalendarActivityProps) {
     };
   });
 
-  return <tr className="monthly-calendar__activity">
+  return <tr className="activity">
     <th>{props.activity.name}</th>
 
-    {months.map(m => <CalendarActivityMonth
+    {months.map(m => <ActivityMonth
       key={m.key}
       count={m.count}
       isThisMonth={m.isThisMonth}
@@ -113,16 +113,14 @@ function CalendarActivity(props: ICalendarActivityProps) {
   </tr>;
 }
 
-function CalendarActivityMonth({ count, isThisMonth }: { count: number, isThisMonth: boolean }) {
-  const level = count
-    ? Math.floor(Math.log2(count)) + 1
-    : 0;
+function ActivityMonth({ count, isThisMonth }: { count: number, isThisMonth: boolean }) {
+  const level = count ? Math.floor(Math.log2(count)) + 1 : 0;
 
   const className = classNames([
-    level && ('monthly-calendar__month--level-' + level)
+    level && ('-level-' + level)
   ]);
 
-  return <CalendarMonth isThisMonth={isThisMonth} className={className}>
+  return <Month isThisMonth={isThisMonth} className={className}>
     {count ? count : null}
-  </CalendarMonth>;
+  </Month>;
 }

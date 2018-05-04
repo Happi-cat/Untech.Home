@@ -40,6 +40,7 @@ export class QuickAdder extends React.Component<IQuickAdderProps, IQuickAdderSta
 
     this.setState({[name]: value});
   }
+
   handleSave = () => {
     this.props.onSave(this.state.value);
   }
