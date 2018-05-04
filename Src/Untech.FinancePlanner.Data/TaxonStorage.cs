@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LinqToDB;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.FinancePlanner.Domain.Requests;
-using Untech.Home;
+using Untech.Home.Data;
 using Untech.Practices.CQRS.Handlers;
-using Untech.Practices.DataStorage;
 
 namespace Untech.FinancePlanner.Data
 {
-	public class TaxonStorage : IDataStorage<Taxon>,
+	public class TaxonStorage : GenericDataStorage<Taxon, TaxonDao>,
 		IQueryHandler<TaxonElementsQuery, IEnumerable<Taxon>>
 	{
 		private static readonly IReadOnlyList<Taxon> s_builtIns;
@@ -26,55 +24,21 @@ namespace Untech.FinancePlanner.Data
 			};
 		}
 
-		private readonly Func<IDataContext> _contextFactory;
-
 		public TaxonStorage(Func<FinancialPlannerContext> contextFactory)
+			: base(contextFactory, DaoMapper.Instance, DaoMapper.Instance)
 		{
-			_contextFactory = contextFactory;
 		}
 
-		public Taxon Find(int key)
+		public override Taxon Find(int key)
 		{
 			var builtInTaxon = s_builtIns.SingleOrDefault(n => n.Key == key);
-			if (builtInTaxon != null)
-			{
-				return builtInTaxon;
-			}
-
-			using (var context = _contextFactory())
-			{
-				var dto = context
-						.GetTable<TaxonDao>()
-						.SingleOrDefault(n => n.Key == key)
-					?? throw new AggregateRootNotFoundException(key);
-				return TaxonDao.ToEntity(dto);
-			}
+			return builtInTaxon ?? base.Find(key);
 		}
 
-		public Taxon Create(Taxon entity)
+		public override Taxon Update(Taxon entity)
 		{
-			using (var context = _contextFactory())
-			{
-				var key = context.InsertWithInt32Identity(new TaxonDao(entity));
-				return Find(key);
-			}
-		}
-
-		public bool Delete(Taxon entity)
-		{
-			using (var context = _contextFactory())
-			{
-				return context.Delete(new TaxonDao(entity)) > 0;
-			}
-		}
-
-		public Taxon Update(Taxon entity)
-		{
-			using (var context = _contextFactory())
-			{
-				context.Update(new TaxonDao(entity));
-				return entity;
-			}
+			if (entity.IsRoot) return entity;
+			return base.Update(entity);
 		}
 
 		public IEnumerable<Taxon> Handle(TaxonElementsQuery request)
@@ -84,12 +48,13 @@ namespace Untech.FinancePlanner.Data
 				return s_builtIns.Where(n => n.ParentKey == 0 && n.Key != 0);
 			}
 
-			using (var context = _contextFactory())
+			using (var context = GetContext())
 			{
-				return context.GetTable<TaxonDao>()
+				return GetTable(context)
 					.Where(n => n.ParentKey == request.TaxonKey)
-					.ToList()
-					.Select(TaxonDao.ToEntity);
+					.AsEnumerable()
+					.Select(TaxonDao.ToEntity)
+					.ToList();
 			}
 		}
 	}

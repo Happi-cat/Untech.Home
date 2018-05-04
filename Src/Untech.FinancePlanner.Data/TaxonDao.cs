@@ -1,14 +1,15 @@
 ﻿using LinqToDB.Mapping;
 using Untech.FinancePlanner.Domain.Models;
+using Untech.Practices.DataStorage;
+using Untech.Practices.ObjectMapping;
 
 namespace Untech.FinancePlanner.Data
 {
 	[Table("Taxons")]
-	public class TaxonDao
+	public class TaxonDao : IAggregateRoot
 	{
 		public TaxonDao()
 		{
-
 		}
 
 		public TaxonDao(Taxon entry)

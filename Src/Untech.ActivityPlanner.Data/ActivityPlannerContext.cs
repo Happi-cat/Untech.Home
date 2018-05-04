@@ -2,13 +2,14 @@
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using Untech.ActivityPlanner.Domain.Models;
+using Untech.Home.Data;
 
 namespace Untech.ActivityPlanner.Data
 {
 	public class ActivityPlannerContext : DataConnection
 	{
-		public ActivityPlannerContext()
-			: base(new SQLiteDataProvider(), "Data Source=activity_planner.db")
+		public ActivityPlannerContext(IConnectionStringFactory connectionStringFactory)
+			: base(new SQLiteDataProvider(), connectionStringFactory.GetConnectionString("activity_planner.db"))
 		{
 			var b = MappingSchema.GetFluentMappingBuilder();
 

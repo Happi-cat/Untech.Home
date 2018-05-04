@@ -2,11 +2,13 @@
 using LinqToDB.Mapping;
 using Untech.FinancePlanner.Domain.Models;
 using Untech.Practices;
+using Untech.Practices.DataStorage;
+using Untech.Practices.ObjectMapping;
 
 namespace Untech.FinancePlanner.Data
 {
 	[Table("FinancialJournalEntries")]
-	public class FinancialJournalEntryDao
+	public class FinancialJournalEntryDao : IAggregateRoot
 	{
 		public FinancialJournalEntryDao()
 		{

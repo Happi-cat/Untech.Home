@@ -11,18 +11,18 @@ import {
 
 export class ApiService {
   public getReport() {
-    return fetch('api/financial-planner/report')
+    return this.fetchJson('report')
       .then(response => response.json() as Promise<IAnnualFinancialReport>);
   }
 
   public getMonthlyReport(year: number | string, month: number | string) {
-    let url = 'api/financial-planner/report/' + encodeURIComponent(year.toString()) + '/' + encodeURIComponent(month.toString());
-    return fetch(url)
+    let url = 'report/' + encodeURIComponent(year.toString()) + '/' + encodeURIComponent(month.toString());
+    return this.fetchJson(url)
       .then(response => response.json() as Promise<IMonthlyFinancialReport>);
   }
 
   public getTaxon(taxonKey?: number | string, deep?: number) {
-    let url = 'api/financial-planner/taxon';
+    let url = 'taxon';
     if (taxonKey != undefined) {
       url += '/' + encodeURIComponent(taxonKey.toString());
 
@@ -31,12 +31,12 @@ export class ApiService {
       }
     }
 
-    return fetch(url)
+    return this.fetchJson(url)
       .then(response => response.json() as Promise<ITaxonTree>);
   }
 
   public getJournal(year: number | string, month: number | string, taxonKey?: number | string, deep?: number) {
-    let url = 'api/financial-planner/journal/' + encodeURIComponent(year.toString()) + '/' + encodeURIComponent(month.toString());
+    let url = 'journal/' + encodeURIComponent(year.toString()) + '/' + encodeURIComponent(month.toString());
     if (taxonKey != undefined) {
       url += '?taxonId=' + encodeURIComponent(taxonKey.toString());
 
@@ -45,34 +45,33 @@ export class ApiService {
       }
     }
 
-    return fetch(url)
+    return this.fetchJson(url)
       .then(response => response.json() as Promise<IFinancialJournalEntry[]>);
   }
 
   public createJournalEntry(request: ICreateFinancialJournalEntryCommand) {
-    return fetch('api/financial-planner/journal', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(request)
-    }).then(response => response.json() as Promise<IFinancialJournalEntry>);
+    return this.fetchJson('journal', 'POST', request)
+      .then(response => response.json() as Promise<IFinancialJournalEntry>);
   }
 
   public updateJournalEntry(request: IUpdateFinancialJournalEntryCommand) {
-    return fetch('api/financial-planner/journal/' + encodeURIComponent(request.key.toString()), {
-      method: 'PUT',
+    return this.fetchJson('journal/' + encodeURIComponent(request.key.toString()), 'PUT', request)
+      .then(response => response.json() as Promise<IFinancialJournalEntry>);;
+  }
+
+  public deleteJournalEntry(request: IDeleteFinancialJournalEntryCommand) {
+    return this.fetchJson('journal/' + encodeURIComponent(request.key.toString()), 'DELETE')
+      .then(response => response.json() as Promise<boolean>);
+  }
+
+  fetchJson(url: string, method?: string, body?: any) {
+    return fetch('api/financial-planner/' + url, {
+      method: method || 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(request)
-    }).then(response => response.json() as Promise<IFinancialJournalEntry>);;
-  }
-
-  public deleteJournalEntry(request: IDeleteFinancialJournalEntryCommand) {
-    return fetch('api/financial-planner/journal/' + encodeURIComponent(request.key.toString()), { method: 'DELETE' })
-      .then(response => response.json() as Promise<boolean>);
+      body: body ? JSON.stringify(body) : undefined
+    });
   }
 }
