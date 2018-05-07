@@ -6,12 +6,21 @@ namespace Untech.ReadingList.Domain.Views
 	public class ReadingStatistics
 	{
 		[DataMember]
-		public int CompletedThisYear { get; set; }
+		public int CompletedThisYearBooksCount { get; set; }
 
 		[DataMember]
-		public int CompletedThisQuarter { get; set; }
+		public int CompletedThisQuarterBooksCount { get; set; }
 
 		[DataMember]
-		public int CompletedThisMonth { get; set; }
+		public int CompletedThisMonthBooksCount { get; set; }
+
+		[DataMember]
+		public int CompletedBooksCount { get; set; }
+
+		[DataMember]
+		public int ReadingBooksCount { get; set; }
+
+		[DataMember]
+		public int TotalBooksCount { get; set; }
 	}
 }

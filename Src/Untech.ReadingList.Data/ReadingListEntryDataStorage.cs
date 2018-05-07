@@ -117,22 +117,24 @@ namespace Untech.ReadingList.Data
 			var monthStart = new DateTime(today.Year, today.Month, 1);
 			var monthEnd = monthStart.AddMonths(1);
 
-			List<DateTime> completionDates;
-
 			using (var context = GetContext())
 			{
-				completionDates = GetTable(context)
+				var completionDates = GetTable(context)
 					.Where(n => n.ReadingCompleted != null && yearStart <= n.ReadingCompleted && n.ReadingCompleted < yearEnd)
 					.Select(n => n.ReadingCompleted.Value)
 					.ToList();
-			}
 
-			return new ReadingStatistics
-			{
-				CompletedThisYear = completionDates.Count,
-				CompletedThisQuarter = completionDates.Count(n => quarterStart <= n && n < quarterEnd),
-				CompletedThisMonth = completionDates.Count(n => monthStart <= n && n < monthEnd)
-			};
+				return new ReadingStatistics
+				{
+					CompletedThisYearBooksCount = completionDates.Count,
+					CompletedThisQuarterBooksCount = completionDates.Count(n => quarterStart <= n && n < quarterEnd),
+					CompletedThisMonthBooksCount = completionDates.Count(n => monthStart <= n && n < monthEnd),
+
+					CompletedBooksCount = GetTable(context).Count(n => n.Status == ReadingListEntryStatus.Completed),
+					ReadingBooksCount = GetTable(context).Count(n => n.Status == ReadingListEntryStatus.Reading),
+					TotalBooksCount = GetTable(context).Count()
+				};
+			}
 		}
 	}
 }
