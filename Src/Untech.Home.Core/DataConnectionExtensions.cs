@@ -7,7 +7,7 @@ namespace Untech.Home
 {
 	public static class DataConnectionExtensions
 	{
-		public static void EnsureTableExists<T>(this  DataConnection context)
+		public static void EnsureTableExists<T>(this DataConnection context)
 		{
 			if (IsTableExists<T>(context))
 			{
@@ -38,7 +38,7 @@ namespace Untech.Home
 
 			command.Parameters.Add(pName);
 
-			var result = (long?)command.ExecuteScalar() ?? 0;
+			var result = (long?) command.ExecuteScalar() ?? 0;
 
 			return result == 1;
 		}

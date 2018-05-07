@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Untech.ActivityPlanner.Data;
 using Untech.FinancePlanner.Data;
+using Untech.FinancePlanner.Data.Initializations;
 using Untech.Home.Data;
 
 namespace Untech.Home.Web
@@ -42,12 +43,12 @@ namespace Untech.Home.Web
 				initializer.InitializeDb();
 			}
 
-			FinancePlanner.Data.Initializations.DbInitializer
-				.Initialize(() => new FinancialPlannerContext(connectionStringFactory), @"..\..\Configs\");
-
 			IEnumerable<IDbInitializer> GetInitializers()
 			{
-				yield return new FinancialPlannerContext(connectionStringFactory);
+				var financialPlannerContext = new FinancialPlannerContext(connectionStringFactory);
+
+				yield return financialPlannerContext;
+				yield return new TaxonTableInitializer(financialPlannerContext, @"..\..\Configs\");
 				yield return new ActivityPlannerContext(connectionStringFactory);
 			}
 		}
