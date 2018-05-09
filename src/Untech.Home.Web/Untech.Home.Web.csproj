@@ -16,14 +16,14 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj" />
+    <ProjectReference Include="..\..\External\Untech.Practices\src\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj" />
     <ProjectReference Include="..\Untech.ActivityPlanner.Data\Untech.ActivityPlanner.Data.csproj" />
     <ProjectReference Include="..\Untech.ActivityPlanner.Domain\Untech.ActivityPlanner.Domain.csproj" />
     <ProjectReference Include="..\Untech.FinancePlanner.Data\Untech.FinancePlanner.Data.csproj" />
     <ProjectReference Include="..\Untech.FinancePlanner.Domain\Untech.FinancePlanner.Domain.csproj" />
-    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
-    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
-    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
+    <ProjectReference Include="..\..\External\Untech.Practices\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
+    <ProjectReference Include="..\..\External\Untech.Practices\src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
+    <ProjectReference Include="..\..\External\Untech.Practices\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
     <ProjectReference Include="..\Untech.Integration.GoogleCalendar\Untech.Integration.GoogleCalendar.csproj" />
   </ItemGroup>
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">

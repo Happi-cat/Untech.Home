@@ -8,8 +8,8 @@
     <PackageReference Include="newtonsoft.json" Version="10.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
-    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
+    <ProjectReference Include="..\..\External\Untech.Practices\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
+    <ProjectReference Include="..\..\External\Untech.Practices\src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
     <ProjectReference Include="..\Untech.Home.Core\Untech.Home.Core.csproj" />
     <ProjectReference Include="..\Untech.ReadingList.Domain\Untech.ReadingList.Domain.csproj" />
   </ItemGroup>
