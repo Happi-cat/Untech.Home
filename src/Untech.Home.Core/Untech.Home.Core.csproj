@@ -8,7 +8,7 @@
     <PackageReference Include="Microsoft.Data.SQLite" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
-    <ProjectReference Include="..\..\External\Untech.Practices\Src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj" />
+    <ProjectReference Include="..\..\ext\Untech.Practices\src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
+    <ProjectReference Include="..\..\ext\Untech.Practices\src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj" />
   </ItemGroup>
 </Project>
