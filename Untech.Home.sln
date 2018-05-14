@@ -5,49 +5,49 @@ VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D6AA5292-C579-4FAE-834E-8DB7A7860894}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.CQRS", "..\ext\Untech.Practices\src\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj", "{235577CF-C863-4760-99B6-381EE2DEEDF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.CQRS", "ext\Untech.Practices\src\Untech.Practices.CQRS\Untech.Practices.CQRS.csproj", "{235577CF-C863-4760-99B6-381EE2DEEDF2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.CQRS.Abstractions", "..\ext\Untech.Practices\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj", "{6ABFF906-9E08-446A-837C-D89023A00A33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.CQRS.Abstractions", "ext\Untech.Practices\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj", "{6ABFF906-9E08-446A-837C-D89023A00A33}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Core", "..\ext\Untech.Practices\src\Untech.Practices.Core\Untech.Practices.Core.csproj", "{B94542B3-1963-494D-82A4-825133FC5099}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Core", "ext\Untech.Practices\src\Untech.Practices.Core\Untech.Practices.Core.csproj", "{B94542B3-1963-494D-82A4-825133FC5099}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Untech.Practices", "Untech.Practices", "{77EB491E-6C4C-4AC7-8594-359E1ADC6F85}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.ActivityPlanner.Domain", "Untech.ActivityPlanner.Domain\Untech.ActivityPlanner.Domain.csproj", "{3706E20C-540B-4E1A-B710-59E4797DD58B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.ActivityPlanner.Domain", "src\Untech.ActivityPlanner.Domain\Untech.ActivityPlanner.Domain.csproj", "{3706E20C-540B-4E1A-B710-59E4797DD58B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.ActivityPlanner.Data", "Untech.ActivityPlanner.Data\Untech.ActivityPlanner.Data.csproj", "{58FEE25D-BAFE-4E54-ADEA-CFE40882C67A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.ActivityPlanner.Data", "src\Untech.ActivityPlanner.Data\Untech.ActivityPlanner.Data.csproj", "{58FEE25D-BAFE-4E54-ADEA-CFE40882C67A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.FinancePlanner.Data", "Untech.FinancePlanner.Data\Untech.FinancePlanner.Data.csproj", "{317FF870-2E26-4DBC-BF78-617885A0A219}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.FinancePlanner.Data", "src\Untech.FinancePlanner.Data\Untech.FinancePlanner.Data.csproj", "{317FF870-2E26-4DBC-BF78-617885A0A219}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.FinancePlanner.Domain", "Untech.FinancePlanner.Domain\Untech.FinancePlanner.Domain.csproj", "{8E92E6A7-3E4A-42F9-AD61-CE6D6F09E342}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.FinancePlanner.Domain", "src\Untech.FinancePlanner.Domain\Untech.FinancePlanner.Domain.csproj", "{8E92E6A7-3E4A-42F9-AD61-CE6D6F09E342}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Collections", "..\ext\Untech.Practices\src\Untech.Practices.Collections\Untech.Practices.Collections.csproj", "{0F2A25B4-A03A-4E2E-B610-DD8791984C55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.Collections", "ext\Untech.Practices\src\Untech.Practices.Collections\Untech.Practices.Collections.csproj", "{0F2A25B4-A03A-4E2E-B610-DD8791984C55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Home.Web", "Untech.Home.Web\Untech.Home.Web.csproj", "{A281CBC8-E7E6-46C0-922B-FEA6675A56A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Home.Web", "src\Untech.Home.Web\Untech.Home.Web.csproj", "{A281CBC8-E7E6-46C0-922B-FEA6675A56A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.DataStorage.Abstractions", "..\ext\Untech.Practices\src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj", "{62CA161E-B8AB-4791-9C61-490833870AF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.DataStorage.Abstractions", "ext\Untech.Practices\src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj", "{62CA161E-B8AB-4791-9C61-490833870AF6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.DataStorage.Cache.Abstractions", "..\ext\Untech.Practices\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj", "{FFD831F9-DDA8-405F-8D70-59365058D680}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Practices.DataStorage.Cache.Abstractions", "ext\Untech.Practices\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj", "{FFD831F9-DDA8-405F-8D70-59365058D680}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Integration.GoogleCalendar", "Untech.Integration.GoogleCalendar\Untech.Integration.GoogleCalendar.csproj", "{B6DB4D04-DC5F-4154-94E9-CC704802C54B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untech.Integration.GoogleCalendar", "src\Untech.Integration.GoogleCalendar\Untech.Integration.GoogleCalendar.csproj", "{B6DB4D04-DC5F-4154-94E9-CC704802C54B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Home.Core", "Untech.Home.Core\Untech.Home.Core.csproj", "{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Home.Core", "src\Untech.Home.Core\Untech.Home.Core.csproj", "{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.ObjectMapping.Abstractions", "..\ext\Untech.Practices\src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj", "{52E3B319-18D1-482A-86DE-8C159AD79547}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Practices.ObjectMapping.Abstractions", "ext\Untech.Practices\src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj", "{52E3B319-18D1-482A-86DE-8C159AD79547}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.DailySurvey.Domain", "Untech.DailySurvey.Domain\Untech.DailySurvey.Domain.csproj", "{4B70B792-F684-42AF-AED3-AAB3C5C95D4C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.DailySurvey.Domain", "src\Untech.DailySurvey.Domain\Untech.DailySurvey.Domain.csproj", "{4B70B792-F684-42AF-AED3-AAB3C5C95D4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.DailySurvey.Data", "Untech.DailySurvey.Data\Untech.DailySurvey.Data.csproj", "{57D2A37A-B85D-43E5-8888-2D45A3C97723}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.DailySurvey.Data", "src\Untech.DailySurvey.Data\Untech.DailySurvey.Data.csproj", "{57D2A37A-B85D-43E5-8888-2D45A3C97723}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.ReadingList.Domain", "Untech.ReadingList.Domain\Untech.ReadingList.Domain.csproj", "{197D60F8-611B-4FED-8B8F-58E1920922C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.ReadingList.Domain", "src\Untech.ReadingList.Domain\Untech.ReadingList.Domain.csproj", "{197D60F8-611B-4FED-8B8F-58E1920922C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.ReadingList.Data", "Untech.ReadingList.Data\Untech.ReadingList.Data.csproj", "{AD8B98EB-EDF2-45B5-9847-9F438936FBA4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.ReadingList.Data", "src\Untech.ReadingList.Data\Untech.ReadingList.Data.csproj", "{AD8B98EB-EDF2-45B5-9847-9F438936FBA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Books.Librus", "Untech.Books.Librus\Untech.Books.Librus.csproj", "{9B8A18C6-96C1-464F-865C-3B3766EE5F0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Books.Librus", "src\Untech.Books.Librus\Untech.Books.Librus.csproj", "{9B8A18C6-96C1-464F-865C-3B3766EE5F0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Users.Data", "Untech.Users.Data\Untech.Users.Data.csproj", "{9146C2A9-F7F2-48C6-90A6-A4BB2856D436}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Users.Data", "src\Untech.Users.Data\Untech.Users.Data.csproj", "{9146C2A9-F7F2-48C6-90A6-A4BB2856D436}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Users.Domain", "Untech.Users.Domain\Untech.Users.Domain.csproj", "{F7747294-2214-4C67-A7AF-490A704623AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untech.Users.Domain", "src\Untech.Users.Domain\Untech.Users.Domain.csproj", "{F7747294-2214-4C67-A7AF-490A704623AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
