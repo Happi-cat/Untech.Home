@@ -17,7 +17,7 @@ install:
 before_build:
   - cmd: |-
       nuget restore
-      cd .\src\ntech.Home.Web
+      cd .\src\Untech.Home.Web
       npm install less@latest -g
       npm install
 build:
