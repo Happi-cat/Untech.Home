@@ -1,5 +1,5 @@
 import { Reducer, Thunk  } from 'repatch';
-import {IActivityOccurrence, IDailyCalendar, IMonthlyCalendar} from "./api";
+import {IActivityOccurrence, IDailyCalendar, IMonthlyCalendar, IToogleActivityOccurrences} from "./api";
 
 export interface ICa {
 
@@ -15,7 +15,7 @@ export interface State {
   isFetching: boolean;
   error?: string | null;
 
-  selectedActivityOccurrnece?: IActivityOccurrence;
+  selectedActivityOccurrence?: IActivityOccurrence;
 }
 
 export type ActivityPlannerReducer = Reducer<State>
