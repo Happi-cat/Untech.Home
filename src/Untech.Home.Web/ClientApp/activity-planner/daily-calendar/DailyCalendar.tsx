@@ -11,28 +11,31 @@ import {pluralizeDayOfWeek, pluralizeMonth} from '../../utils'
 import {QuickAdder} from "../components/QuickAdder";
 import {SmartQuickEditor} from "../components/SmartQuickEditor";
 import {Popup, Divider, Button} from "semantic-ui-react";
+import {State} from "../types";
+import {connect} from "react-redux";
+import {
+  addActivity,
+  addGroup,
+  deleteActivity,
+  deleteGroup,
+  selectActivityOccurrence,
+  toggleActivityOccurrence,
+  updateActivity, updateGroup
+} from "../actions";
 
 export interface IDailyCalendarProps {
   calendar: IDailyCalendar;
-  dispatcher: IDailyCalendarDispatcher;
-}
 
-export interface IDailyCalendarDispatcher {
-  onAddGroup(name: string): void;
+  addGroup: typeof addGroup;
+  updateGroup: typeof updateGroup;
+  deleteGroup: typeof deleteGroup;
 
-  onUpdateGroup(id: number, name: string): void;
+  addActivity: typeof addActivity;
+  updateActivity: typeof updateActivity;
+  deleteActivity: typeof deleteActivity;
+  toggleActivityOccurrence: typeof toggleActivityOccurrence;
 
-  onDeleteGroup(id: number): void;
-
-  onAddActivity(groupId: number, name: string): void;
-
-  onUpdateActivity(id: number, name: string): void;
-
-  onDelteActivity(id: number): void;
-
-  onToggleActivityOccurrence(activityId: number, year: number, month: number, day: number): void;
-
-  onActivityOccurrenceSelected(occurrence: IActivityOccurrence): void;
+  selectActivityOccurrence: typeof selectActivityOccurrence;
 }
 
 export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
@@ -97,6 +100,16 @@ export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
   }
 }
 
+const mapStateToProps = (state: State) => ({
+  dailyCalendar: state.dailyCalendar
+})
+
+const mapDispatchToProps = {
+  addGroup, updateGroup, deleteGroup, addActivity, updateActivity, deleteActivity, toggleActivityOccurrence, selectActivityOccurrence
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DailyCalendar)
+
 interface IExtendendDailyCalendarDay extends IDailyCalendarDay {
   key: string;
   isWeekend: boolean;
@@ -127,7 +140,6 @@ class CalendarDay extends React.PureComponent<ICalendarDayProps> {
 interface ICalendarGroupProps {
   group: IActivitiesViewGroup;
   allDays: IExtendendDailyCalendarDay[];
-  dispatcher: IDailyCalendarDispatcher;
 }
 
 interface ICalendarGroupState {
