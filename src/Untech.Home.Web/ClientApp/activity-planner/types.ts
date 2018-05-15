@@ -1,9 +1,5 @@
-import { Reducer, Thunk  } from 'repatch';
+import {Reducer, Thunk} from 'repatch';
 import {IActivityOccurrence, IDailyCalendar, IMonthlyCalendar, IToogleActivityOccurrences} from "./api";
-
-export interface ICa {
-
-}
 
 export interface State {
   monthlyCalendar?: IMonthlyCalendar;
