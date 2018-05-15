@@ -14,7 +14,7 @@
     "@types/webpack-env": "1.13.0",
     "aspnet-webpack": "^2.0.1",
     "aspnet-webpack-react": "^3.0.0",
-    "awesome-typescript-loader": "3.2.1",
+    "awesome-typescript-loader": "^5.0.0",
     "classnames": "^2.2.5",
     "css-loader": "0.28.4",
     "event-source-polyfill": "0.0.9",
@@ -35,8 +35,8 @@
     "semantic-ui-react": "^0.74.2",
     "style-loader": "0.18.2",
     "typescript": "2.4.1",
-    "url-loader": "0.5.9",
-    "webpack": "^2.7.0",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.8.3",
     "webpack-hot-middleware": "2.18.2"
   },
   "dependencies": {}
