@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { IActivityOccurrence} from '../api'
-import { TextArea, Form, Radio, Button } from "semantic-ui-react";
+import {IActivityOccurrence} from '../api'
+import {TextArea, Form, Radio, Button} from "semantic-ui-react";
 import {pluralizeMonth} from "../../utils";
+import {updateActivityOccurrence} from "../actions";
+import {connect} from "react-redux";
+import {State} from "../types";
 
 export interface IOccurrenceEditorProps {
   occurrence: IActivityOccurrence;
-  onSubmit(value: IActivityOccurrence): void;
+  onSubmit: typeof updateActivityOccurrence
 }
 
 export interface IOccurrenceEditorState {
@@ -14,7 +17,7 @@ export interface IOccurrenceEditorState {
   missed: boolean;
 }
 
-export class OccurrenceEditor extends React.Component<IOccurrenceEditorProps, IOccurrenceEditorState> {
+class OccurrenceEditor extends React.Component<IOccurrenceEditorProps, IOccurrenceEditorState> {
   constructor(props: any) {
     super(props);
 
@@ -87,13 +90,22 @@ export class OccurrenceEditor extends React.Component<IOccurrenceEditorProps, IO
   handleSubmit = (event: any) => {
     event.preventDefault();
 
-    const value = {
+    this.props.onSubmit({
       ...this.props.occurrence,
       note: this.state.note,
       highlighted: this.state.highlighted,
       missed: this.state.missed
-    }
-
-    this.props.onSubmit(value);
+    });
   }
 }
+
+
+const mapStateToProps = (state: State) => ({
+  occurrence: state.selectedActivityOccurrence || {}
+})
+
+const mapDispatchToProps = {
+  onSubmit: updateActivityOccurrence
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(OccurrenceEditor)

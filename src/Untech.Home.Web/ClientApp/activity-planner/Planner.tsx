@@ -4,7 +4,7 @@ import {apiService, IActivityOccurrence, IDailyCalendar, IMonthlyCalendar} from 
 import {MonthlyCalendar} from './monthly-calendar/MonthlyCalendar';
 import {DailyCalendar} from './daily-calendar/DailyCalendar';
 import {HorScrollable} from './components/HorScrollable';
-import {OccurrenceEditor} from "./occurrence-editor/OccurrenceEditor";
+import OccurrenceEditor from "./occurrence-editor/OccurrenceEditor";
 
 interface ActivityPlannerState {
   daily?: IDailyCalendar;
@@ -17,10 +17,6 @@ export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, Ac
   constructor(props: any) {
     super(props);
     this.state = {loading: true};
-  }
-
-  public componentWillMount() {
-    this.reload();
   }
 
   public render() {
@@ -37,10 +33,7 @@ export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, Ac
         <DailyCalendar calendar={this.state.daily}/>
       </HorScrollable>
 
-      {this.state.selectedOccurrence && <OccurrenceEditor
-        occurrence={this.state.selectedOccurrence}
-        onSubmit={this.handleOccurrenceSubmit}
-      />}
+      {this.state.selectedOccurrence && <OccurrenceEditor />}
     </div>;
   }
 }
