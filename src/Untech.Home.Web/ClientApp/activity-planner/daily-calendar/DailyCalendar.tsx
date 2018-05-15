@@ -20,7 +20,8 @@ import {
   deleteGroup,
   selectActivityOccurrence,
   toggleActivityOccurrence,
-  updateActivity, updateGroup
+  updateActivity,
+  updateGroup
 } from "../actions";
 
 export interface IDailyCalendarProps {
@@ -38,7 +39,7 @@ export interface IDailyCalendarProps {
   selectActivityOccurrence: typeof selectActivityOccurrence;
 }
 
-export class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
+class DailyCalendar extends React.PureComponent<IDailyCalendarProps> {
   public render() {
     const months = this.props.calendar.months.map(m => ({
       key: m.year + '-' + m.month,
@@ -108,7 +109,7 @@ const mapDispatchToProps = {
   addGroup, updateGroup, deleteGroup, addActivity, updateActivity, deleteActivity, toggleActivityOccurrence, selectActivityOccurrence
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DailyCalendar)
+export default connect(() => ({}), mapDispatchToProps)(DailyCalendar)
 
 interface IExtendendDailyCalendarDay extends IDailyCalendarDay {
   key: string;
