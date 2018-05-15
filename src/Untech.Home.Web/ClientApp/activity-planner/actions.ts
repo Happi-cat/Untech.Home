@@ -1,35 +1,38 @@
-﻿import {Dispatch, GetState} from "repatch";
+﻿import {Dispatch} from "repatch";
 import {apiService, IActivityOccurrence} from "./api";
 import {State, ActivityPlannerReducer as Reducer, ActivityPlannerThunk as Thunk} from "./types";
 
-function changeState(partialState : Partial<State>) : Reducer {
+function changeState(partialState: Partial<State>): Reducer {
   return state => ({
     ...state,
     ...partialState
   });
 }
 
+function showSpinner() {
+  return changeState({isFetching: true});
+}
+
+function hideSpinner() {
+  return changeState({isFetching: false});
+}
+
 function fetchCalendar(): Thunk<Promise<void>> {
   return state => async (dispatch: Dispatch<State>) => {
     dispatch(unselectActivityOccurrence());
-    dispatch(changeState({ isFetching: true }));
+    dispatch(showSpinner());
 
-    var montlyCalendar = await apiService.getMonthlyCalendar(-18, 2);
-    var dailyCalendar = await apiService.getDailyCalendar(state.dailyCalendarFrom, state.dailyCalendarTo);
+    const monthlyCalendar = await apiService.getMonthlyCalendar(-18, 2);
+    const dailyCalendar = await apiService.getDailyCalendar(state.dailyCalendarFrom, state.dailyCalendarTo);
 
-    dispatch(state => ({
-      ...state,
-      montlyCalendar,
-      dailyCalendar,
-      isFetching: false
-    }));
+    dispatch(changeState({monthlyCalendar, dailyCalendar}));
+    dispatch(hideSpinner());
   }
 }
 
 export function changeDailyCalendarRange(from: number, to: number): Thunk<Promise<void>> {
   return () => async (dispatch: Dispatch<State>) => {
-    dispatch(state => ({
-      ...state,
+    dispatch(changeState({
       dailyCalendarFrom: from,
       dailyCalendarTo: to
     }));
@@ -38,21 +41,21 @@ export function changeDailyCalendarRange(from: number, to: number): Thunk<Promis
 }
 
 export function selectActivityOccurrence(occurrence: IActivityOccurrence): Reducer {
-  return changeState({ selectedActivityOccurrnece: occurrence });
+  return changeState({selectedActivityOccurrence: occurrence});
 }
 
 export function unselectActivityOccurrence(): Reducer {
-  return changeState({ selectedActivityOccurrnece: undefined });
+  return changeState({selectedActivityOccurrence: undefined});
 }
 
-export function addGroup(name: string) : Thunk<Promise<void>> {
+export function addGroup(name: string): Thunk<Promise<void>> {
   return () => async (dispatch: Dispatch<State>) => {
     await apiService.createGroup({name: name});
     await dispatch(fetchCalendar());
   }
 }
 
-export function updateGroup(id: number,  name: string) : Thunk<Promise<void>> {
+export function updateGroup(id: number, name: string): Thunk<Promise<void>> {
   return () => async (dispatch: Dispatch<State>) => {
     await apiService.updateGroup({
       key: id,
@@ -62,7 +65,7 @@ export function updateGroup(id: number,  name: string) : Thunk<Promise<void>> {
   }
 }
 
-export function deleteGroup(id: number) : Thunk<Promise<void>> {
+export function deleteGroup(id: number): Thunk<Promise<void>> {
   return () => async (dispatch: Dispatch<State>) => {
     await apiService.deleteGroup(id);
     await dispatch(fetchCalendar());
@@ -79,7 +82,7 @@ export function addActivity(groupId: number, name: string): Thunk<Promise<void>>
   }
 }
 
-export function updateActivity(id: number, name: string) : Thunk<Promise<void>> {
+export function updateActivity(id: number, name: string): Thunk<Promise<void>> {
   return () => async (dispatch: Dispatch<State>) => {
     await apiService.updateActivity({
       key: id,
@@ -89,14 +92,14 @@ export function updateActivity(id: number, name: string) : Thunk<Promise<void>> 
   }
 }
 
-export function deleteActivity(id: number) : Thunk<Promise<void>> {
-    return () => async (dispatch: Dispatch<State>) => {
-      await apiService.deleteActivity(id)
-      await dispatch(fetchCalendar());
-    }
+export function deleteActivity(id: number): Thunk<Promise<void>> {
+  return () => async (dispatch: Dispatch<State>) => {
+    await apiService.deleteActivity(id)
+    await dispatch(fetchCalendar());
+  }
 }
 
-export function toggleActivityOccurrence(activityId: number, year: number, month: number, day: number) : Thunk<Promise<void>> {
+export function toggleActivityOccurrence(activityId: number, year: number, month: number, day: number): Thunk<Promise<void>> {
   return () => async (dispatch: Dispatch<State>) => {
     await apiService.toggleActivityOccurrence({
       activityKey: activityId,
@@ -106,7 +109,7 @@ export function toggleActivityOccurrence(activityId: number, year: number, month
   }
 }
 
-export function updateActivityOccurrence(occurrence: IActivityOccurrence) : Thunk<Promise<void>> {
+export function updateActivityOccurrence(occurrence: IActivityOccurrence): Thunk<Promise<void>> {
   return () => async (dispatch: Dispatch<State>) => {
     await apiService.updateActivityOccurrence({
       key: occurrence.key,
