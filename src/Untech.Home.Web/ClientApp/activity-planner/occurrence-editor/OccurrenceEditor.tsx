@@ -99,7 +99,6 @@ class OccurrenceEditor extends React.Component<IOccurrenceEditorProps, IOccurren
   }
 }
 
-
 const mapStateToProps = (state: State) => ({
   occurrence: state.selectedActivityOccurrence || {}
 })
