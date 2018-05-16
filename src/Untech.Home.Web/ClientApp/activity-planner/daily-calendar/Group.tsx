@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 import {IActivitiesViewGroup} from "../api";
-import {QuickAdder} from "../components/QuickAdder";
+import {QuickAdder} from "../components";
 import {Button} from "semantic-ui-react";
 import {default as Activity, IActivityDay} from "./Activity";
 import {SmartQuickEditor} from "../components";
