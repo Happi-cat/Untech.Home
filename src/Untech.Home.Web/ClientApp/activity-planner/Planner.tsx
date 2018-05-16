@@ -1,39 +1,52 @@
-import {RouteComponentProps} from "react-router";
 import * as React from "react";
-import {IActivityOccurrence, IDailyCalendar, IMonthlyCalendar} from './api';
+import {IDailyCalendar, IMonthlyCalendar} from './api';
 import {MonthlyCalendar} from './monthly-calendar/MonthlyCalendar';
 import DailyCalendar from './daily-calendar';
-import {HorScrollable} from './components/HorScrollable';
+import {HorScrollable} from './components';
 import OccurrenceEditor from "./occurrence-editor";
+import {Loader} from "semantic-ui-react";
+import {connect} from "react-redux";
+import {State} from "./types";
 
-interface ActivityPlannerState {
-  daily?: IDailyCalendar;
-  monthly?: IMonthlyCalendar;
-  selectedOccurrence?: IActivityOccurrence;
-  loading: boolean;
+interface IActivityPlannerProps {
+  dailyCalendar?: IDailyCalendar;
+  monthlyCalendar?: IMonthlyCalendar;
+  isOccurrenceSelected: boolean;
+  isLoading: boolean;
 }
 
-export class ActivityPlanner extends React.Component<RouteComponentProps<{}>, ActivityPlannerState> {
+class ActivityPlanner extends React.PureComponent<IActivityPlannerProps> {
   constructor(props: any) {
     super(props);
-    this.state = {loading: true};
+    this.state = {isLoading: true, isOccurrenceSelected: false};
   }
 
   public render() {
-    if (this.state.loading || !this.state.daily || !this.state.monthly) {
-      return <div>Loading...</div>
+    if (this.props.isLoading || !this.props.dailyCalendar || !this.props.monthlyCalendar) {
+      return <div>
+        <Loader>Loading...</Loader>
+      </div>
     }
 
     return <div>
       <HorScrollable>
-        <MonthlyCalendar calendar={this.state.monthly}/>
+        <MonthlyCalendar calendar={this.props.monthlyCalendar}/>
       </HorScrollable>
 
       <HorScrollable>
-        <DailyCalendar calendar={this.state.daily}/>
+        <DailyCalendar calendar={this.props.dailyCalendar}/>
       </HorScrollable>
 
-      {this.state.selectedOccurrence && <OccurrenceEditor />}
+      {this.props.isOccurrenceSelected && <OccurrenceEditor/>}
     </div>;
   }
 }
+
+const mapStateToProps = (state: State) => ({
+  dailyCalendar: state.dailyCalendar,
+  monthlyCalendar: state.monthlyCalendar,
+  isOccurrenceSelected: !!state.selectedActivityOccurrence ,
+  isLoading: state.isFetching
+})
+
+export default connect(mapStateToProps)(ActivityPlanner)
