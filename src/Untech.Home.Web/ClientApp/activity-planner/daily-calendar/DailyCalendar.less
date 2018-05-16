@@ -19,11 +19,11 @@
 .daily-calendar__day {
   .calendar-cell();
 
-  &--weekend {
+  -weekend {
     .background-gradient-lines(@color-grey-2);
   }
 
-  &--today {
+  -today {
     border: 1px solid gray;
   }
 }
@@ -36,15 +36,9 @@ tbody .daily-calendar__day {
   background-color: @color-primary-0;
   position: relative;
 
-  &--ongoing {
-    background-color: @color-secondary-1-0;
-  }
-  &--highlight {
-    background-color: @color-complement-0;
-  }
-  &--missed {
-    background-color: @color-grey-0;
-  }
+  -ongoing { background-color: @color-secondary-1-0; }
+  -highlight { background-color: @color-complement-0; }
+  -missed { background-color: @color-grey-0; }
 }
 
 .daily-calendar__activity-day-marker {

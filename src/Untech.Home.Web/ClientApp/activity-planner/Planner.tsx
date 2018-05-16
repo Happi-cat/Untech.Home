@@ -1,8 +1,8 @@
 import {RouteComponentProps} from "react-router";
 import * as React from "react";
-import {apiService, IActivityOccurrence, IDailyCalendar, IMonthlyCalendar} from './api';
+import {IActivityOccurrence, IDailyCalendar, IMonthlyCalendar} from './api';
 import {MonthlyCalendar} from './monthly-calendar/MonthlyCalendar';
-import DailyCalendar from './daily-calendar/DailyCalendar';
+import DailyCalendar from './daily-calendar';
 import {HorScrollable} from './components/HorScrollable';
 import OccurrenceEditor from "./occurrence-editor";
 
