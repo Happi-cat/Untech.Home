@@ -4,5 +4,8 @@ import {HorScrollable} from "./HorScrollable";
 import {SmartQuickEditor} from "./SmartQuickEditor";
 
 export {
-  QuickAdder, QuickEditor, HorScrollable, SmartQuickEditor
+  QuickAdder,
+  QuickEditor,
+  HorScrollable,
+  SmartQuickEditor
 };

@@ -1,6 +1,6 @@
 import * as React from "react";
 import {IDailyCalendar, IMonthlyCalendar} from './api';
-import {MonthlyCalendar} from './monthly-calendar/MonthlyCalendar';
+import MonthlyCalendar from './monthly-calendar';
 import DailyCalendar from './daily-calendar';
 import {HorScrollable} from './components';
 import OccurrenceEditor from "./occurrence-editor";
@@ -47,6 +47,6 @@ const mapStateToProps = (state: State) => ({
   monthlyCalendar: state.monthlyCalendar,
   isOccurrenceSelected: !!state.selectedActivityOccurrence ,
   isLoading: state.isFetching
-})
+});
 
-export default connect(mapStateToProps)(ActivityPlanner)
+export default connect(mapStateToProps, {})(ActivityPlanner);
