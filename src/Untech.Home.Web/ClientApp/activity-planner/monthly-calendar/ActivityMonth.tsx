@@ -14,9 +14,7 @@ export default class ActivityMonth extends React.PureComponent<IActivityMonthPro
       ? Math.floor(Math.log2(count)) + 1
       : 0;
 
-    const className = classNames([
-      level && ('-level-' + level)
-    ]);
+    const className = classNames(level && ('-level-' + level));
 
     return <Month isThisMonth={isThisMonth} className={className}>
       {count ? count : null}

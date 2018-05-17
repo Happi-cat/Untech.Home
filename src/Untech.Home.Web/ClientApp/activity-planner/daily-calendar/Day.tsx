@@ -11,9 +11,10 @@ export default class Day extends React.PureComponent<IDayProps> {
   public render() {
     const {isWeekend, isThisDay, className, ...other} = this.props;
     const elementClassName = classNames([
-      'daily-calendar__day',
-      isWeekend && '-weekend',
-      isThisDay && '-today',
+      'daily-calendar__day', {
+        '-weekend': isWeekend,
+        '-today': isThisDay
+      },
       className
     ]);
 

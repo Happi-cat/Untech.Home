@@ -142,8 +142,8 @@ class ReportCell extends React.Component<IReportMonthProps, {}> {
   public render() {
     const { isPast, isNow } = this.props.model;
     const cls = classNames('report-month', {
-      'report-month--past': isPast,
-      'report-month--now': isNow
+      '-past': isPast,
+      '-now': isNow
     });
 
     return <td className={cls} children={this.props.children} onClick={this.handleClick} />;

@@ -29,12 +29,12 @@ class ActivityDay extends React.PureComponent<IActivityDayProps> {
       note: ''
     };
 
-    const className = classNames([
-      this.props.occurrence && "daily-calendar__activity-day",
-      ongoing && "-ongoing",
-      ongoing && highlighted && "-highlight",
-      missed && "-missed"
-    ]);
+    const className = classNames({
+      "daily-calendar__activity-day": !!this.props.occurrence,
+      "-ongoing": ongoing,
+      "-highlight": ongoing && highlighted,
+      "-missed": missed
+    });
 
     return <Popup
       content={

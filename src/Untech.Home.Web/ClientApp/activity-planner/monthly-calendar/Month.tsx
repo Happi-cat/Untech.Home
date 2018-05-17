@@ -9,8 +9,9 @@ export interface IMonthProps {
 export default class Month extends React.PureComponent<IMonthProps> {
   public render() {
     const className = classNames([
-      'monthly-calendar__month',
-      this.props.isThisMonth && '-this',
+      'monthly-calendar__month', {
+        '-this': this.props.isThisMonth
+      },
       this.props.className
     ]);
 
