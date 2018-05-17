@@ -2,9 +2,8 @@ import * as React from "react";
 import {IDailyCalendar, IMonthlyCalendar} from './api';
 import MonthlyCalendar from './monthly-calendar';
 import DailyCalendar from './daily-calendar';
-import {HorScrollable} from './components';
+import {HorScrollable, Loader} from './components';
 import OccurrenceEditor from "./occurrence-editor";
-import {Loader} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {State} from "./types";
 
@@ -45,7 +44,7 @@ class ActivityPlanner extends React.PureComponent<IActivityPlannerProps> {
 const mapStateToProps = (state: State) => ({
   dailyCalendar: state.dailyCalendar,
   monthlyCalendar: state.monthlyCalendar,
-  isOccurrenceSelected: !!state.selectedActivityOccurrence ,
+  isOccurrenceSelected: !!state.selectedActivityOccurrence,
   isLoading: state.isFetching
 });
 

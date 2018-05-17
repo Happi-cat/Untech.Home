@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IActivityOccurrence} from '../api'
-import {TextArea, Form, Radio, Button} from "semantic-ui-react";
+import {TextArea, Form, Radio, Button} from "../components";
 import {pluralizeMonth} from "../../utils";
 import {updateActivityOccurrence} from "../actions";
 import {connect} from "react-redux";

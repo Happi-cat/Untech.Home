@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as classNames from "classnames";
 import {default as Day, IDayProps} from "./Day";
-import {Popup, Divider} from "semantic-ui-react";
+import {Popup, Divider} from "../components";
 import {IActivityOccurrence} from "../api";
 import {
   selectActivityOccurrence,

@@ -5,7 +5,6 @@ import {pluralizeDayOfWeek, pluralizeMonth} from '../../utils'
 import {QuickAdder} from "../components";
 import {connect} from "react-redux";
 import {addGroup} from "../actions";
-
 import Group from "./Group";
 import Day from "./Day";
 

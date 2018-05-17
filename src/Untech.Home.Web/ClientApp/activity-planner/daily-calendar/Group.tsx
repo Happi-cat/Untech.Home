@@ -1,9 +1,7 @@
 ﻿import * as React from "react";
 import {IActivitiesViewGroup} from "../api";
-import {QuickAdder} from "../components";
-import {Button} from "semantic-ui-react";
+import {QuickAdder, SmartQuickEditor, Button} from "../components";
 import {default as Activity, IActivityDay} from "./Activity";
-import {SmartQuickEditor} from "../components";
 import {addActivity, deleteGroup, updateGroup} from "../actions";
 import {connect} from "react-redux";
 
@@ -63,7 +61,7 @@ class Group extends React.Component<IGroupProps, IGroupState> {
   }
 
   get daysCount() {
-      return this.props.allDays.length
+    return this.props.allDays.length
   }
 
   handleGroupSave = async (name: string) => {
