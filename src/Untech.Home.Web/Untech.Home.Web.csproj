@@ -26,6 +26,18 @@
     <ProjectReference Include="..\..\ext\Untech.Practices\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
     <ProjectReference Include="..\Untech.Integration.GoogleCalendar\Untech.Integration.GoogleCalendar.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\dist\82f60bd0b94a1ed68b1e6e309ce2e8c3.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\8e3c7f5520f5ae906c6cf6d7f3ddcd19.eot" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\962a1bf31c081691065fe333d9fa8105.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\a1a749e89f578a49306ec2b055c073da.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\b87b9ba532ace76ae9f6edfe9f72ded2.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\main.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\main.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\vendor-manifest.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\vendor.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\vendor.js" />
+  </ItemGroup>
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">

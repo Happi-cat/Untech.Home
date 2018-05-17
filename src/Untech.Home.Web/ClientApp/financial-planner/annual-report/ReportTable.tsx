@@ -96,7 +96,7 @@ class ReportBody extends React.Component<IReportBodyProps, IReportBodyState> {
   renderRow(level: number, model: ITaxonAnnualFinancialReport, expanded?: boolean) {
     const cls = classNames(
       'report-table__row',
-      'report-table__row--l' + level,
+      '-l' + level,
     );
 
     let icon = expanded
@@ -104,7 +104,7 @@ class ReportBody extends React.Component<IReportBodyProps, IReportBodyState> {
       : <Icon name='triangle left' />
 
     let heading = model.elements && model.elements.length
-      ? <th className='report-heading report-heading--clickable' onClick={() => this.toggleExpanded(model.taxonKey)}>{icon}{model.name}</th>
+      ? <th className='report-heading -clickable' onClick={() => this.toggleExpanded(model.taxonKey)}>{icon}{model.name}</th>
       : <th className='report-heading'>{model.name}</th>;
 
     return <tr key={model.taxonKey} className={cls}>
