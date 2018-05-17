@@ -28,7 +28,7 @@ class ActivityPlanner extends React.PureComponent<IActivityPlannerProps> {
   }
 
   public render() {
-    if (this.props.isLoading || !this.props.dailyCalendar || !this.props.monthlyCalendar) {
+    if (!this.props.dailyCalendar || !this.props.monthlyCalendar) {
       return <div>
         <Loader>Loading...</Loader>
       </div>

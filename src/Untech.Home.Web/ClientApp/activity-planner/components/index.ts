@@ -1,19 +1,5 @@
-﻿import {QuickAdder} from "./QuickAdder";
-import {QuickEditor} from "./QuickEditor";
-import {HorScrollable} from "./HorScrollable";
-import {SmartQuickEditor} from "./SmartQuickEditor";
-import {Button, Popup, Loader, Form, Divider, TextArea, Radio} from "semantic-ui-react";
-
-export {
-  QuickAdder,
-  QuickEditor,
-  HorScrollable,
-  SmartQuickEditor,
-  Button,
-  Popup,
-  Loader,
-  Form,
-  Divider,
-  TextArea,
-  Radio
-};
+﻿export {QuickAdder} from "./QuickAdder";
+export {QuickEditor} from "./QuickEditor";
+export {HorScrollable} from "./HorScrollable";
+export {SmartQuickEditor} from "./SmartQuickEditor";
+export {Button, Popup, Loader, Form, Divider, TextArea, Radio} from "semantic-ui-react";
