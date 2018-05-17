@@ -19,6 +19,6 @@ export const routes = <Layout>
 
 function ActivityPlannerRoute() {
   return <Provider store={store as any}>
-    < ActivityPlanner/>
+    <ActivityPlanner />
   </Provider>
 }

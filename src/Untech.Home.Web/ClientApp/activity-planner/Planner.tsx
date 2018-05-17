@@ -41,11 +41,11 @@ class ActivityPlanner extends React.PureComponent<IActivityPlannerProps> {
   }
 }
 
-const mapStateToProps = (state: State) => ({
+const mapStateToProps = (state: State) : IActivityPlannerProps => ({
   dailyCalendar: state.dailyCalendar,
   monthlyCalendar: state.monthlyCalendar,
   isOccurrenceSelected: !!state.selectedActivityOccurrence,
   isLoading: state.isFetching
 });
 
-export default connect(mapStateToProps, {} as any)(ActivityPlanner);
+export default connect(mapStateToProps)(ActivityPlanner);
