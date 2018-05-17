@@ -6,18 +6,25 @@ import {HorScrollable, Loader} from './components';
 import OccurrenceEditor from "./occurrence-editor";
 import {connect} from "react-redux";
 import {State} from "./types";
+import {fetchCalendar} from "./actions";
 
 interface IActivityPlannerProps {
   dailyCalendar?: IDailyCalendar;
   monthlyCalendar?: IMonthlyCalendar;
   isOccurrenceSelected: boolean;
   isLoading: boolean;
+
+  onMount: typeof fetchCalendar;
 }
 
 class ActivityPlanner extends React.PureComponent<IActivityPlannerProps> {
   constructor(props: any) {
     super(props);
     this.state = {isLoading: true, isOccurrenceSelected: false};
+  }
+
+  componentDidMount() {
+    this.props.onMount();
   }
 
   public render() {
@@ -41,11 +48,15 @@ class ActivityPlanner extends React.PureComponent<IActivityPlannerProps> {
   }
 }
 
-const mapStateToProps = (state: State) : IActivityPlannerProps => ({
+const mapStateToProps = (state: State) : Partial<IActivityPlannerProps> => ({
   dailyCalendar: state.dailyCalendar,
   monthlyCalendar: state.monthlyCalendar,
   isOccurrenceSelected: !!state.selectedActivityOccurrence,
   isLoading: state.isFetching
 });
 
-export default connect(mapStateToProps)(ActivityPlanner);
+const mapDispatchToProps = {
+  onMount: fetchCalendar
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ActivityPlanner);

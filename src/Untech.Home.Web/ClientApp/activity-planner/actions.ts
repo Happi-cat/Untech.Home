@@ -17,7 +17,7 @@ function hideSpinner() {
   return changeState({isFetching: false});
 }
 
-function fetchCalendar(): Thunk<Promise<void>> {
+export function fetchCalendar(): Thunk<Promise<void>> {
   return state => async (dispatch: Dispatch<State>) => {
     dispatch(unselectActivityOccurrence());
     dispatch(showSpinner());
