@@ -48,4 +48,4 @@ const mapStateToProps = (state: State) => ({
   isLoading: state.isFetching
 });
 
-export default connect(mapStateToProps, {})(ActivityPlanner);
+export default connect(mapStateToProps, {} as any)(ActivityPlanner);
