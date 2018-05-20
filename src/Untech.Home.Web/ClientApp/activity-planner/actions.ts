@@ -1,4 +1,4 @@
-﻿import {Dispatch} from "repatch";
+﻿import {Dispatch, GetState} from "repatch";
 import {apiService, IActivityOccurrence} from "./api";
 import {State, ActivityPlannerReducer as Reducer, ActivityPlannerThunk as Thunk} from "./types";
 
@@ -23,7 +23,8 @@ export function fetchCalendar(): Thunk<Promise<void>> {
     dispatch(showSpinner());
 
     const monthlyCalendar = await apiService.getMonthlyCalendar(-18, 2);
-    const dailyCalendar = await apiService.getDailyCalendar(state.dailyCalendarFrom, state.dailyCalendarTo);
+    const { dailyCalendarFrom, dailyCalendarTo } = state;
+    const dailyCalendar = await apiService.getDailyCalendar(dailyCalendarFrom, dailyCalendarTo);
 
     dispatch(changeState({monthlyCalendar, dailyCalendar}));
     dispatch(hideSpinner());
