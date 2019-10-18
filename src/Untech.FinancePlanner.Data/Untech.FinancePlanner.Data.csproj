@@ -4,14 +4,13 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="linq2db.core" Version="1.9.0" />
-    <PackageReference Include="Microsoft.Data.SQLite" Version="2.0.0" />
     <PackageReference Include="newtonsoft.json" Version="10.0.3" />
     <PackageReference Include="YamlDotNet" Version="4.2.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ext\Untech.Practices\Src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj" />
+    <ProjectReference Include="..\..\ext\Untech.Practices\src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj" />
     <ProjectReference Include="..\Untech.FinancePlanner.Domain\Untech.FinancePlanner.Domain.csproj" />
-    <ProjectReference Include="..\..\ext\Untech.Practices\Src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
-    <ProjectReference Include="..\..\ext\Untech.Practices\Src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
+    <ProjectReference Include="..\..\ext\Untech.Practices\src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
+    <ProjectReference Include="..\..\ext\Untech.Practices\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
   </ItemGroup>
 </Project>

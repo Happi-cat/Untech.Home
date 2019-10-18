@@ -1,35 +1,35 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Untech.FinancePlanner.Data.Cache;
 using Untech.FinancePlanner.Domain.Models;
-using Untech.Home;
+using Untech.Home.Data;
 using YamlDotNet.RepresentationModel;
 
 namespace Untech.FinancePlanner.Data.Initializations
 {
-	public static class DbInitializer
+	public class TaxonTableInitializer : IDbInitializer
 	{
-		public static void Initialize(Func<FinancialPlannerContext> contextFactory, string directory)
-		{
-			using (var context = contextFactory())
-			{
-				context.EnsureTableExists<CacheEntry>();
-				context.EnsureTableExists<TaxonDao>();
-				context.EnsureTableExists<FinancialJournalEntryDao>();
+		private readonly FinancialPlannerContext _context;
+		private readonly string _configFolder;
 
-				if (context.Taxons.Any())
-				{
-					return;
-				}
+		public TaxonTableInitializer(FinancialPlannerContext context, string configFolder)
+		{
+			_context = context;
+			_configFolder = configFolder;
+		}
+
+		public void InitializeDb()
+		{
+			if (_context.Taxons.Any())
+			{
+				return;
 			}
 
-			var taxonStorage = new TaxonStorage(contextFactory);
-			Initialize(taxonStorage, BuiltInTaxonId.Expense, Path.Combine(directory, "Expenses.eyaml"));
-			Initialize(taxonStorage, BuiltInTaxonId.Saving, Path.Combine(directory, "Savings.eyaml"));
-			Initialize(taxonStorage, BuiltInTaxonId.Income, Path.Combine(directory, "Incomes.eyaml"));
+			var taxonStorage = new TaxonStorage(() => _context);
+			Initialize(taxonStorage, BuiltInTaxonId.Expense, Path.Combine(_configFolder, "Expenses.eyaml"));
+			Initialize(taxonStorage, BuiltInTaxonId.Saving, Path.Combine(_configFolder, "Savings.eyaml"));
+			Initialize(taxonStorage, BuiltInTaxonId.Income, Path.Combine(_configFolder, "Incomes.eyaml"));
 		}
 
 		private static void Initialize(TaxonStorage storage, int rootId, string filePath)
@@ -107,7 +107,7 @@ namespace Untech.FinancePlanner.Data.Initializations
 			{
 				foreach (var node in mapping.Children)
 				{
-					var nameNode = (YamlScalarNode)node.Key;
+					var nameNode = (YamlScalarNode) node.Key;
 
 					var newTaxon = new Tree { Name = nameNode.Value };
 					_path.Peek().Elements.Add(newTaxon);

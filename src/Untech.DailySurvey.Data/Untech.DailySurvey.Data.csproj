@@ -4,22 +4,15 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="linq2db.core" Version="1.9.0" />
-    <PackageReference Include="Microsoft.Data.SQLite" Version="2.0.0" />
     <PackageReference Include="newtonsoft.json" Version="10.0.3" />
     <PackageReference Include="YamlDotNet" Version="4.2.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ext\Untech.Practices\Src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj">
-      <Project>{6ABFF906-9E08-446A-837C-D89023A00A33}</Project>
-      <Name>Untech.Practices.CQRS.Abstractions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ext\Untech.Practices\Src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj" />
+    <ProjectReference Include="..\..\ext\Untech.Practices\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
+    <ProjectReference Include="..\..\ext\Untech.Practices\src\Untech.Practices.ObjectMapping.Abstractions\Untech.Practices.ObjectMapping.Abstractions.csproj" />
     <ProjectReference Include="..\Untech.DailySurvey.Domain\Untech.DailySurvey.Domain.csproj" />
-    <ProjectReference Include="..\..\ext\Untech.Practices\Src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
-    <ProjectReference Include="..\..\ext\Untech.Practices\Src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
-    <ProjectReference Include="..\Untech.Home.Core\Untech.Home.Core.csproj">
-      <Project>{7A0C70A1-7F4F-4422-BBC1-80FB8DB41E24}</Project>
-      <Name>Untech.Home.Core</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\..\ext\Untech.Practices\src\Untech.Practices.DataStorage.Abstractions\Untech.Practices.DataStorage.Abstractions.csproj" />
+    <ProjectReference Include="..\..\ext\Untech.Practices\src\Untech.Practices.DataStorage.Cache.Abstractions\Untech.Practices.DataStorage.Cache.Abstractions.csproj" />
+    <ProjectReference Include="..\Untech.Home.Core\Untech.Home.Core.csproj" />
   </ItemGroup>
 </Project>

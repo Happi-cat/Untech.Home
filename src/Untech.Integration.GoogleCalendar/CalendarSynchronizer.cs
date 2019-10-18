@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Google.Apis.Calendar.v3;
 using Google.Apis.Calendar.v3.Data;
 using Google.Apis.Services;
@@ -34,7 +35,7 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 			var prefix = string.Join(" ", GetPrefixes(notification.Occurrence).Select(n => $"[{n}]"));
 
 			calendarEvent.Summary = $"{prefix} {notification.Activity.Name}".TrimStart();
-			calendarEvent.Description = notification.Occurrence.Note;
+			calendarEvent.Description = GetDescription();
 			calendarEvent.Start = new EventDateTime
 			{
 				Date = when.ToString("yyyy-MM-dd")
@@ -53,6 +54,18 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 					.Update(calendarEvent, "primary", calendarEvent.Id)
 					.Execute();
 			}
+
+			string GetDescription()
+			{
+				var filler = string.Join("", Enumerable.Repeat("=", 5));
+
+				return new StringBuilder()
+					.AppendLine(notification.Occurrence.Note)
+					.Append(filler)
+					.AppendFormat(" id: {0:B} ", notification.Occurrence.ExternalKey)
+					.Append(filler)
+					.ToString();
+			}
 		}
 
 		private static Event GetDefaultCalendarEvent(ActivityOccurrenceSaved notification, DateTime when)
@@ -63,7 +76,7 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 				{
 					Private__ = new Dictionary<string, string>
 					{
-						[CalendarKey] = notification.Occurrence.ExternalKey.ToString()
+						[CalendarKey] = notification.Occurrence.ExternalKey.ToString("N")
 					}
 				},
 				Reminders = new Event.RemindersData
@@ -102,7 +115,7 @@ namespace Untech.ActivityPlanner.Integration.GoogleCalendar
 			eventsRequest.MaxResults = 1;
 			eventsRequest.PrivateExtendedProperty = new Repeatable<string>(new[]
 			{
-				$"{CalendarKey}={notification.Occurrence.ExternalKey}"
+				$"{CalendarKey}={notification.Occurrence.ExternalKey:N}"
 			});
 
 			return eventsRequest

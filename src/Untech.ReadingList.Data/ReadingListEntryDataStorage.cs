@@ -14,7 +14,8 @@ namespace Untech.ReadingList.Data
 		IQueryHandler<ReadingListQuery, IEnumerable<ReadingListEntry>>,
 		IQueryHandler<AuthorsQuery, AuthorsView>,
 		IQueryHandler<AuthorsBooksQuery, IEnumerable<ReadingListEntry>>,
-		IQueryHandler<AuthorsSuggestionQuery, IEnumerable<string>>
+		IQueryHandler<AuthorsSuggestionQuery, IEnumerable<string>>,
+		IQueryHandler<ReadingStatisticsQuery, ReadingStatistics>
 	{
 		public ReadingListEntryDataStorage(Func<ReadingListContext> contextFactory) : base(contextFactory)
 		{
@@ -54,8 +55,10 @@ namespace Untech.ReadingList.Data
 						.AsEnumerable()
 						.Select(author => new AuthorsViewItem(author)
 						{
-							CompletedBooksCount = GetTable(context).Count(n => n.Author == author && n.Status == ReadingListEntryStatus.Completed),
-							ReadingBooksCount = GetTable(context).Count(n => n.Author == author && n.Status == ReadingListEntryStatus.Reading),
+							CompletedBooksCount =
+								GetTable(context).Count(n => n.Author == author && n.Status == ReadingListEntryStatus.Completed),
+							ReadingBooksCount =
+								GetTable(context).Count(n => n.Author == author && n.Status == ReadingListEntryStatus.Reading),
 							TotalBooksCount = GetTable(context).Count(n => n.Author == author),
 						})
 						.ToList()
@@ -98,6 +101,40 @@ namespace Untech.ReadingList.Data
 			return authors
 				.Where(n => n.ApproximatelyEquals(request.SearchString, FuzzyStringComparisonTolerance.Normal, options))
 				.ToList();
+		}
+
+		public ReadingStatistics Handle(ReadingStatisticsQuery request)
+		{
+			var today = DateTime.Today;
+
+			var yearStart = new DateTime(today.Year, 1, 1);
+			var yearEnd = yearStart.AddYears(1);
+
+			var monthIndexInQuarter = (today.Month - 1) % 3;
+			var quarterStart = new DateTime(today.Year, today.Month - monthIndexInQuarter, 1);
+			var quarterEnd = quarterStart.AddMonths(3);
+
+			var monthStart = new DateTime(today.Year, today.Month, 1);
+			var monthEnd = monthStart.AddMonths(1);
+
+			using (var context = GetContext())
+			{
+				var completionDates = GetTable(context)
+					.Where(n => n.ReadingCompleted != null && yearStart <= n.ReadingCompleted && n.ReadingCompleted < yearEnd)
+					.Select(n => n.ReadingCompleted.Value)
+					.ToList();
+
+				return new ReadingStatistics
+				{
+					CompletedThisYearBooksCount = completionDates.Count,
+					CompletedThisQuarterBooksCount = completionDates.Count(n => quarterStart <= n && n < quarterEnd),
+					CompletedThisMonthBooksCount = completionDates.Count(n => monthStart <= n && n < monthEnd),
+
+					CompletedBooksCount = GetTable(context).Count(n => n.Status == ReadingListEntryStatus.Completed),
+					ReadingBooksCount = GetTable(context).Count(n => n.Status == ReadingListEntryStatus.Reading),
+					TotalBooksCount = GetTable(context).Count()
+				};
+			}
 		}
 	}
 }

@@ -73,11 +73,16 @@ namespace Untech.FinancePlanner.Domain.Services
 
 		private static DateTime GetWhenFromRequest(CreateFinancialJournalEntry request)
 		{
-			var when = DateTime.Today;
+			var thisMonth = DateTime.Today;
 
-			return when.Year != request.Year || when.Month != request.Month
-				? new DateTime(request.Year, request.Month, 1)
-				: when;
+			if (thisMonth.Year == request.Year && thisMonth.Month == request.Month)
+				return thisMonth;
+
+			var requestDate = new DateTime(request.Year, request.Month, 1);
+
+			return requestDate < thisMonth
+				? requestDate.AddDays(DateTime.DaysInMonth(request.Year, request.Month) - 1)
+				: requestDate;
 		}
 	}
 }

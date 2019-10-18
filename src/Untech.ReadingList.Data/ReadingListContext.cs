@@ -1,12 +1,13 @@
 ﻿using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
+using Untech.Home;
 using Untech.Home.Data;
 using Untech.ReadingList.Domain.Models;
 
 namespace Untech.ReadingList.Data
 {
-	public class ReadingListContext : DataConnection
+	public class ReadingListContext : DataConnection, IDbInitializer
 	{
 		public ReadingListContext(IConnectionStringFactory connectionStringFactory)
 			: base(new SQLiteDataProvider(), connectionStringFactory.GetConnectionString("reading_list.db"))
@@ -24,5 +25,10 @@ namespace Untech.ReadingList.Data
 		}
 
 		public ITable<ReadingListEntry> ReadingListEntries => GetTable<ReadingListEntry>();
+
+		public void InitializeDb()
+		{
+			this.EnsureTableExists<ReadingListEntry>();
+		}
 	}
 }

@@ -2,11 +2,12 @@
 using LinqToDB.Data;
 using LinqToDB.DataProvider.SQLite;
 using Untech.ActivityPlanner.Domain.Models;
+using Untech.Home;
 using Untech.Home.Data;
 
 namespace Untech.ActivityPlanner.Data
 {
-	public class ActivityPlannerContext : DataConnection
+	public class ActivityPlannerContext : DataConnection, IDbInitializer
 	{
 		public ActivityPlannerContext(IConnectionStringFactory connectionStringFactory)
 			: base(new SQLiteDataProvider(), connectionStringFactory.GetConnectionString("activity_planner.db"))
@@ -37,5 +38,12 @@ namespace Untech.ActivityPlanner.Data
 		public ITable<Activity> Activities => GetTable<Activity>();
 
 		public ITable<ActivityOccurrence> ActivityOccurrences => GetTable<ActivityOccurrence>();
+
+		public void InitializeDb()
+		{
+			this.EnsureTableExists<Group>();
+			this.EnsureTableExists<Activity>();
+			this.EnsureTableExists<ActivityOccurrence>();
+		}
 	}
 }
