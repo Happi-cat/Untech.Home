@@ -43,7 +43,6 @@ export default class ApiService {
     return this.fetchJson('activity/' + request.key, 'PUT', request);
   }
 
-
   public deleteActivity(request: ActivityKey) {
     return this.fetchJson('activity/' + encodeURIComponent(request.toString()), 'DELETE')
       .then(response => response.json() as Promise<boolean>);

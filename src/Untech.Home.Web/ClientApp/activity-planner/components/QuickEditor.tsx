@@ -1,25 +1,35 @@
 import * as React from 'react';
-import {Input, Button} from "semantic-ui-react";
+import {Input, Button, Loader} from "semantic-ui-react";
 
 export interface IQuickEditorProps {
   placeholder?:string;
   value: string;
-  onSave(value: string) : void;
+  onSave(value: string) : Promise<void>;
   onCancel() : void;
 }
 
 export interface IQuickEditorState {
-  value: string
+  value: string,
+  isSaving: boolean,
 }
 
 export class QuickEditor extends React.Component<IQuickEditorProps, IQuickEditorState> {
   constructor(props: any) {
     super(props);
 
-    this.state = { value: props.value };
+    this.state = { value: props.value, isSaving: false };
   }
 
   public render() {
+    if (this.state.isSaving)
+    {
+      return <div>
+        <Loader active inline size={"small"}  >
+          Saving
+        </Loader>
+      </div>
+    }
+
     return <div>
       <Input
         fluid
@@ -45,8 +55,10 @@ export class QuickEditor extends React.Component<IQuickEditorProps, IQuickEditor
     this.setState({ [name]: value });
   }
 
-  handleSave = () => {
-    this.props.onSave(this.state.value);
+  handleSave = async () => {
+    this.setState({ isSaving: true });
+    await this.props.onSave(this.state.value);
+    this.setState({ isSaving: false });
   }
 
   handleCancel = () => {

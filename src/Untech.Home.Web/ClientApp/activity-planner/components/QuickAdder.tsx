@@ -1,24 +1,34 @@
 import * as React from 'react';
-import {Input, Button} from "semantic-ui-react";
+import {Input, Button, Loader} from "semantic-ui-react";
 
 export interface IQuickAdderProps {
   placeholder?: string;
 
-  onSave(value: string): void;
+  onSave(value: string): Promise<void>;
 }
 
 export interface IQuickAdderState {
-  value: string
+  value: string,
+  isSaving: boolean
 }
 
 export class QuickAdder extends React.Component<IQuickAdderProps, IQuickAdderState> {
   constructor(props: any) {
     super(props);
 
-    this.state = {value: ""};
+    this.state = {value: "", isSaving: false};
   }
 
   public render() {
+    if (this.state.isSaving)
+    {
+      return <div>
+        <Loader active inline size={"small"}  >
+          Saving
+        </Loader>
+      </div>
+    }
+
     return <div>
       <Input
         fluid
@@ -40,7 +50,9 @@ export class QuickAdder extends React.Component<IQuickAdderProps, IQuickAdderSta
 
     this.setState({[name]: value});
   }
-  handleSave = () => {
-    this.props.onSave(this.state.value);
+  handleSave = async () => {
+    this.setState({ isSaving: true });
+    await this.props.onSave(this.state.value);
+    this.setState({isSaving: false});
   }
 }
