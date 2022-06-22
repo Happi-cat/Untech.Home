@@ -5,7 +5,7 @@
   <ItemGroup>
     <PackageReference Include="FuzzyString.Standard" Version="1.1.1" />
     <PackageReference Include="linq2db.core" Version="1.9.0" />
-    <PackageReference Include="newtonsoft.json" Version="10.0.3" />
+    <PackageReference Include="newtonsoft.json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ext\Untech.Practices\src\Untech.Practices.CQRS.Abstractions\Untech.Practices.CQRS.Abstractions.csproj" />
